@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: one
+  role: one
+  active: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString
+
+two:
+  account: two
+  role: two
+  active: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString

@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  role: one
+  function_access: one
+  allow_create: false
+  allow_read: false
+  allow_update: false
+  allow_delete: false
+  allow_confirm: false
+  allow_cancel_confirm: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString
+
+two:
+  role: two
+  function_access: two
+  allow_create: false
+  allow_read: false
+  allow_update: false
+  allow_delete: false
+  allow_confirm: false
+  allow_cancel_confirm: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString

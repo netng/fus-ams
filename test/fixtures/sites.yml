@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  site_stat: one
+  site_group: one
+  created_by: MyString
+  ip: MyString
+  request_id: MyString
+
+two:
+  name: MyString
+  site_stat: two
+  site_group: two
+  created_by: MyString
+  ip: MyString
+  request_id: MyString

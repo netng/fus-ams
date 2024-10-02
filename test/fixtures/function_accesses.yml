@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  label: MyString
+  path: MyString
+  description: MyString
+  admin: false
+  active: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString
+
+two:
+  code: MyString
+  label: MyString
+  path: MyString
+  description: MyString
+  admin: false
+  active: false
+  created_by: MyString
+  ip: MyString
+  request_id: MyString
