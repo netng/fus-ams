@@ -1,7 +1,9 @@
 class Brand < ApplicationRecord
   include Trackable
+  include Downcaseable
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
+  downcase_fields :name
 
 
   def self.ransackable_attributes(auth_object = nil)
