@@ -4,6 +4,7 @@ class ApplicationAdminController < ActionController::Base
 
   include Authentication
   include SetCurrentRequestDetails
+  include Pagy::Backend
 
   layout "application_admin"
 end

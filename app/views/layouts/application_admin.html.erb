@@ -86,9 +86,11 @@
 
     @media (min-width: 768px) {
       .main-content {
-        margin-left: 16rem;
+        margin-left: 18rem;
+        margin-right: 1.5rem;
       }
     }
+
 
     .sticky-header {
       position: sticky;
@@ -105,8 +107,33 @@
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="container mx-auto mt-28 px-5 flex pt-16">
-      <%= yield %>
+    <main class="mx-auto mt-8 flex pt-16 bg-slate-50 min-h-screen">
+      <%= render "shared/sidebar" %>
+      <div class="main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12">
+        <%= render "shared/flash" %>
+        <%= yield %>
+      </div>
+      <%= render "shared/mobile_sidebar" %>
     </main>
+
+    <script>
+    // Toggle mobile sidebar visibility
+    const menuButton = document.getElementById('menu-button');
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+
+    menuButton.addEventListener('click', () => {
+      mobileSidebar.classList.toggle('sidebar-mobile-active');
+    });
+
+    // Close mobile sidebar when clicking outside
+    document.addEventListener('click', (event) => {
+      const isClickInsideSidebar = mobileSidebar.contains(event.target);
+      const isClickOnButton = menuButton.contains(event.target);
+
+      if (!isClickInsideSidebar && !isClickOnButton) {
+        mobileSidebar.classList.remove('sidebar-mobile-active');
+      }
+    });
+  </script>
   </body>
 </html>

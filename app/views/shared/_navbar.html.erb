@@ -1,135 +1,27 @@
 <!-- Navbar -->
-  <nav class="bg-blue-500 text-white fixed top-0 w-full z-50 px-4">
-    <div class="container mx-auto flex justify-between items-center py-4">
-      <div class="text-xl font-bold">Asset Management System</div>
-      <div class="md:hidden">
-        <button id="menu-button" class="text-white focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
-      </div>
-      <ul class="hidden md:flex space-x-8 md:items-center">
-        <li><a href="#" class="hover:text-gray-200">Home</a></li>
-        <li><a href="#" class="hover:text-gray-200">View</a></li>
-        <li><a href="#" class="hover:text-gray-200">Report</a></li>
-        <li><a href="#" class="hover:text-gray-200">Entry</a></li>
-        <li><a href="#" class="hover:text-gray-200">Search</a></li>
-        <li><a href="#" class="hover:text-gray-200">Setup</a></li>
-        <li><a href="#" class="hover:text-gray-200">Non</a></li>
-        <li>
-          <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
-        </li>
-      </ul>
+<nav class="bg-blue-500 text-white fixed top-0 w-full z-50 px-4 shadow-lg">
+  <div class="container mx-auto flex justify-between items-center py-4">
+    <div class="text-xl font-bold">Asset Management System</div>
+    <div class="md:hidden">
+      <button id="menu-button" class="text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
     </div>
-  </nav>
-
-  <div class="mx-auto mt-8 flex pt-16">
-    <!-- Sidebar Menu for Desktop (Fixed and Scrollable) -->
-    <div id="desktop-sidebar" class="hidden bg-blue-500 shadow-lg md:block sidebar-fixed">
-      <div class="p-0"> <!-- Menghapus padding dari sidebar -->
-        <h2 class="font-bold text-lg text-white px-8 py-4 bg-blue-500 sticky-header">Entry</h2>
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Asset</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Asset and Component</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Location</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Master</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Asset</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-
-        <div class="mt-4 px-4">
-          <h3 class="font-semibold text-white">Asset</h3>
-          <ul>
-            <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-            <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-          </ul>
-        </div>
-        
-        <!-- Tambahkan lebih banyak grup jika perlu -->
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content w-full md:w-3/4 bg-white px-12">
-      <h2 class="font-bold text-xl">Service Details</h2>
-      <p class="mt-2">Here you can add the detailed information about the selected service.</p>
-      <!-- Tambahkan lebih banyak konten di sini -->
-      <div class="h-screen mt-4">
-        <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-        <!-- Konten tambahan untuk memastikan scrolling -->
-      </div>
-    </div>
+    <ul class="hidden md:flex space-x-8 md:items-center">
+      <li><a href="#" class="hover:text-gray-200">Home</a></li>
+      <li><a href="#" class="hover:text-gray-200">View</a></li>
+      <li><a href="#" class="hover:text-gray-200">Report</a></li>
+      <li><a href="#" class="hover:text-gray-200">Entry</a></li>
+      <li><a href="#" class="hover:text-gray-200">Search</a></li>
+      <li><a href="#" class="hover:text-gray-200">Setup</a></li>
+      <li><a href="#" class="hover:text-gray-200">Non</a></li>
+      <li>
+        <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
+      </li>
+    </ul>
   </div>
+</nav>
 
-
-  <!-- Sidebar for mobile (hidden by default) -->
-  <div id="mobile-sidebar" class="fixed top-0 left-0 w-64 bg-blue-500 h-full sidebar-mobile md:hidden">
-    <div class="p-4">
-      <h2 class="font-bold text-lg text-white">Menu</h2>
-      <ul>
-        <li><a href="#" class="text-white hover:underline">Home</a></li>
-        <li><a href="#" class="text-white hover:underline">About</a></li>
-        <li><a href="#" class="text-white hover:underline">Services</a></li>
-        <li><a href="#" class="text-white hover:underline">Contact</a></li>
-        <li><a href="#" class="text-white hover:underline">Blog</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <script>
-    // Toggle mobile sidebar visibility
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-
-    menuButton.addEventListener('click', () => {
-      mobileSidebar.classList.toggle('sidebar-mobile-active');
-    });
-
-    // Close mobile sidebar when clicking outside
-    document.addEventListener('click', (event) => {
-      const isClickInsideSidebar = mobileSidebar.contains(event.target);
-      const isClickOnButton = menuButton.contains(event.target);
-
-      if (!isClickInsideSidebar && !isClickOnButton) {
-        mobileSidebar.classList.remove('sidebar-mobile-active');
-      }
-    });
-  </script>
+ 

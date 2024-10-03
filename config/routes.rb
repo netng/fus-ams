@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "home#index"
 
-    resources :brands, except: [:destroy]
+    resources :brands do
+      collection do
+        delete "destroy_many"
+      end
+    end
   end
 end

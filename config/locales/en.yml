@@ -4,9 +4,13 @@ en:
       role: Role
       account: Account
       project: Project
+      brand: Brand
     attributes:
       role:
         name: Name
+      brand:
+        name: Name
+        description: Description
 
       account:
         email: Email
@@ -239,20 +243,22 @@ en:
       description: Deskripsi
       password: Password
       forgot_password: Forgot password?
-      back: Kembali
-      save: Simpan
-      cancel: Batal
+      back: Back
+      save: Save
+      cancel: Cancel
       search: Cari
       reset: Reset
       number_of_rt: Jumlah RT
-      destroy: Hapus
-      edit: Ubah
+      destroy: Delete
+      edit: Edit
       update: Perbaharui
       edit_form: Ubah data %{model}
-      new_form: Tambah data %{model}
+      new_form: Asset %{model} registration
       filter: Filter
       confirm:
         to_destroy_many: Apakah anda yakin ingin menghapus semua data terpilih? data terhapus tidak dapat dikembalikan!
+      brand_registration: Asset brand registration
+      index_header: Asset %{model}
 
     format: "%{attribute} %{message}"
     errors:
@@ -270,8 +276,8 @@ en:
       notices:
         successfully:
           logged_in: Berhasil login
-          updated: Data berhasil diperbaharui
-          created: Data berhasil dibuat
+          updated: "%{model} successfully updated"
+          created: "%{model} successfully created"
           destroyed: Data berhasil dihapus
   
   pundit:

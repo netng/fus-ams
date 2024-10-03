@@ -1,3 +1,0 @@
-PG_USER=postgres
-PG_PASSWORD=postgres
-NGROK_HOST="1e10-150-107-140-110.ngrok-free.app"

@@ -65,3 +65,9 @@ group :test do
 end
 
 gem "bcrypt", "~> 3.1"
+
+gem "pagy", "~> 9.0"
+
+gem "ransack", "~> 4.2"
+
+gem "dotenv", "~> 3.1"
