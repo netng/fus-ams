@@ -41,6 +41,28 @@ module Admin
     end
 
     def destroy_many
+      brand_ids = params[:brand_ids]
+			deletion_failed = false
+
+			ActiveRecord::Base.transaction do
+				brands = Brand.where(id: brand_ids)
+
+				brands.each do |brand|
+					unless brand.destroy
+						deletion_failed = true
+						break
+					end
+				end
+				
+				respond_to do |format|
+					if deletion_failed
+						error_message = brands.map { |brand| brand.errors.full_messages }.flatten.uniq
+						format.html { redirect_to admin_brands_path, alert: error_message.to_sentence }
+					else
+						format.html { redirect_to admin_brands_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.brand")) }
+					end
+				end
+			end
     end
 
     private

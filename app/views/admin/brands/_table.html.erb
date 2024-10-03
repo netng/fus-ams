@@ -1,6 +1,6 @@
 <div class="overflow-x-auto mb-4">
-  <div class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-    <%= turbo_frame_tag "table" do %>
+<%= turbo_frame_tag "table" do %>
+  <div class="min-w-full bg-white rounded-lg overflow-x-auto">
       <table class="min-w-full bg-white table-auto" data-table-target="table">
         <thead class="rounded-lg">
           <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -21,11 +21,11 @@
           <%= render @brands %>
         </tbody>
       </table>
+  </div>
       <div class="flex justify-between items-center my-4 mx-4">
         <%== pagy_info(@pagy) %>
         <%== pagy_nav(@pagy, anchor_string: 'data-turbo-action="advance" data-action="click->table#resetDeleteButton"') %>
       </div>
-    <% end %>
-  </div>
+<% end %>
 
 </div>

@@ -252,11 +252,11 @@ en:
       destroy: Delete
       edit: Edit
       update: Perbaharui
-      edit_form: Ubah data %{model}
+      edit_form: Update data %{model}
       new_form: Asset %{model} registration
       filter: Filter
       confirm:
-        to_destroy_many: Apakah anda yakin ingin menghapus semua data terpilih? data terhapus tidak dapat dikembalikan!
+        to_destroy_many: Are you sure you want to delete all selected data? Deleted data cannot be restored!
       brand_registration: Asset brand registration
       index_header: Asset %{model}
 
@@ -278,7 +278,7 @@ en:
           logged_in: Berhasil login
           updated: "%{model} successfully updated"
           created: "%{model} successfully created"
-          destroyed: Data berhasil dihapus
+          destroyed: "Selected %{model} successfully deleted"
   
   pundit:
     default: Anda tidak berhak untuk melakukan aksi ini
