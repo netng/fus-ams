@@ -24,5 +24,11 @@ Rails.application.routes.draw do
         delete "destroy_many"
       end
     end
+
+    resources :vendors do
+      collection do
+        delete "destroy_many"
+      end
+    end
   end
 end

@@ -1,0 +1,7 @@
+<h2 class="font-bold text-gray-600 text-xl mb-4"><%= t("custom.label.index_header", model: t("activerecord.models.vendor")).capitalize %></h2>
+
+<%= render "action_group" %>
+<div class="table-vendor" data-controller="table">
+  <%= render "table" %>
+  <%= render "destroy_button" %>
+</div>

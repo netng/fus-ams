@@ -5,11 +5,23 @@ en:
       account: Account
       project: Project
       brand: Brand
+      vendor: Vendor
     attributes:
       role:
         name: Name
       brand:
         name: Name
+        description: Description
+      vendor:
+        name: Name
+        address1: Address 1
+        address2: Address 2
+        city: City
+        postal_code: Postal code
+        phone_number: Phone
+        fax_number: Fax
+        contact_person: Contact person
+        email: Email
         description: Description
 
       account:

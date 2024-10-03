@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_02_065146) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_03_065526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -158,6 +158,26 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_02_065146) do
     t.index ["name"], name: "index_sites_on_name", unique: true
     t.index ["site_group_id"], name: "index_sites_on_site_group_id"
     t.index ["site_stat_id"], name: "index_sites_on_site_stat_id"
+  end
+
+  create_table "vendors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "address1"
+    t.text "address2"
+    t.string "city"
+    t.integer "postal_code"
+    t.string "phone_number"
+    t.string "fax_number"
+    t.string "contact_person"
+    t.string "email"
+    t.string "description"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_vendors_on_name", unique: true
   end
 
   add_foreign_key "account_roles", "accounts"

@@ -1,0 +1,83 @@
+<%= form_with model: [:admin, vendor] do |form| %>
+  <div class="mb-4">
+    <%= form.label :name, "#{t("activerecord.attributes.vendor.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <% @vendor.errors.full_messages_for(:name).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :address1, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :address1, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:address1).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :address2, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :address2, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:address2).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :city, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :city, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:city).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :postal_code, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.number_field :postal_code, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:postal_code).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :phone_number, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :phone_number, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:phone_number).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :fax_number, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :fax_number, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:fax_number).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :contact_person, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :contact_person, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:contact_person).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :email, class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.email_field :email, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <% @vendor.errors.full_messages_for(:email).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description , class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_area :description, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </div>
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2">
+    <%= form.submit "#{t('custom.label.save')}", class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto" %>
+    <%= link_to "#{t('custom.label.cancel')}", admin_vendors_path, class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto" %>
+  </div>
+<% end %>
