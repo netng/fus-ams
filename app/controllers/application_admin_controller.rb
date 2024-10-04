@@ -3,6 +3,7 @@ class ApplicationAdminController < ActionController::Base
   allow_browser versions: :modern
 
   include Authentication
+  include Authorization
   include SetCurrentRequestDetails
   include Pagy::Backend
 

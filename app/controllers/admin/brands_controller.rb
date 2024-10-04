@@ -1,18 +1,26 @@
 module Admin
   class BrandsController < ApplicationAdminController
     before_action :set_brand, only: [:edit, :update, :destroy]
+		before_action :set_function_access_code
+
 
     def index
+      authorize :authorization, :index?
+
       @q = Brand.ransack(params[:q])
 			scope = @q.result
 			@pagy, @brands = pagy(scope)
     end
 
     def new
+      authorize :authorization, :create?
+
       @brand = Brand.new
     end
 
     def create
+      authorize :authorization, :create?
+
       @brand = Brand.new(brand_params)
 
       respond_to do |format|
@@ -25,9 +33,13 @@ module Admin
     end
 
     def edit
+      authorize :authorization, :update?
+
     end
 
     def update
+      authorize :authorization, :update?
+
       respond_to do |format|
 				if @brand.update(brand_params)
 					format.html { redirect_to admin_brands_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.brand")) }
@@ -38,9 +50,13 @@ module Admin
     end
 
     def destroy
+      authorize :authorization, :destroy?
+
     end
 
     def destroy_many
+      authorize :authorization, :destroy?
+
       brand_ids = params[:brand_ids]
 			deletion_failed = false
 
@@ -72,6 +88,10 @@ module Admin
 
       def set_brand
         @brand = Brand.find(params[:id])
+      end
+
+      def set_function_access_code
+				@function_access_code = FunctionAccessConstant::FA_MST_BRAND
       end
 
   end

@@ -293,6 +293,6 @@ en:
           destroyed: "Selected %{model} successfully deleted"
   
   pundit:
-    default: Anda tidak berhak untuk melakukan aksi ini
-    admin/dashboard_policy:
-      index?: Halaman yang anda akses tidak ditemukan
+    default: You don't have permission to perform this action
+    admin/authorization_policy:
+      index?: Page not found
