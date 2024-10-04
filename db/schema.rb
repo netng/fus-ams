@@ -10,25 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_03_065526) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_04_053646) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-
-  create_table "account_roles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "account_id", null: false
-    t.uuid "role_id", null: false
-    t.boolean "active", default: false
-    t.string "created_by"
-    t.string "request_id"
-    t.string "user_agent"
-    t.string "ip_address"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "role_id"], name: "index_account_roles_on_account_id_and_role_id", unique: true
-    t.index ["account_id"], name: "index_account_roles_on_account_id"
-    t.index ["role_id"], name: "index_account_roles_on_role_id"
-  end
 
   create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "username", null: false
@@ -43,6 +28,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_065526) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.string "email", null: false
+    t.uuid "role_id", null: false
+    t.boolean "default"
+    t.index ["role_id"], name: "index_accounts_on_role_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true
   end
 
@@ -56,6 +44,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_065526) do
     t.string "user_agent"
     t.string "ip_address"
     t.index ["name"], name: "index_brands_on_name", unique: true
+  end
+
+  create_table "departments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "floor"
+    t.string "description"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_departments_on_name", unique: true
   end
 
   create_table "function_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -180,8 +181,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_065526) do
     t.index ["name"], name: "index_vendors_on_name", unique: true
   end
 
-  add_foreign_key "account_roles", "accounts"
-  add_foreign_key "account_roles", "roles"
+  add_foreign_key "accounts", "roles"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
   add_foreign_key "site_groups", "projects"

@@ -6,6 +6,7 @@ en:
       project: Project
       brand: Brand
       vendor: Vendor
+      department: Department
     attributes:
       role:
         name: Name
@@ -22,6 +23,10 @@ en:
         fax_number: Fax
         contact_person: Contact person
         email: Email
+        description: Description
+      department:
+        name: Name
+        floor: Floor
         description: Description
 
       account:
@@ -293,6 +298,6 @@ en:
           destroyed: "Selected %{model} successfully deleted"
   
   pundit:
-    default: Anda tidak berhak untuk melakukan aksi ini
-    admin/dashboard_policy:
-      index?: Halaman yang anda akses tidak ditemukan
+    default: You don't have permission to perform this action
+    admin/authorization_policy:
+      index?: Page not found

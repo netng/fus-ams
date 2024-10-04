@@ -71,3 +71,5 @@ gem "pagy", "~> 9.0"
 gem "ransack", "~> 4.2"
 
 gem "dotenv", "~> 3.1"
+
+gem "pundit", "~> 2.4"
