@@ -6,6 +6,7 @@ en:
       project: Project
       brand: Brand
       vendor: Vendor
+      department: Department
     attributes:
       role:
         name: Name
@@ -22,6 +23,10 @@ en:
         fax_number: Fax
         contact_person: Contact person
         email: Email
+        description: Description
+      department:
+        name: Name
+        floor: Floor
         description: Description
 
       account:

@@ -1,6 +1,7 @@
 module Admin
   class VendorsController < ApplicationAdminController
     before_action :set_vendor, only: [:edit, :update, :destroy]
+    before_action :set_function_access_code
 
     def index
       authorize :authorization, :index?
@@ -88,6 +89,10 @@ module Admin
 
       def set_vendor
         @vendor = Vendor.find(params[:id])
+      end
+
+      def set_function_access_code
+				@function_access_code = FunctionAccessConstant::FA_MST_VENDOR
       end
   end
 end

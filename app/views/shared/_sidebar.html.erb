@@ -32,7 +32,9 @@
       <ul>
         <li><a href="#" class="px-2 text-white hover:underline">Project</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Site</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Departement</a></li>
+        <li>
+          <%= link_to t("activerecord.models.department"), admin_departments_path, class: "px-2 text-white hover:underline" %>
+        </li>
       </ul>
     </div>
 
