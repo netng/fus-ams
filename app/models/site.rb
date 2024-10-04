@@ -6,6 +6,6 @@ class Site < ApplicationRecord
   belongs_to :site_group
 
   downcase_fields :name
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   
 end

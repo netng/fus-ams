@@ -2,7 +2,7 @@ class Brand < ApplicationRecord
   include Trackable
   include Downcaseable
 
-  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   downcase_fields :name
 
 

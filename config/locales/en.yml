@@ -7,6 +7,7 @@ en:
       brand: Brand
       vendor: Vendor
       department: Department
+      site_stat: Site stat
     attributes:
       role:
         name: Name
@@ -27,6 +28,9 @@ en:
       department:
         name: Name
         floor: Floor
+        description: Description
+      site_stat:
+        name: Name
         description: Description
 
       account:
@@ -271,11 +275,13 @@ en:
       update: Perbaharui
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
+      default_new_form: "%{model} registration"
       filter: Filter
       confirm:
         to_destroy_many: Are you sure you want to delete all selected data? Deleted data cannot be restored!
       brand_registration: Asset brand registration
-      index_header: Asset %{model}
+      asset_index_header: Asset %{model}
+      default_index_header: "%{model}"
 
     format: "%{attribute} %{message}"
     errors:
