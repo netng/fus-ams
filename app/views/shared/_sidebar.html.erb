@@ -31,7 +31,10 @@
       <h3 class="font-semibold text-white">Location</h3>
       <ul>
         <li>
-          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline" %>
+          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline", data: { turbo_target: "main-content" } %>
+        </li>
+        <li>
+          <%= link_to t("activerecord.models.site_group"), admin_site_groups_path, class: "px-2 text-white hover:underline" %>
         </li>
         <li><a href="#" class="px-2 text-white hover:underline">Site</a></li>
         <li>
