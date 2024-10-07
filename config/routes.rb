@@ -49,5 +49,11 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :site_groups do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
   end
 end

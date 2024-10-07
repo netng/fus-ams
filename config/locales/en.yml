@@ -9,6 +9,7 @@ en:
       department: Department
       site_stat: Site stat
       project: Project
+      site_group: Site group
 
     attributes:
       role:
@@ -40,6 +41,10 @@ en:
         description: Description
 
       project:
+        name: Name
+        description: Description
+
+      site_group:
         name: Name
         description: Description
 
@@ -292,6 +297,7 @@ en:
       brand_registration: Asset brand registration
       asset_index_header: Asset %{model}
       default_index_header: "%{model}"
+      all: All %{model}
 
     format: "%{attribute} %{message}"
     errors:
