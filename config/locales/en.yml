@@ -12,6 +12,7 @@ en:
       site_group: Site group
       site: Site
       software: Software
+      component_type: Component type
 
     attributes:
       role:
@@ -55,6 +56,10 @@ en:
         description: Description
 
       software:
+        name: Name
+        description: Description
+      
+      component_type:
         name: Name
         description: Description
 

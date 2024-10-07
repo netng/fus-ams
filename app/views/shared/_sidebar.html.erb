@@ -22,8 +22,13 @@
         <li><a href="#" class="px-2 text-white hover:underline">Asset type</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Asset item type</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Asset model</a></li>
+        <li>
+          <%= link_to t("activerecord.models.component_type"), admin_component_types_path, class: "px-2 text-white hover:underline" %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Component</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Software</a></li>
+        <li>
+          <%= link_to t("activerecord.models.sofware"), admin_softwares_path, class: "px-2 text-white hover:underline" %>
+        </li>
       </ul>
     </div>
 
@@ -31,7 +36,7 @@
       <h3 class="font-semibold text-white">Location</h3>
       <ul>
         <li>
-          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline", data: { turbo_target: "main-content" } %>
+          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline" %>
         </li>
         <li>
           <%= link_to t("activerecord.models.site_group"), admin_site_groups_path, class: "px-2 text-white hover:underline" %>
