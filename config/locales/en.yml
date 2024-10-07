@@ -7,9 +7,10 @@ en:
       brand: Brand
       vendor: Vendor
       department: Department
-      site_stat: Site stat
+      site_stat: Asset status
       project: Project
       site_group: Site group
+      site: Site
 
     attributes:
       role:
@@ -45,6 +46,10 @@ en:
         description: Description
 
       site_group:
+        name: Name
+        description: Description
+      
+      site:
         name: Name
         description: Description
 
@@ -298,6 +303,7 @@ en:
       asset_index_header: Asset %{model}
       default_index_header: "%{model}"
       all: All %{model}
+      select: "--- Select %{model} ---"
 
     format: "%{attribute} %{message}"
     errors:

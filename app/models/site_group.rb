@@ -3,6 +3,8 @@ class SiteGroup < ApplicationRecord
   include Downcaseable
   
   belongs_to :project
+
+  has_many :sites, dependent: :restrict_with_error
   
   downcase_fields :name
 

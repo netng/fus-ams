@@ -2,6 +2,8 @@ class SiteStat < ApplicationRecord
   include Trackable
   include Downcaseable
 
+  has_many :sites, dependent: :restrict_with_error
+
   downcase_fields :name
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }

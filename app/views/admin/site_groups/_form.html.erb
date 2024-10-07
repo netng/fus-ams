@@ -9,7 +9,11 @@
 
   <div class="mb-4">
     <%= form.label :project, "#{t("activerecord.models.project")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.select :project_id, Project.pluck(:name, :id).map { |name, id| [name.capitalize, id] }, {}, {data: { controller: 'slim' } } %>
+    <%= form.select :project_id, 
+      Project.pluck(:name, :id).map { |name, id| [name.capitalize, id] },
+      {include_blank: t("custom.label.select", model: t("activerecord.models.project")).capitalize},
+      {data: { controller: 'slim' } }
+    %>
     <% @site_group.errors.full_messages_for(:project).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>

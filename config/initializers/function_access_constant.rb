@@ -9,6 +9,7 @@ module FunctionAccessConstant
   # Function access site data
   FA_DEPARTMENT = "FA_DEPARTMENT"
   FA_SITE_GROUP = "FA_SITE_GROUP"
+  FA_SITE = "FA_SITE"
 
   freeze
 end
