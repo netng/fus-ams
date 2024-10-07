@@ -1,0 +1,23 @@
+<%= tag.tr id: dom_id(component), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+  <td class="sticky left-0 py-3 px-4 bg-white border-r border-gray-300">
+    <div class="flex items-center space-x-4">
+      <%= check_box_tag "component_ids[]",
+        component.id,
+        nil,
+        {
+          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-200",
+          multiple: true,
+          form: :component_table,
+          data: {
+            table_target: "childCheckbox",
+            action: "change->table#toggleParentCheckbox"
+          }
+        }
+       %>
+      <%= link_to "#{t("custom.label.edit")}", edit_admin_component_path(component), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
+    </div>
+  </td>
+  <td class="py-3 px-6 text-left"><%= component.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= component.component_type.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= component.description.blank? ? "-" : component.description %></td>
+<% end %>
