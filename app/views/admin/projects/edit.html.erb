@@ -3,3 +3,5 @@
 </h2>
 
 <%= render "form", project: @project %>
+
+<% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.project")).capitalize) %>

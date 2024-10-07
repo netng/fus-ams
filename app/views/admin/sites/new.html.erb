@@ -3,3 +3,5 @@
 </h2>
 
 <%= render "form", site: @site %>
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.site")).capitalize) %>

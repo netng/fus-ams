@@ -1,2 +1,4 @@
 <h2 class="text-2xl font-bold text-gray-600 mb-8"><%= t("custom.label.edit_form", model: t("activerecord.models.site_stat")).capitalize %></h2>
 <%= render "form", site_stat: @site_stat %>
+
+<% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.site_stat")).capitalize) %>

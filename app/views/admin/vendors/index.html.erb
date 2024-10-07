@@ -5,3 +5,5 @@
   <%= render "table" %>
   <%= render "destroy_button" %>
 </div>
+
+<% content_for(:title, t("custom.label.asset_index_header", model: t("activerecord.models.vendor")).capitalize) %>
