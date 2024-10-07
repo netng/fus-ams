@@ -8,12 +8,16 @@ en:
       vendor: Vendor
       department: Department
       site_stat: Site stat
+      project: Project
+
     attributes:
       role:
         name: Name
+
       brand:
         name: Name
         description: Description
+        
       vendor:
         name: Name
         address1: Address 1
@@ -25,11 +29,17 @@ en:
         contact_person: Contact person
         email: Email
         description: Description
+
       department:
         name: Name
         floor: Floor
         description: Description
+
       site_stat:
+        name: Name
+        description: Description
+
+      project:
         name: Name
         description: Description
 
