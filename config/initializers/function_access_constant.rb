@@ -13,6 +13,7 @@ module FunctionAccessConstant
 
   # Function access asset and component
   FA_ASS_COM_SOFTWARE = "FA_ASS_COM_SOFTWARE"
+  FA_ASS_COM_COMPONENT_TYPE = "FA_ASS_COM_COMPONENT_TYPE"
 
   freeze
 end
