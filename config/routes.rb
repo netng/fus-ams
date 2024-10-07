@@ -61,5 +61,11 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :softwares do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
   end
 end
