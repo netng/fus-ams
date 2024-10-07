@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  component_type: one
+  description: MyString
+  created_by: MyString
+  request_id: MyString
+  user_agent: MyString
+  ip_address: MyString
+
+two:
+  name: MyString
+  component_type: two
+  description: MyString
+  created_by: MyString
+  request_id: MyString
+  user_agent: MyString
+  ip_address: MyString

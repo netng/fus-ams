@@ -13,6 +13,7 @@ en:
       site: Site
       software: Software
       component_type: Component type
+      component: Component
 
     attributes:
       role:
@@ -60,6 +61,10 @@ en:
         description: Description
       
       component_type:
+        name: Name
+        description: Description
+
+      component:
         name: Name
         description: Description
 
