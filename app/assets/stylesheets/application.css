@@ -8,3 +8,5 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ @import url("https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.css");

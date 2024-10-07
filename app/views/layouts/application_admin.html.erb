@@ -7,7 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -109,7 +108,7 @@
     <%= render "shared/navbar" %>
     <main class="mt-8 flex pt-16 bg-slate-50 min-h-screen">
       <%= render "shared/sidebar" %>
-      <div class="main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12">
+      <div id="main-content" class="main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12">
         <%= render "shared/flash" %>
         <%= yield %>
       </div>

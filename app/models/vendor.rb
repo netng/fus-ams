@@ -1,8 +1,13 @@
 class Vendor < ApplicationRecord
   include Trackable
   include Downcaseable
-
-  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
+  
+  downcase_fields :email
+  downcase_fields :contact_person
+  downcase_fields :city
+  downcase_fields :name
+  
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :address1, length: { maximum: 500 }
   validates :address2, length: { maximum: 500 }
   validates :city, length: { maximum: 100 }
@@ -13,10 +18,6 @@ class Vendor < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }, allow_nil: true
   validates :description, length: { maximum: 500 }
 
-  downcase_fields :email
-  downcase_fields :contact_person
-  downcase_fields :city
-  downcase_fields :name
 
 
   def self.ransackable_attributes(auth_object = nil)

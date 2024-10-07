@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_04_053646) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_07_045408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -156,6 +156,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_04_053646) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["name"], name: "index_sites_on_name", unique: true
     t.index ["site_group_id"], name: "index_sites_on_site_group_id"
     t.index ["site_stat_id"], name: "index_sites_on_site_stat_id"
@@ -179,6 +180,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_04_053646) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_vendors_on_name", unique: true
+    t.index ["phone_number", "fax_number", "contact_person", "email"], name: "idx_on_phone_number_fax_number_contact_person_email_34185d41f8"
   end
 
   add_foreign_key "accounts", "roles"

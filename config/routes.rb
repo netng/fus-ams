@@ -36,5 +36,30 @@ Rails.application.routes.draw do
         delete "destroy_many"
       end
     end
+
+    resources :site_stats do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
+    resources :projects do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
+    resources :site_groups do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
+    resources :sites do
+      collection do
+        delete "destroy_many"
+      end
+    end
+
   end
 end

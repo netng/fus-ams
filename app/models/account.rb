@@ -9,14 +9,10 @@ class Account < ApplicationRecord
   downcase_fields :email
   downcase_fields :username
 
-  validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9\-.]+\z/, message: I18n.t("custom.errors.invalid_username_format") }
+  validates :username, presence: true, uniqueness: { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9\-.]+\z/, message: I18n.t("custom.errors.invalid_username_format") }
   
-  validates :password, length: { minimum: 3 }, if: :password_changed?
+  validates :password, length: { minimum: 3 }, unless: -> { password.blank? }
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
 
-  private
-    def password_changed?
-      return if password.blank?
-    end
 end

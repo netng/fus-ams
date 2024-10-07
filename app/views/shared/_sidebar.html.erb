@@ -30,8 +30,15 @@
     <div class="mt-4 px-4">
       <h3 class="font-semibold text-white">Location</h3>
       <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Project</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Site</a></li>
+        <li>
+          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline", data: { turbo_target: "main-content" } %>
+        </li>
+        <li>
+          <%= link_to t("activerecord.models.site_group"), admin_site_groups_path, class: "px-2 text-white hover:underline" %>
+        </li>
+        <li>
+          <%= link_to t("activerecord.models.site"), admin_sites_path, class: "px-2 text-white hover:underline" %>
+        </li>
         <li>
           <%= link_to t("activerecord.models.department"), admin_departments_path, class: "px-2 text-white hover:underline" %>
         </li>
@@ -46,6 +53,9 @@
         </li>
         <li>
           <%= link_to t("activerecord.models.vendor"), admin_vendors_path, class: "px-2 text-white hover:underline" %>
+        </li>
+        <li>
+          <%= link_to t("activerecord.models.site_stat"), admin_site_stats_path, class: "px-2 text-white hover:underline" %>
         </li>
       </ul>
     </div>

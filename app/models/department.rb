@@ -2,12 +2,13 @@ class Department < ApplicationRecord
   include Trackable
   include Downcaseable
 
-  validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
+  downcase_fields :name
+  downcase_fields :floor
+  
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :floor, length: { maximum: 100 }
   validates :description, length: { maximum: 500 }
 
-  downcase_fields :name
-  downcase_fields :floor
 
   def self.ransackable_associations(auth_object = nil)
     []
