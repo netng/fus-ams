@@ -92,7 +92,7 @@ module Admin
       end
 
       def set_function_access_code
-				@function_access_code = FunctionAccessConstant::FA_SITE
+				@function_access_code = FunctionAccessConstant::FA_LOC_SITE
       end
   end
 end
