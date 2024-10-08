@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_07_082255) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_08_014129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -32,6 +32,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_07_082255) do
     t.boolean "default"
     t.index ["role_id"], name: "index_accounts_on_role_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true
+  end
+
+  create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_asset_types_on_name", unique: true
   end
 
   create_table "brands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
