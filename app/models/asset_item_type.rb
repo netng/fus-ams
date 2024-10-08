@@ -1,8 +1,8 @@
-class AssetType < ApplicationRecord
+class AssetItemType < ApplicationRecord
   include Trackable
   include Downcaseable
 
-  has_many :asset_item_types, dependent: :restrict_with_error
+  belongs_to :asset_type
 
   downcase_fields :name
 
@@ -10,10 +10,10 @@ class AssetType < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   def self.ransackable_associations(auth_object = nil)
-    []
+    ["asset_type"]
   end
-
+  
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "created_by", "description", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
+    ["asset_type_id", "created_at", "created_by", "description", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
   end
 end
