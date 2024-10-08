@@ -14,7 +14,8 @@ en:
       software: Software
       component_type: Component type
       component: Component
-      asset_type: Asset types
+      asset_type: Asset type
+      asset_item_type: Asset item type
 
     attributes:
       role:
@@ -70,6 +71,10 @@ en:
         description: Description
 
       asset_type:
+        name: Name
+        description: Description
+
+      asset_item_type:
         name: Name
         description: Description
 
