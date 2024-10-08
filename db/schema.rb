@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_08_021808) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_08_032436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -46,6 +46,24 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_08_021808) do
     t.datetime "updated_at", null: false
     t.index ["asset_type_id"], name: "index_asset_item_types_on_asset_type_id"
     t.index ["name"], name: "index_asset_item_types_on_name", unique: true
+  end
+
+  create_table "asset_models", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.uuid "brand_id", null: false
+    t.uuid "asset_type_id", null: false
+    t.uuid "asset_item_type_id", null: false
+    t.string "description"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_item_type_id"], name: "index_asset_models_on_asset_item_type_id"
+    t.index ["asset_type_id"], name: "index_asset_models_on_asset_type_id"
+    t.index ["brand_id"], name: "index_asset_models_on_brand_id"
+    t.index ["name"], name: "index_asset_models_on_name", unique: true
   end
 
   create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -249,6 +267,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_08_021808) do
 
   add_foreign_key "accounts", "roles"
   add_foreign_key "asset_item_types", "asset_types"
+  add_foreign_key "asset_models", "asset_item_types"
+  add_foreign_key "asset_models", "asset_types"
+  add_foreign_key "asset_models", "brands"
   add_foreign_key "components", "component_types"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"

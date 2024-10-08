@@ -2,6 +2,8 @@ class Brand < ApplicationRecord
   include Trackable
   include Downcaseable
 
+  has_many :asset_models, dependent: :restrict_with_error
+
   validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :description, length: { maximum: 500 }
 

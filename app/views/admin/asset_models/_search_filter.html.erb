@@ -1,0 +1,48 @@
+<div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+  <%= search_form_for [:admin, @q], url: admin_asset_models_path, data: { 
+    controller: "filters",
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-asset_model"
+  } do |f| %>
+
+    <div class="md:flex gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.asset_model.name')}", class: "block text-gray-700" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.models.brand')}", class: "block text-gray-700" %>
+        <%= f.select :brand_name_cont,
+          Brand.pluck(:name).map { |name| [name.capitalize]},
+          {include_blank: t("custom.label.all", model: t("activerecord.models.brand")).capitalize},
+          data: { action: "filters#submit", controller: "slim" },
+          class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.models.asset_type')}", class: "block text-gray-700" %>
+        <%= f.select :asset_type_name_cont,
+          AssetType.pluck(:name).map { |name| [name.capitalize]},
+          {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
+          data: { action: "filters#submit", controller: "slim" },
+          class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.models.asset_item_type')}", class: "block text-gray-700" %>
+        <%= f.select :asset_item_type_name_cont,
+          @asset_item_types.pluck(:name).map { |name| [name.capitalize]},
+          {include_blank: t("custom.label.all", model: t("activerecord.models.asset_item_type")).capitalize},
+          data: { action: "filters#submit", controller: "slim" },
+          class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        %>
+      </div>
+    </div>
+    
+  <% end %>
+
+</div>
