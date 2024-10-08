@@ -19,7 +19,9 @@
     <div class="mt-4 px-4">
       <h3 class="font-semibold text-white">Asset and Component</h3>
       <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Asset type</a></li>
+        <li>
+          <%= link_to t("activerecord.models.asset_type"), admin_asset_types_path, class: "px-2 text-white hover:underline" %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Asset item type</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Asset model</a></li>
         <li>
