@@ -1,5 +1,3 @@
-<%= turbo_frame_tag "form" do %>
-  <%= render "shared/flash" %>
   <h2 class="font-bold text-gray-600 text-xl mb-4">
     <%= t("custom.label.default_index_header", model: t("activerecord.models.asset_model")).capitalize %>
   </h2>
@@ -11,6 +9,5 @@
     
     <%= render "destroy_button" %>
   </div>
-<% end %>
 
 <% content_for(:title, t("custom.label.default_index_header", model: t("activerecord.models.asset_model")).capitalize) %>

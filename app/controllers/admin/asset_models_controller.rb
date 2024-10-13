@@ -2,7 +2,7 @@ module Admin
   class AssetModelsController < ApplicationAdminController
     before_action :set_asset_model, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
-    before_action :find_dependent
+    before_action :find_dependent, only: [:index]
 
     def index
       authorize :authorization, :index?
@@ -12,10 +12,6 @@ module Admin
 			@pagy, @asset_models = pagy(scope)
 
       @asset_item_types = @asset_type&.asset_item_types || []
-      puts "Asset type: #{@asset_type}"
-      puts "Asset item types : #{@asset_item_types}"
-      p @asset_item_types
-      puts "Params #{params[:q][:asset_type_name_cont]}" if params[:q].present?
     end
 
     def new
@@ -90,12 +86,15 @@ module Admin
     def asset_item_types
       authorize :authorization, :read?
 
-      if params[:asset_type].present?
-        asset_type = AssetType.find_by_name(params[:asset_type].downcase)
+      if params[:query].present?
+        puts "====== ASSET ITEM TYPES =========="
+        query = params[:query].downcase
+        asset_type = AssetType.find_by_name(query)
+        # asset_item_types = asset_type.asset_item_types.where("name ILIKE ?", "%#{query}%")
         asset_item_types = asset_type.asset_item_types
         render json: asset_item_types.pluck(:id, :name).map { |id, name| { id: id, name: name.capitalize } }
       else
-        render json: []
+        render json: [] 
       end
     end
 
