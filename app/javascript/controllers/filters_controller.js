@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="filters"
 export default class extends Controller {
   static outlets = ["table"]
+  static targets = ["form"];
 
   static values = {
     delay: {
@@ -12,9 +13,7 @@ export default class extends Controller {
   }
 
   connect() {
-    console.log("Filters controller connected")
     if (this.delayValue) {
-      console.log(this.delayValue)
       this.submit = this.debounce(this.submit.bind(this), this.delayValue) 
     }
   }
@@ -29,13 +28,17 @@ export default class extends Controller {
   }
 
   submit(event) {
-    console.log(this.delayValue)
-    console.log("search...")
     this.element.requestSubmit()
     this.resetDeleteButton()
   }
 
   resetDeleteButton() {
     this.tableOutlets.forEach(table => table.resetDeleteButton())
+  }
+
+  nextFrame(event) {
+    const form = this.formTarget;
+    form.dataset.turboFrame = event.params.frame; // load the next frame
+    form.requestSubmit();                         // after submitting the form
   }
 }

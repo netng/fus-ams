@@ -16,6 +16,7 @@ en:
       component: Component
       asset_type: Asset type
       asset_item_type: Asset item type
+      asset_model: Asset model
 
     attributes:
       role:
@@ -75,6 +76,10 @@ en:
         description: Description
 
       asset_item_type:
+        name: Name
+        description: Description
+
+      asset_model:
         name: Name
         description: Description
 

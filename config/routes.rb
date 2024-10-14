@@ -91,6 +91,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :asset_models do
+      collection do
+        delete "destroy_many"
+        get "asset_item_types"
+      end
+    end
 
   end
 end
