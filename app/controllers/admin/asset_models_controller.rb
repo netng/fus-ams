@@ -8,7 +8,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = AssetModel.ransack(params[:q])
-			scope = @q.result.includes(:brand, :asset_type, :asset_item_type)
+			scope = @q.result.includes(:brand, :asset_type, :asset_item_type).order(created_at: :desc)
 			@pagy, @asset_models = pagy(scope)
 
       @asset_item_types = @asset_type&.asset_item_types || []
@@ -18,12 +18,14 @@ module Admin
       authorize :authorization, :create?
 
       @asset_model = AssetModel.new
+      @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
     end
 
     def create
       authorize :authorization, :create?
 
       @asset_model = AssetModel.new(asset_model_params)
+      @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
 
       respond_to do |format|
         if @asset_model.save
@@ -36,6 +38,7 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @asset_item_types = @asset_model.asset_type.asset_item_types.pluck(:name, :id).map { |name, id| [name.capitalize, id] }
 
     end
 
@@ -87,10 +90,8 @@ module Admin
       authorize :authorization, :read?
 
       if params[:query].present?
-        puts "====== ASSET ITEM TYPES =========="
         query = params[:query].downcase
         asset_type = AssetType.find_by_name(query)
-        # asset_item_types = asset_type.asset_item_types.where("name ILIKE ?", "%#{query}%")
         asset_item_types = asset_type.asset_item_types
         render json: asset_item_types.pluck(:id, :name).map { |id, name| { id: id, name: name.capitalize } }
       else
