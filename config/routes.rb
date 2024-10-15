@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     resources :vendors do
       collection do
         delete "destroy_many"
+        get "import"
+        post "process_import"
       end
     end
 

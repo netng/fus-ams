@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_08_032436) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_15_044611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -249,7 +249,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_08_032436) do
     t.text "address1"
     t.text "address2"
     t.string "city"
-    t.integer "postal_code"
+    t.string "postal_code"
     t.string "phone_number"
     t.string "fax_number"
     t.string "contact_person"
@@ -261,7 +261,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_08_032436) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_vendors_on_name", unique: true
+    t.string "id_vendor"
+    t.index ["id_vendor"], name: "index_vendors_on_id_vendor", unique: true
+    t.index ["name"], name: "index_vendors_on_name"
     t.index ["phone_number", "fax_number", "contact_person", "email"], name: "idx_on_phone_number_fax_number_contact_person_email_34185d41f8"
   end
 

@@ -33,7 +33,7 @@
 
   <div class="mb-4">
     <%= form.label :postal_code, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.number_field :postal_code, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.text_field :postal_code, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
     <% @vendor.errors.full_messages_for(:postal_code).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>

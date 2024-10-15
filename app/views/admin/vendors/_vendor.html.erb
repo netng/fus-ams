@@ -17,9 +17,9 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_vendor_path(vendor), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= vendor.name %></td>
+  <td class="py-3 px-6 text-left"><%= vendor.name.titleize %></td>
   <td class="py-3 px-6 text-left"><%= vendor.phone_number.blank? ? "-" : vendor.phone_number %></td>
   <td class="py-3 px-6 text-left"><%= vendor.fax_number.blank? ? "-" : vendor.fax_number %></td>
-  <td class="py-3 px-6 text-left"><%= vendor.contact_person.blank? ? "-" : vendor.contact_person %></td>
+  <td class="py-3 px-6 text-left"><%= vendor.contact_person.blank? ? "-" : vendor.contact_person.titleize %></td>
   <td class="py-3 px-6 text-left"><%= vendor.email.blank? ? "-" : vendor.email %></td>
 <% end %>
