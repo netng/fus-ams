@@ -7,7 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Vendor.ransack(params[:q])
-			scope = @q.result
+			scope = @q.result.order(name: :asc)
 			@pagy, @vendors = pagy(scope)
     end
 
@@ -78,6 +78,81 @@ module Admin
 					end
 				end
 			end
+    end
+
+    def import
+      authorize :authorization, :create?
+      @vendor = Vendor.new
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      file = params[:file]
+      creation_failed = false
+      vendor = nil
+
+      if file.present?
+
+        # buka file menggunakan roo
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        # ambil sheet pertama
+        sheet = xlsx.sheet(0)
+
+        vendor_attributes_headers = {
+          id_vendor: 'Vendor Id',
+          name: 'Name',
+          address1: 'Address1',
+          address2: 'Address2',
+          city: 'City',
+          postal_code: 'Postal code',
+          phone_number: 'Phone number',
+          fax_number: 'Fax number',
+          contact_person: 'Contact person',
+          email: 'Email',
+          description: 'Description'
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(vendor_attributes_headers).each do |row|
+  
+              vendor = Vendor.new(
+                id_vendor: row[:id_vendor],
+                name: row[:name],
+                address1: row[:address1],
+                address2: row[:address2],
+                city: row[:city],
+                postal_code: row[:postal_code],
+                phone_number: row[:phone_number],
+                fax_number: row[:fax_number],
+                contact_person: row[:contact_person],
+                email: row[:email],
+                description: row[:description]
+              )
+  
+              unless vendor.save
+                creation_failed = true
+                break
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_vendors_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            if creation_failed
+              error_message = vendor.errors.details
+              format.html { redirect_to import_admin_vendors_path, alert: error_message }
+            else
+              format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.vendor")) }
+            end
+          end
+        end
+      else
+        redirect_back_or_to import_admin_vendors_path, alert: t("custom.flash.alerts.select_file")
+      end
     end
 
 

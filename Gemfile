@@ -73,3 +73,5 @@ gem "ransack", "~> 4.2"
 gem "dotenv", "~> 3.1"
 
 gem "pundit", "~> 2.4"
+
+gem "roo", "~> 2.10"

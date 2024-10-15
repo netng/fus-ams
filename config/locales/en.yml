@@ -27,6 +27,7 @@ en:
         description: Description
         
       vendor:
+        id_vendor: Vendor ID
         name: Name
         address1: Address 1
         address2: Address 2
@@ -310,11 +311,13 @@ en:
       is_registered: Already have an account?
       username: Username
       email: Email
+      importing: Importing data. Please wait...
       name: Nama
       description: Deskripsi
       password: Password
       forgot_password: Forgot password?
       back: Back
+      upload: Upload
       save: Save
       cancel: Cancel
       search: Cari
@@ -325,6 +328,7 @@ en:
       update: Perbaharui
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
+      import_form: Import data
       default_new_form: "%{model} registration"
       filter: Filter
       confirm:
@@ -339,12 +343,14 @@ en:
     errors:
       invalid_code_format: hanya boleh huruf dan angka tanpa spasi
       delete_restriction_error: Gagal menghapus karena data digunakan pada tabel %{model}
+      invalid_import_template: "Header template invalid: %{errors}"
     
     flash:
       alerts:
         invalid_credential: Incorrect username or password
         require_authentication: The page you want to access was not found
         select_on_or_more: Silakan pilih setidaknya satu data
+        select_file: Please select file
         failed:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data
@@ -353,6 +359,7 @@ en:
           logged_in: Berhasil login
           updated: "%{model} successfully updated"
           created: "%{model} successfully created"
+          imported: "%{model}'s successfully imported"
           destroyed: "Selected %{model} successfully deleted"
   
   pundit:
