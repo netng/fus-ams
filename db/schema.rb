@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_15_044611) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_15_083236) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -87,7 +87,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_15_044611) do
     t.string "request_id"
     t.string "user_agent"
     t.string "ip_address"
-    t.index ["name"], name: "index_brands_on_name", unique: true
+    t.string "id_brand"
+    t.index ["id_brand"], name: "index_brands_on_id_brand", unique: true
+    t.index ["name"], name: "index_brands_on_name"
   end
 
   create_table "component_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -213,6 +215,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_15_044611) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "id_site_stat"
+    t.index ["id_site_stat"], name: "index_site_stats_on_id_site_stat", unique: true
     t.index ["name"], name: "index_site_stats_on_name", unique: true
   end
 

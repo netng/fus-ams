@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     resources :brands do
       collection do
         delete "destroy_many"
+        get "import"
+        post "process_import"
       end
     end
 
@@ -42,6 +44,8 @@ Rails.application.routes.draw do
     resources :site_stats do
       collection do
         delete "destroy_many"
+        get "import"
+        post "process_import"
       end
     end
 

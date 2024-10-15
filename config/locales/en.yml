@@ -23,6 +23,7 @@ en:
         name: Name
 
       brand:
+        id_brand: Brand ID
         name: Name
         description: Description
         
@@ -45,6 +46,7 @@ en:
         description: Description
 
       site_stat:
+        id_site_stat: Asset status ID
         name: Name
         description: Description
 
@@ -344,6 +346,7 @@ en:
       invalid_code_format: hanya boleh huruf dan angka tanpa spasi
       delete_restriction_error: Gagal menghapus karena data digunakan pada tabel %{model}
       invalid_import_template: "Header template invalid: %{errors}"
+      invalid_allowed_extension: "File extension is not valid"
     
     flash:
       alerts:

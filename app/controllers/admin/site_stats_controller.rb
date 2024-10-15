@@ -81,9 +81,71 @@ module Admin
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+      creation_failed = false
+      site_stat = nil
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_brands_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        # buka file menggunakan roo
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        # ambil sheet pertama
+        sheet = xlsx.sheet(0)
+
+        site_stat_attributes_headers = {
+          id_site_stat: 'Site stat id',
+          name: 'Name',
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(site_stat_attributes_headers).each do |row|
+  
+              site_stat = SiteStat.new(
+                id_site_stat: row[:id_site_stat],
+                name: row[:name],
+                description: row[:description]
+              )
+  
+              unless site_stat.save
+                creation_failed = true
+                break
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_site_stats_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            if creation_failed
+              error_message = site_stat.errors.details
+              format.html { redirect_to import_admin_site_stats_path, alert: error_message }
+            else
+              format.html { redirect_to admin_site_stats_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.site_stat")) }
+            end
+          end
+        end
+      else
+        redirect_back_or_to import_admin_site_stats_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
     private
       def site_stat_params
-        params.expect(site_stat: [ :name, :description ])
+        params.expect(site_stat: [ :id_site_stat, :name, :description ])
       end
 
       def set_site_stat

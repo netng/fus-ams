@@ -1,4 +1,12 @@
 <%= form_with model: [:admin, vendor] do |form| %>
+    <div class="mb-4">
+    <%= form.label :id_vendor, "#{t("activerecord.attributes.vendor.id_vendor")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :id_vendor, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <% @vendor.errors.full_messages_for(:id_vendor).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
   <div class="mb-4">
     <%= form.label :name, "#{t("activerecord.attributes.vendor.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
     <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>

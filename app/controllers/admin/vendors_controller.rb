@@ -82,16 +82,20 @@ module Admin
 
     def import
       authorize :authorization, :create?
-      @vendor = Vendor.new
     end
 
     def process_import
       authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
       file = params[:file]
       creation_failed = false
       vendor = nil
 
       if file.present?
+
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_brands_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
 
         # buka file menggunakan roo
         xlsx = Roo::Spreadsheet.open(file.path)
@@ -100,7 +104,7 @@ module Admin
         sheet = xlsx.sheet(0)
 
         vendor_attributes_headers = {
-          id_vendor: 'Vendor Id',
+          id_vendor: 'Vendor id',
           name: 'Name',
           address1: 'Address1',
           address2: 'Address2',
@@ -159,7 +163,7 @@ module Admin
     private
 
       def vendor_params
-        params.require(:vendor).permit(:name, :address1, :address2, :city, :postal_code, :phone_number, :fax_number, :contact_person, :email, :description)
+        params.require(:vendor).permit(:id_vendor, :name, :address1, :address2, :city, :postal_code, :phone_number, :fax_number, :contact_person, :email, :description)
       end
 
       def set_vendor

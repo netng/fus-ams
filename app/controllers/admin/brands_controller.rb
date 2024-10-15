@@ -8,7 +8,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Brand.ransack(params[:q])
-			scope = @q.result
+			scope = @q.result.order(name: :asc)
 			@pagy, @brands = pagy(scope)
     end
 
@@ -81,9 +81,72 @@ module Admin
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+      creation_failed = false
+      brand = nil
+
+      if file.present?
+
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_brands_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        # buka file menggunakan roo
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        # ambil sheet pertama
+        sheet = xlsx.sheet(0)
+
+        brand_attributes_headers = {
+          id_brand: 'Brand id',
+          name: 'Name',
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(brand_attributes_headers).each do |row|
+  
+              brand = Brand.new(
+                id_brand: row[:id_brand],
+                name: row[:name],
+                description: row[:description]
+              )
+  
+              unless brand.save
+                creation_failed = true
+                break
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_brands_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            if creation_failed
+              error_message = brand.errors.details
+              format.html { redirect_to import_admin_brands_path, alert: error_message }
+            else
+              format.html { redirect_to admin_brands_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.brand")) }
+            end
+          end
+        end
+      else
+        redirect_back_or_to import_admin_brands_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
     private
       def brand_params
-        params.require(:brand).permit(:name, :description)
+        params.require(:brand).permit(:id_brand, :name, :description)
       end
 
       def set_brand
