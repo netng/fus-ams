@@ -72,6 +72,7 @@ en:
         description: Description
       
       component_type:
+        id_component_type: Component type ID
         name: Name
         description: Description
 
