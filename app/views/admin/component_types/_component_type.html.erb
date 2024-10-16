@@ -17,6 +17,7 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_component_type_path(component_type), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= component_type.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= component_type.id_component_type %></td>
+  <td class="py-3 px-6 text-left"><%= component_type.name %></td>
   <td class="py-3 px-6 text-left"><%= component_type.description.blank? ? "-" : component_type.description %></td>
 <% end %>
