@@ -44,7 +44,7 @@ module Admin
 				if @site_stat.update(site_stat_params)
 					format.html { redirect_to admin_site_stats_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.site_stat")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end

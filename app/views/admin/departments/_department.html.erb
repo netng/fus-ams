@@ -17,6 +17,7 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_department_path(department), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
+  <td class="py-3 px-6 text-left"><%= department.id_department %></td>
   <td class="py-3 px-6 text-left"><%= department.name %></td>
   <td class="py-3 px-6 text-left"><%= department.floor.blank? ? "-" : department.floor %></td>
   <td class="py-3 px-6 text-left"><%= department.description.blank? ? "-" : department.description %></td>

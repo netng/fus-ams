@@ -41,6 +41,7 @@ en:
         description: Description
 
       department:
+        id_department: Department ID
         name: Name
         floor: Floor
         description: Description
@@ -319,7 +320,7 @@ en:
       password: Password
       forgot_password: Forgot password?
       back: Back
-      upload: Upload
+      upload: Submit
       save: Save
       cancel: Cancel
       search: Cari

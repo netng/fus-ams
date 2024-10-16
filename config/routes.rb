@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     resources :departments do
       collection do
         delete "destroy_many"
+        get "import"
+        post "process_import"
       end
     end
 

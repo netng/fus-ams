@@ -44,7 +44,7 @@ module Admin
 				if @brand.update(brand_params)
 					format.html { redirect_to admin_brands_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.brand")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end
