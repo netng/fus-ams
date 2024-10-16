@@ -70,6 +70,8 @@ Rails.application.routes.draw do
     resources :sites do
       collection do
         delete "destroy_many"
+        get "import"
+        post "process_import"
       end
     end
 
