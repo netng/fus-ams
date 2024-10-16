@@ -17,6 +17,7 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_project_path(project), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= project.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= project.id_project %></td>
+  <td class="py-3 px-6 text-left"><%= project.name %></td>
   <td class="py-3 px-6 text-left"><%= project.description.blank? ? "-" : project.description %></td>
 <% end %>
