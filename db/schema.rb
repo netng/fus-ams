@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_16_021626) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_16_023554) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -206,7 +206,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_16_021626) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_site_groups_on_name", unique: true
+    t.string "id_site_group", null: false
+    t.index ["id_site_group"], name: "index_site_groups_on_id_site_group", unique: true
+    t.index ["name"], name: "index_site_groups_on_name"
     t.index ["project_id"], name: "index_site_groups_on_project_id"
   end
 

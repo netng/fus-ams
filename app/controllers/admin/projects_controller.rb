@@ -57,25 +57,20 @@ module Admin
       authorize :authorization, :destroy?
 
       project_ids = params[:project_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				projects = Project.where(id: project_ids)
 
 				projects.each do |project|
 					unless project.destroy
-						deletion_failed = true
-						break
+						error_message = project.errors.full_messages.join("")
+            redirect_to admin_projects_path, alert: "#{error_message} - #{t('activerecord.models.project')} id: #{project.id_project}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = projects.map { |project| project.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_projects_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.project")) }
-					end
+					format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.project")) }
 				end
 			end
     end
@@ -88,8 +83,6 @@ module Admin
       authorize :authorization, :create?
       allowed_extension = [".xlsx", ".csv"]
       file = params[:file]
-      creation_failed = false
-      project = nil
 
       if file.present?
         if !allowed_extension.include?(File.extname(file.original_filename))
@@ -119,8 +112,14 @@ module Admin
               )
   
               unless project.save
-                creation_failed = true
-                break
+                error_message = project.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_projects_path, alert: error_message
+                raise ActiveRecord::Rollback
               end
             end
           rescue Roo::HeaderRowNotFoundError => e
@@ -129,12 +128,7 @@ module Admin
           end
 
           respond_to do |format|
-            if creation_failed
-              error_message = project.errors.details
-              format.html { redirect_to import_admin_projects_path, alert: error_message }
-            else
-              format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.project")) }
-            end
+            format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.project")) }
           end
         end
       else

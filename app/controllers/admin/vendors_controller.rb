@@ -57,25 +57,19 @@ module Admin
       authorize :authorization, :destroy?
 
       vendor_ids = params[:vendor_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				vendors = Vendor.where(id: vendor_ids)
 
 				vendors.each do |vendor|
 					unless vendor.destroy
-						deletion_failed = true
-						break
+            redirect_to admin_vendors_path, alert: "#{vendor.errors.full_messages.join("")} - #{t('activerecord.models.vendor')} id: #{vendor.id_vendor}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = vendors.map { |vendor| vendor.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_vendors_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.vendor")) }
-					end
+					format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.vendor")) }
 				end
 			end
     end
@@ -88,8 +82,6 @@ module Admin
       authorize :authorization, :create?
       allowed_extension = [".xlsx", ".csv"]
       file = params[:file]
-      creation_failed = false
-      vendor = nil
 
       if file.present?
 
@@ -136,22 +128,22 @@ module Admin
               )
   
               unless vendor.save
-                creation_failed = true
-                break
+                error_message = vendor.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_vendors_path, alert: error_message
+                raise ActiveRecord::Rollback
               end
             end
           rescue Roo::HeaderRowNotFoundError => e
             return redirect_to import_admin_vendors_path, alert: t("custom.errors.invalid_import_template", errors: e)
-
           end
 
           respond_to do |format|
-            if creation_failed
-              error_message = vendor.errors.details
-              format.html { redirect_to import_admin_vendors_path, alert: error_message }
-            else
-              format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.vendor")) }
-            end
+            format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.vendor")) }
           end
         end
       else

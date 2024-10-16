@@ -17,7 +17,8 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_site_group_path(site_group), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= site_group.name.capitalize %></td>
-  <td class="py-3 px-6 text-left"><%= site_group.project.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= site_group.id_site_group %></td>
+  <td class="py-3 px-6 text-left"><%= site_group.name %></td>
+  <td class="py-3 px-6 text-left"><%= site_group.project.name %></td>
   <td class="py-3 px-6 text-left"><%= site_group.description.blank? ? "-" : site_group.description %></td>
 <% end %>
