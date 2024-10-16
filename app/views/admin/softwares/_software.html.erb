@@ -17,6 +17,7 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_software_path(software), data: { turbo_frame: "_top" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= software.name.capitalize %></td>
+  <td class="py-3 px-6 text-left"><%= software.id_software %></td>
+  <td class="py-3 px-6 text-left"><%= software.name %></td>
   <td class="py-3 px-6 text-left"><%= software.description.blank? ? "-" : software.description %></td>
 <% end %>

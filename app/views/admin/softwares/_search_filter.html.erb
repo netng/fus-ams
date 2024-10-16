@@ -7,7 +7,12 @@
     filters_table_outlet: ".table-software"
   } do |f| %>
 
-    <div class="md:flex flex-wrap gap-2">
+    <div class="flex flew-wrap md:flex md:flex-nowrap gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.software.id_software')}", class: "block text-gray-700" %>
+        <%= f.search_field :id_software_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+      </div>
+
       <div class="w-full mb-2">
         <%= f.label "#{t('activerecord.attributes.software.name')}", class: "block text-gray-700" %>
         <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>

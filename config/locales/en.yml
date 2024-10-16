@@ -67,6 +67,7 @@ en:
         description: Description
 
       software:
+        id_software: Software ID
         name: Name
         description: Description
       

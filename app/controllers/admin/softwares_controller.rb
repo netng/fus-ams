@@ -7,7 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Software.ransack(params[:q])
-			scope = @q.result
+			scope = @q.result.order(name: :asc)
 			@pagy, @softwares = pagy(scope)
     end
 
@@ -43,7 +43,7 @@ module Admin
 				if @software.update(software_params)
 					format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.software")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end
@@ -57,34 +57,87 @@ module Admin
       authorize :authorization, :destroy?
 
       software_ids = params[:software_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				softwares = Software.where(id: software_ids)
 
 				softwares.each do |software|
 					unless software.destroy
-						deletion_failed = true
-						break
+            error_message = software.errors.full_messages.join("")
+            redirect_to admin_softwares_path, alert: "#{error_message} - #{t('activerecord.models.software')} id: #{software.id_software}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = softwares.map { |software| software.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_softwares_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.software")) }
-					end
+					format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.software")) }
 				end
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_softwares_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        sheet = xlsx.sheet(0)
+
+        software_attributes_headers = {
+          id_software: "Software id",
+          name: "Name",
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(software_attributes_headers).each do |row|
+  
+              software = Software.new(
+                id_software: row[:id_software],
+                name: row[:name],
+                description: row[:description]
+              )
+  
+              unless software.save
+                error_message = software.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_softwares_path, alert: error_message
+                raise ActiveRecord::Rollback
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_softwares_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.software")) }
+          end
+        end
+      else
+        redirect_back_or_to import_admin_softwares_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
 
     private
 
       def software_params
-        params.expect(software: [ :name, :description ])
+        params.expect(software: [ :id_software, :name, :description ])
       end
 
       def set_software
