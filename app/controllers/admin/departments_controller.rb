@@ -7,7 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Department.ransack(params[:q])
-			scope = @q.result
+			scope = @q.result.order(name: :asc)
 			@pagy, @departments = pagy(scope)
     end
 
@@ -44,7 +44,7 @@ module Admin
 				if @department.update(department_params)
 					format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.department")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end
@@ -81,9 +81,73 @@ module Admin
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+      creation_failed = false
+      department = nil
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_departments_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        # buka file menggunakan roo
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        # ambil sheet pertama
+        sheet = xlsx.sheet(0)
+
+        department_attributes_headers = {
+          id_department: "Department id",
+          name: "Name",
+          floor: "Floor",
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(department_attributes_headers).each do |row|
+  
+              department = Department.new(
+                id_department: row[:id_department],
+                name: row[:name],
+                floor: row[:floor],
+                description: row[:description]
+              )
+  
+              unless department.save
+                creation_failed = true
+                break
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_departments_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            if creation_failed
+              error_message = department.errors.details
+              format.html { redirect_to import_admin_departments_path, alert: error_message }
+            else
+              format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.department")) }
+            end
+          end
+        end
+      else
+        redirect_back_or_to import_admin_departments_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
     private
       def department_params
-        params.expect(department: [ :name, :floor, :description ])
+        params.expect(department: [ :id_department, :name, :floor, :description ])
       end
 
       def set_department

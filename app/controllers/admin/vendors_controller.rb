@@ -43,7 +43,7 @@ module Admin
 				if @vendor.update(vendor_params)
 					format.html { redirect_to admin_vendors_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.vendor")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end

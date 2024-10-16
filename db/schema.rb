@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_15_083236) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_16_014143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -128,7 +128,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_15_083236) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_departments_on_name", unique: true
+    t.string "id_department", null: false
+    t.index ["id_department"], name: "index_departments_on_id_department", unique: true
+    t.index ["name"], name: "index_departments_on_name"
   end
 
   create_table "function_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
