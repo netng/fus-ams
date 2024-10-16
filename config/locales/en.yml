@@ -77,6 +77,7 @@ en:
         description: Description
 
       component:
+        id_component: Component ID
         name: Name
         description: Description
 
