@@ -1,5 +1,13 @@
 <%= form_with model: [:admin, component] do |form| %>
   <div class="mb-4">
+    <%= form.label :id_component, "#{t("activerecord.attributes.component.id_component")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.text_field :id_component, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <% @component.errors.full_messages_for(:id_component).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
     <%= form.label :name, "#{t("activerecord.attributes.component.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
     <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @component.errors.full_messages_for(:name).each do |message| %>

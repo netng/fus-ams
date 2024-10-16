@@ -7,6 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Component.ransack(params[:q])
+      @q.sorts = ['component_type_name asc'] if @q.sorts.empty?
 			scope = @q.result.includes(:component_type)
 			@pagy, @components = pagy(scope)
     end
@@ -43,7 +44,7 @@ module Admin
 				if @component.update(component_params)
 					format.html { redirect_to admin_components_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.component")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end
@@ -57,34 +58,95 @@ module Admin
       authorize :authorization, :destroy?
 
       component_ids = params[:component_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				components = Component.where(id: component_ids)
 
 				components.each do |component|
 					unless component.destroy
-						deletion_failed = true
-						break
+            error_message = component.errors.full_messages.join("")
+            redirect_to admin_components_path, alert: "#{error_message} - #{t('activerecord.models.component')} id: #{component.id_component}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = components.map { |component| component.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_components_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_components_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.component")) }
-					end
+					format.html { redirect_to admin_components_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.component")) }
 				end
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_components_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        sheet = xlsx.sheet(0)
+
+        component_attributes_headers = {
+          id_component: "Component id",
+          name: "Name",
+          component_type: "Component type id",
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(component_attributes_headers).each do |row|
+
+              component_type = ComponentType.find_by_id_component_type(row[:component_type])
+
+              if component_type.nil?
+                redirect_back_or_to import_admin_components_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.component_type"), id: row[:component_type])
+                raise ActiveRecord::Rollback
+              end
+
+              component = Component.new(
+                id_component: row[:id_component],
+                name: row[:name],
+                component_type: component_type,
+                description: row[:description]
+              )
+  
+              unless component.save
+                error_message = component.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_components_path, alert: error_message
+                raise ActiveRecord::Rollback
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_components_path, alert: t("custom.errors.invalid_import_template", errors: e)
+          end
+
+          respond_to do |format|
+            format.html { redirect_to admin_components_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.component")) }
+          end
+        end
+      else
+        redirect_back_or_to import_admin_components_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
 
     private
 
       def component_params
-        params.expect(component: [ :name, :description, :component_type_id ])
+        params.expect(component: [ :id_component, :name, :description, :component_type_id ])
       end
 
       def set_component
