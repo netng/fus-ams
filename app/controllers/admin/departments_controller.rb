@@ -58,25 +58,20 @@ module Admin
       authorize :authorization, :destroy?
 
       department_ids = params[:department_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				departments = Department.where(id: department_ids)
 
 				departments.each do |department|
 					unless department.destroy
-						deletion_failed = true
-						break
+            error_message = department.errors.full_messages.join("")
+            redirect_to admin_departments_path, alert: "#{error_message} - #{t('activerecord.models.department')} id: #{department.id_department}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = departments.map { |department| department.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_departments_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.department")) }
-					end
+					format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.department")) }
 				end
 			end
     end
@@ -89,8 +84,6 @@ module Admin
       authorize :authorization, :create?
       allowed_extension = [".xlsx", ".csv"]
       file = params[:file]
-      creation_failed = false
-      department = nil
 
       if file.present?
         if !allowed_extension.include?(File.extname(file.original_filename))
@@ -122,8 +115,14 @@ module Admin
               )
   
               unless department.save
-                creation_failed = true
-                break
+                error_message = department.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_departments_path, alert: error_message
+                raise ActiveRecord::Rollback
               end
             end
           rescue Roo::HeaderRowNotFoundError => e
@@ -132,12 +131,7 @@ module Admin
           end
 
           respond_to do |format|
-            if creation_failed
-              error_message = department.errors.details
-              format.html { redirect_to import_admin_departments_path, alert: error_message }
-            else
-              format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.department")) }
-            end
+            format.html { redirect_to admin_departments_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.department")) }
           end
         end
       else
