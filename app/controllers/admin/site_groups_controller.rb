@@ -109,14 +109,14 @@ module Admin
               project = Project.find_by_id_project(row[:project])
 
               if project.nil?
-                redirect_back_or_to import_admin_projects_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.project"), id: row[:project])
+                redirect_back_or_to import_admin_site_groups_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.project"), id: row[:project])
                 raise ActiveRecord::Rollback
               end
 
               site_group = SiteGroup.new(
                 id_site_group: row[:id_site_group],
                 name: row[:name],
-                project: Project.find_by_id_project!(row[:project]),
+                project: project,
                 description: row[:description]
               )
   

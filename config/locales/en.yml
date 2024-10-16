@@ -62,6 +62,7 @@ en:
         description: Description
       
       site:
+        id_site: Site ID
         name: Name
         description: Description
 
@@ -333,7 +334,7 @@ en:
       update: Perbaharui
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
-      import_form: Import data
+      import_form: Import data %{model}
       default_new_form: "%{model} registration"
       filter: Filter
       confirm:
