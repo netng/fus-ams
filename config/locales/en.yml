@@ -52,6 +52,7 @@ en:
         description: Description
 
       project:
+        id_project: Project ID
         name: Name
         description: Description
 

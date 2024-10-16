@@ -43,7 +43,7 @@ module Admin
 				if @project.update(project_params)
 					format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.project")) }
 				else
-					format.html { render :new, status: :unprocessable_entity }
+					format.html { render :edit, status: :unprocessable_entity }
 				end
 			end
     end
@@ -80,11 +80,72 @@ module Admin
 			end
     end
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+      creation_failed = false
+      project = nil
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_projects_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        # buka file menggunakan roo
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        # ambil sheet pertama
+        sheet = xlsx.sheet(0)
+
+        project_attributes_headers = {
+          id_project: "Project id",
+          name: "Name",
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(project_attributes_headers).each do |row|
+  
+              project = Project.new(
+                id_project: row[:id_project],
+                name: row[:name],
+                description: row[:description]
+              )
+  
+              unless project.save
+                creation_failed = true
+                break
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_projects_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            if creation_failed
+              error_message = project.errors.details
+              format.html { redirect_to import_admin_projects_path, alert: error_message }
+            else
+              format.html { redirect_to admin_projects_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.project")) }
+            end
+          end
+        end
+      else
+        redirect_back_or_to import_admin_projects_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
 
     private
 
       def project_params
-        params.expect(project: [ :name, :description ])
+        params.expect(project: [ :id_project, :name, :description ])
       end
 
       def set_project
