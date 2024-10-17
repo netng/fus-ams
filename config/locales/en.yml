@@ -342,6 +342,8 @@ en:
       filter: Filter
       confirm:
         to_destroy_many: Are you sure you want to delete all selected data? Deleted data cannot be restored!
+        to_save: Are you sure to save this data?
+        to_import: Are your sure to import this data?
       brand_registration: Asset brand registration
       asset_index_header: Asset %{model}
       default_index_header: "%{model}"

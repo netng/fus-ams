@@ -5,7 +5,13 @@
   </div>
 
   <div class="mt-4">
-    <%= form.submit "#{t('custom.label.upload')}", class: "bg-blue-500 p-2 rounded text-white", data: { turbo_submits_with: t("custom.label.importing") } %>
+    <%= form.submit "#{t('custom.label.upload')}",
+      class: "bg-blue-500 p-2 rounded text-white",
+      data: {
+        turbo_action: "advance",
+        turbo_submits_with: t("custom.label.importing")
+      }
+    %>
   </div>
 <% end %>
 

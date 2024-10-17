@@ -35,6 +35,14 @@ module Admin
     def edit
       authorize :authorization, :update?
 
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(@site_stat, partial: "admin/site_stats/form", locals: { site_stat: @site_stat })
+        end
+        format.html
+      end
+    
+
     end
 
     def update

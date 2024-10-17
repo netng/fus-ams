@@ -14,9 +14,19 @@
       <%= link_to "#{t("custom.label.default_new_form", 
         model: t("activerecord.models.software"))}",
         new_admin_software_path,
+        data: {
+          turbo_action: "advance"
+        },
         class: "bg-blue-500 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
       %>
-      <%= link_to "#{t("custom.label.import_form", model: t("activerecord.models.software"))}", import_admin_softwares_path, class: "bg-green-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-300" %>
+
+      <%= link_to "#{t("custom.label.import_form", model: t("activerecord.models.software"))}",
+        import_admin_softwares_path,
+        data: {
+          turbo_action: "advance"
+        },
+        class: "bg-green-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+      %>
     </div>
 
     

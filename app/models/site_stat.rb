@@ -7,7 +7,7 @@ class SiteStat < ApplicationRecord
   # downcase_fields :name
 
   validates :id_site_stat, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
-  validates :name, presence: true, length: { maximum: 100 }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
 
   validates :description, length: { maximum: 500 }
   
