@@ -7,7 +7,12 @@
     filters_table_outlet: ".table-asset_type"
   } do |f| %>
 
-    <div class="md:flex flex-wrap gap-2">
+    <div class="flex flex-wrap md:flex md:flex-nowrap gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.asset_type.id_asset_type')}", class: "block text-gray-700" %>
+        <%= f.search_field :id_asset_type_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+      </div>
+
       <div class="w-full mb-2">
         <%= f.label "#{t('activerecord.attributes.asset_type.name')}", class: "block text-gray-700" %>
         <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>

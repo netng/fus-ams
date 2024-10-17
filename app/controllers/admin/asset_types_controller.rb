@@ -7,6 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = AssetType.ransack(params[:q])
+      @q.sorts = ["name asc", "id_asset_type asc"] if @q.sorts.empty?
 			scope = @q.result
 			@pagy, @asset_types = pagy(scope)
     end
@@ -57,34 +58,88 @@ module Admin
       authorize :authorization, :destroy?
 
       asset_type_ids = params[:asset_type_ids]
-			deletion_failed = false
 
 			ActiveRecord::Base.transaction do
 				asset_types = AssetType.where(id: asset_type_ids)
 
 				asset_types.each do |asset_type|
 					unless asset_type.destroy
-						deletion_failed = true
-						break
+            error_message = asset_type.errors.full_messages.join("")
+            redirect_to admin_asset_types_path, alert: "#{error_message} - #{t('activerecord.models.asset_type')} id: #{asset_type.id_asset_type}"
+            raise ActiveRecord::Rollback
 					end
 				end
 				
 				respond_to do |format|
-					if deletion_failed
-						error_message = asset_types.map { |asset_type| asset_type.errors.full_messages }.flatten.uniq
-						format.html { redirect_to admin_asset_types_path, alert: error_message.to_sentence }
-					else
-						format.html { redirect_to admin_asset_types_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset_type")) }
-					end
+					format.html { redirect_to admin_asset_types_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset_type")) }
 				end
 			end
     end
 
 
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_asset_types_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        sheet = xlsx.sheet(0)
+
+        asset_type_attributes_headers = {
+          id_asset_type: "Asset type id",
+          name: "Name",
+          description: "Description"
+        }
+
+        ActiveRecord::Base.transaction do
+          begin
+            sheet.parse(asset_type_attributes_headers).each do |row|
+  
+              asset_type = AssetType.new(
+                id_asset_type: row[:id_asset_type],
+                name: row[:name],
+                description: row[:description]
+              )
+  
+              unless asset_type.save
+                error_message = asset_type.errors.details.map do |field, error_details|
+                  error_details.map do |error|
+                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
+                  end
+                end.flatten.join("")
+
+                redirect_to import_admin_asset_types_path, alert: error_message
+                raise ActiveRecord::Rollback
+              end
+            end
+          rescue Roo::HeaderRowNotFoundError => e
+            return redirect_to import_admin_asset_types_path, alert: t("custom.errors.invalid_import_template", errors: e)
+
+          end
+
+          respond_to do |format|
+            format.html { redirect_to admin_asset_types_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset_type")) }
+          end
+        end
+      else
+        redirect_back_or_to import_admin_asset_types_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
     private
 
       def asset_type_params
-        params.expect(asset_type: [ :name, :description ])
+        params.expect(asset_type: [ :id_asset_type, :name, :description ])
       end
 
       def set_asset_type
