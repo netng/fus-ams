@@ -7,7 +7,8 @@ module Admin
       authorize :authorization, :index?
 
       @q = Department.ransack(params[:q])
-			scope = @q.result.order(name: :asc)
+      @q.sorts = ["name asc"] if @q.sorts.empty?
+			scope = @q.result
 			@pagy, @departments = pagy(scope)
     end
 

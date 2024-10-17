@@ -7,6 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = Project.ransack(params[:q])
+      @q.sorts = ["name asc"] if @q.sorts.empty?
 			scope = @q.result
 			@pagy, @projects = pagy(scope)
     end

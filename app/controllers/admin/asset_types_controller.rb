@@ -7,7 +7,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = AssetType.ransack(params[:q])
-      @q.sorts = ["name asc", "id_asset_type asc"] if @q.sorts.empty?
+      @q.sorts = ["name asc"] if @q.sorts.empty?
 			scope = @q.result
 			@pagy, @asset_types = pagy(scope)
     end

@@ -7,7 +7,8 @@ module Admin
       authorize :authorization, :index?
 
       @q = Site.ransack(params[:q])
-			scope = @q.result.includes(:site_stat, :site_group).order(name: :asc)
+      @q.sorts = ["name asc"] if @q.sorts.empty?
+			scope = @q.result.includes(:site_stat, :site_group)
 			@pagy, @sites = pagy(scope)
     end
 
