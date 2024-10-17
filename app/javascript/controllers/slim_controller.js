@@ -6,7 +6,10 @@ import { get } from "@rails/request.js"
 export default class extends Controller {
   connect() {
     this.select = new SlimSelect({
-      select: this.element
+      select: this.element,
+      settings: {
+        allowDeselect: true
+      }
     });
   }
 

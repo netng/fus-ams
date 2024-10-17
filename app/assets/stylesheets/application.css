@@ -10,3 +10,8 @@
  */
 
  @import url("https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.css");
+
+ .sort_link {
+    display: flex;
+    align-items: center;
+ }

@@ -7,8 +7,19 @@ export default class extends Controller {
   static targets = ["parent", "child"]
 
   connect() {
-    this.parentSelect = new SlimSelect({select: this.parentTarget})
-    this.childSelect = new SlimSelect({select: this.childTarget})
+    this.parentSelect = new SlimSelect({
+      select: this.parentTarget,
+      settings: {
+        allowDeselect: true
+      }
+    })
+
+    this.childSelect = new SlimSelect({
+      select: this.childTarget,
+      settings: {
+        allowDeselect: true
+      }
+    })
   }
 
   disconnect() {

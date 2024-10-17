@@ -23,12 +23,12 @@ en:
         name: Name
 
       brand:
-        id_brand: Brand ID
+        id_brand: ID
         name: Name
         description: Description
         
       vendor:
-        id_vendor: Vendor ID
+        id_vendor: ID
         name: Name
         address1: Address 1
         address2: Address 2
@@ -41,48 +41,48 @@ en:
         description: Description
 
       department:
-        id_department: Department ID
+        id_department: ID
         name: Name
         floor: Floor
         description: Description
 
       site_stat:
-        id_site_stat: Asset status ID
+        id_site_stat: ID
         name: Name
         description: Description
 
       project:
-        id_project: Project ID
+        id_project: ID
         name: Name
         description: Description
 
       site_group:
-        id_site_group: Site group ID
+        id_site_group: ID
         name: Name
         description: Description
       
       site:
-        id_site: Site ID
+        id_site: ID
         name: Name
         description: Description
 
       software:
-        id_software: Software ID
+        id_software: ID
         name: Name
         description: Description
       
       component_type:
-        id_component_type: Component type ID
+        id_component_type: ID
         name: Name
         description: Description
 
       component:
-        id_component: Component ID
+        id_component: ID
         name: Name
         description: Description
 
       asset_type:
-        id_asset_type: Asset type ID
+        id_asset_type: ID
         name: Name
         description: Description
 
