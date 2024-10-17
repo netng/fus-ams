@@ -82,6 +82,7 @@ en:
         description: Description
 
       asset_type:
+        id_asset_type: Asset type ID
         name: Name
         description: Description
 
