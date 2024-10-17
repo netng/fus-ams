@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_17_032341) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_17_060755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -44,8 +44,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_17_032341) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "id_asset_item_type", null: false
     t.index ["asset_type_id"], name: "index_asset_item_types_on_asset_type_id"
-    t.index ["name"], name: "index_asset_item_types_on_name", unique: true
+    t.index ["id_asset_item_type"], name: "index_asset_item_types_on_id_asset_item_type", unique: true
+    t.index ["name"], name: "index_asset_item_types_on_name"
   end
 
   create_table "asset_models", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
