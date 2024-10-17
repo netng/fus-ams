@@ -119,6 +119,8 @@ Rails.application.routes.draw do
       collection do
         delete "destroy_many"
         get "asset_item_types"
+        get "import"
+        post "process_import"
       end
     end
 

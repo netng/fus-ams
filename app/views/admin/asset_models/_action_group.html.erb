@@ -10,11 +10,25 @@
       
     </button>
 
-    <%= link_to "#{t("custom.label.default_new_form", 
-      model: t("activerecord.models.asset_model"))}",
-      new_admin_asset_model_path,
-      class: "bg-blue-500 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-    %>
+    <div class="flex gap-2">
+      <%= link_to "#{t("custom.label.default_new_form", 
+        model: t("activerecord.models.asset_model"))}",
+        new_admin_asset_model_path,
+        data: {
+          turbo_action: "advance"
+        },
+        class: "bg-blue-500 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+      %>
+
+      <%= link_to "#{t("custom.label.import_form", model: t("activerecord.models.asset_model"))}",
+        import_admin_asset_models_path,
+        data: {
+          turbo_action: "advance"
+        },
+        class: "bg-green-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+      %>
+    </div>
+
     
   </div>
 

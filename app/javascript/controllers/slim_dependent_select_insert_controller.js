@@ -39,7 +39,7 @@ export default class extends Controller {
 
     if (parentValue && endpoint) {
       try {
-        const searchValue = parentElement[parentElement.selectedIndex].text
+        const searchValue = parentElement[parentElement.selectedIndex].value
         childSelect.setData([])
 
         const response = await get(`${endpoint}?query=${searchValue}`, {

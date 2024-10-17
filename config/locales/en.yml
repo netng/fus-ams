@@ -92,6 +92,7 @@ en:
         description: Description
 
       asset_model:
+        id_asset_model: ID
         name: Name
         description: Description
 
@@ -317,6 +318,7 @@ en:
   
   custom:
     label:
+      clear_filter: Clear
       sign_in: Sign in
       sign_in_anchor: Sign in
       is_registered: Already have an account?
@@ -349,8 +351,8 @@ en:
       brand_registration: Asset brand registration
       asset_index_header: Asset %{model}
       default_index_header: "%{model}"
-      all: All %{model}
-      select: "--- Select %{model} ---"
+      all: All # awalnya All %{model}, namun diubah cukup all saja
+      select: "Select %{model}"
 
     format: "%{attribute} %{message}"
     errors:
