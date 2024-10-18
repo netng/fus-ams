@@ -3,10 +3,7 @@ class Vendor < ApplicationRecord
   include Downcaseable
   
   downcase_fields :email
-  downcase_fields :contact_person
-  downcase_fields :city
-  downcase_fields :name
-  
+   
   # validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :id_vendor, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :name, length: { maximum: 100 }

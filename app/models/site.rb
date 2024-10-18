@@ -5,6 +5,8 @@ class Site < ApplicationRecord
   belongs_to :site_stat
   belongs_to :site_group
 
+  has_many :user_assets, dependent: :restrict_with_error
+
   # downcase_fields :name
   validates :id_site, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :name, presence: true, length: { maximum: 100 }
