@@ -25,7 +25,7 @@
     
     .sidebar-fixed {
       position: fixed;
-      top: 100px;
+      top: 85px;
       left: 10px;
       width: 16rem;
       height: 80vh;
@@ -62,7 +62,7 @@
     /* Firefox */
     .sidebar-fixed {
       scrollbar-width: thin; /* Make scrollbar thinner */
-      scrollbar-color: #88bafb #3b82f6; /* thumb color and track color */
+      scrollbar-color: #88bafb #60a5fa; /* thumb color and track color */
     }
 
     .sidebar-mobile {
@@ -106,7 +106,7 @@
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="mt-8 flex pt-16 bg-slate-50 min-h-screen">
+    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen">
       <%= render "shared/sidebar" %>
       <%= turbo_frame_tag "main-content", class: "main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
         <%= render "shared/flash" %>
