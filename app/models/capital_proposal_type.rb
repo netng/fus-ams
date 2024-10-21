@@ -1,0 +1,2 @@
+class CapitalProposalType < ApplicationRecord
+end

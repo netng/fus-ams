@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_21_063817) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_21_091734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -96,6 +96,71 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_21_063817) do
     t.string "id_brand"
     t.index ["id_brand"], name: "index_brands_on_id_brand", unique: true
     t.index ["name"], name: "index_brands_on_name"
+  end
+
+  create_table "capital_proposal_group_headers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_capital_proposal_group_header", limit: 100, null: false
+    t.string "name", limit: 100
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id_capital_proposal_group_header"], name: "idx_on_id_capital_proposal_group_header_5f91f718d8", unique: true
+  end
+
+  create_table "capital_proposal_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_capital_proposal_group", limit: 100, null: false
+    t.string "name", limit: 100
+    t.uuid "capital_proposal_group_header_id", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["capital_proposal_group_header_id"], name: "idx_on_capital_proposal_group_header_id_2321905d54"
+    t.index ["id_capital_proposal_group"], name: "index_capital_proposal_groups_on_id_capital_proposal_group", unique: true
+  end
+
+  create_table "capital_proposal_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_capital_proposal_type", limit: 100, null: false
+    t.string "name", limit: 100
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id_capital_proposal_type"], name: "index_capital_proposal_types_on_id_capital_proposal_type", unique: true
+  end
+
+  create_table "capital_proposals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "number", limit: 100, null: false
+    t.string "real_number", limit: 100
+    t.uuid "capital_proposal_type_id", null: false
+    t.uuid "capital_proposal_group_id", null: false
+    t.uuid "site_id", null: false
+    t.uuid "department_id", null: false
+    t.datetime "date", null: false
+    t.string "description", null: false
+    t.decimal "equiv_amount", precision: 18, scale: 2, null: false
+    t.decimal "rate", precision: 18, scale: 2, null: false
+    t.decimal "amount", precision: 18, scale: 2, null: false
+    t.string "status", limit: 100, null: false
+    t.string "budget_ref_number", limit: 100, null: false
+    t.decimal "budget_amount", precision: 18, scale: 2, null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["capital_proposal_group_id"], name: "index_capital_proposals_on_capital_proposal_group_id"
+    t.index ["capital_proposal_type_id"], name: "index_capital_proposals_on_capital_proposal_type_id"
+    t.index ["department_id"], name: "index_capital_proposals_on_department_id"
+    t.index ["site_id"], name: "index_capital_proposals_on_site_id"
   end
 
   create_table "component_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -327,6 +392,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_21_063817) do
   add_foreign_key "asset_models", "asset_item_types"
   add_foreign_key "asset_models", "asset_types"
   add_foreign_key "asset_models", "brands"
+  add_foreign_key "capital_proposal_groups", "capital_proposal_group_headers"
+  add_foreign_key "capital_proposals", "capital_proposal_groups"
+  add_foreign_key "capital_proposals", "capital_proposal_types"
+  add_foreign_key "capital_proposals", "departments"
+  add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
