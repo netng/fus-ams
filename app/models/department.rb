@@ -2,6 +2,8 @@ class Department < ApplicationRecord
   include Trackable
   include Downcaseable
 
+  has_many :user_assets, dependent: :restrict_with_error
+
   # downcase_fields :name
   # downcase_fields :floor
   

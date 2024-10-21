@@ -17,6 +17,7 @@ en:
       asset_type: Asset type
       asset_item_type: Asset item type
       asset_model: Asset model
+      user_asset: User asset
 
     attributes:
       role:
@@ -95,6 +96,14 @@ en:
         id_asset_model: ID
         name: Name
         description: Description
+      
+      user_asset:
+        id_user_asset: ID
+        username: Username
+        aztec_code: Aztec code
+        email: Email
+        location: Location
+        floor: Floor
 
       account:
         email: Email
@@ -344,6 +353,7 @@ en:
       import_form: Import data %{model}
       default_new_form: "%{model} registration"
       filter: Filter
+      register: Register
       confirm:
         to_destroy_many: Are you sure you want to delete all selected data? Deleted data cannot be restored!
         to_save: Are you sure to save this data?
@@ -362,6 +372,10 @@ en:
       invalid_import_template: "Header template invalid: %{errors}"
       invalid_allowed_extension: "File extension is not valid"
       activerecord_object_not_found: "%{model} id %{id} is not found"
+      resolve_duplicate: Please check and make sure there are no duplicates
+      duplicate_data: "Dulicate data found: '%{field}' with value '%{value}' already exists"
+      general_error: Something wrong. Please contact admin
+      not_null_violation: 
     
     flash:
       alerts:

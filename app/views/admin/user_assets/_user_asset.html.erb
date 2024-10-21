@@ -1,0 +1,36 @@
+<%= tag.tr id: dom_id(user_asset), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+  <td class="sticky left-0 py-3 px-4 bg-white border-r border-gray-300">
+    <div class="flex items-center space-x-4">
+
+      <%= check_box_tag "user_asset_ids[]",
+        user_asset.id,
+        nil,
+        {
+          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-200",
+          multiple: true,
+          form: :user_asset_table,
+          data: {
+            table_target: "childCheckbox",
+            action: "change->table#toggleParentCheckbox"
+          }
+        }
+      %>
+
+      <%= link_to "#{t("custom.label.edit")}",
+        edit_admin_user_asset_path(user_asset),
+        data: {
+          turbo_frame: "main-content",
+          turbo_action: "advance"
+        },
+        class: "text-blue-500 hover:text-blue-700"
+      %>
+
+    </div>
+  </td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.id_user_asset %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.username %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
+<% end %>

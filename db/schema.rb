@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_17_074555) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_21_063817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -206,6 +206,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_17_074555) do
     t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
+  create_table "site_defaults", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "site_id", null: false
+    t.string "name"
+    t.string "id_user_site_default"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_site_defaults_on_site_id"
+  end
+
   create_table "site_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -268,6 +277,28 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_17_074555) do
     t.index ["name"], name: "index_softwares_on_name"
   end
 
+  create_table "user_assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_user_asset", null: false
+    t.string "aztec_code"
+    t.string "username"
+    t.string "email"
+    t.uuid "site_id", null: false
+    t.uuid "department_id"
+    t.string "location"
+    t.string "floor"
+    t.string "description"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_user_assets_on_department_id"
+    t.index ["id_user_asset"], name: "index_user_assets_on_id_user_asset", unique: true
+    t.index ["site_id"], name: "index_user_assets_on_site_id"
+    t.index ["username", "aztec_code"], name: "index_user_assets_on_username_and_aztec_code"
+  end
+
   create_table "vendors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.text "address1"
@@ -299,7 +330,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_17_074555) do
   add_foreign_key "components", "component_types"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
+  add_foreign_key "site_defaults", "sites"
   add_foreign_key "site_groups", "projects"
   add_foreign_key "sites", "site_groups"
   add_foreign_key "sites", "site_stats"
+  add_foreign_key "user_assets", "departments"
+  add_foreign_key "user_assets", "sites"
 end
