@@ -1,24 +1,24 @@
 <%= form_with model: [:admin, project], data: { turbo_action: "advance" } do |form| %>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :id_project, "#{t("activerecord.attributes.project.id_project")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_project, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :id_project, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @project.errors.full_messages_for(:id_project).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :name, "#{t("activerecord.attributes.project.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :name, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @project.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
     <% @project.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
@@ -26,7 +26,7 @@
 
   
 
-  <div class="flex flex-col md:flex-row items-center md:gap-2">
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
       class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>

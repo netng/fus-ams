@@ -1,28 +1,28 @@
 <%= form_with model: [:admin, asset_model], data: { turbo_action: "advance" } do |form| %>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :id_asset_model, "#{t("activerecord.attributes.asset_model.id_asset_model")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_asset_model, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :id_asset_model, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @asset_model.errors.full_messages_for(:id_asset_model).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :name, "#{t("activerecord.attributes.asset_model.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :name, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @asset_model.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :brand, "#{t("activerecord.models.brand")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
     <%= form.select :brand_id,
       Brand.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
       {include_blank: t("custom.label.select", model: t("activerecord.models.brand")).capitalize},
-      { data: { controller: "slim" } }
+      { data: { controller: "slim" }, class: "p-2 rounded-lg" }
     %>
     <% @asset_model.errors.full_messages_for(:brand).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -30,7 +30,7 @@
   </div>
 
   <div data-controller="slim-dependent-select-insert">
-    <div class="mb-4">
+    <div class="mb-2">
       <%= form.label :asset_type, "#{t("activerecord.models.asset_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
       <%= form.select :asset_type_id,
         AssetType.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
@@ -40,7 +40,8 @@
             action: "filters#submit change->slim-dependent-select-insert#changeChild", 
             slim_dependent_select_insert_target: "parent",
             endpoint: "#{asset_item_types_admin_asset_models_path}"
-          }
+          },
+          class: "p-2 rounded-lg"
         }
       %>
 
@@ -50,7 +51,7 @@
     </div>
 
 
-    <div class="mb-4">
+    <div class="mb-2">
       <%= form.label :asset_item_type, "#{t("activerecord.models.asset_item_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
       <%= form.select :asset_item_type_id,
         @asset_item_types,
@@ -60,7 +61,8 @@
             action: "filters#submit",
             default_option: t("custom.label.select", model: t("activerecord.models.asset_item_type")).capitalize,
             slim_dependent_select_insert_target: "child"
-          }
+          },
+          class: "p-2 rounded-lg"
         }
       %>
   
@@ -71,16 +73,16 @@
 
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
     <% @asset_model.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
 
-  <div class="flex flex-col md:flex-row items-center md:gap-2">
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
       class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>

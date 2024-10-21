@@ -1,54 +1,54 @@
 <%= form_with model: [:admin, site], data: { turbo_action: "advance" } do |form| %>
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :name, "#{t("activerecord.attributes.site.id_site")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_site, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :id_site, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @site.errors.full_messages_for(:id_site).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :name, "#{t("activerecord.attributes.site.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :name, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.text_field :name, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
     <% @site.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :site_stat, "#{t("activerecord.models.site_stat")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
     <%= form.select :site_stat_id,
       SiteStat.pluck(:name, :id).map { |name, id| [name.capitalize, id] },
       {include_blank: t("custom.label.select", model: t("activerecord.models.site_stat")).capitalize},
-      {data: { controller: 'slim' } }
+      {data: { controller: 'slim' }, class: "p-2 rounded-lg"}
     %>
     <% @site.errors.full_messages_for(:site_stat).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :site_group, "#{t("activerecord.models.site_group")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
     <%= form.select :site_group_id,
       SiteGroup.pluck(:name, :id).map { |name, id| [name.capitalize, id] },
       {include_blank: t("custom.label.select", model: t("activerecord.models.site_group")).capitalize},
-      {data: { controller: 'slim' } }
+      {data: { controller: 'slim' }, class: "p-2 rounded-lg" }
     %>
     <% @site.errors.full_messages_for(:site_group).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
     <% @site.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
 
-  <div class="flex flex-col md:flex-row items-center md:gap-2">
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
       class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>

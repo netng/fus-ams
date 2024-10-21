@@ -10,19 +10,19 @@
                 </div>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :id_site_group, "#{t('activerecord.attributes.site_group.id_site_group')}", { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :name, "#{t('activerecord.attributes.site_group.name')}", { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :project_name, "#{t('activerecord.models.project')}", { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= t("activerecord.attributes.site_group.description") %>
               </th>
             </tr>

@@ -10,15 +10,15 @@
                 </div>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :id_project, "#{t('activerecord.attributes.project.id_project')}", { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :name, "#{t('activerecord.attributes.project.name')}", { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= t("activerecord.attributes.project.description") %>
               </th>
             </tr>

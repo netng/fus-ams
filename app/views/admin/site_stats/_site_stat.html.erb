@@ -14,7 +14,14 @@
           }
         }
        %>
-      <%= link_to "#{t("custom.label.edit")}", edit_admin_site_stat_path(site_stat), data: { turbo_frame: "main-content" }, class: "text-blue-500 hover:text-blue-700" %>
+      <%= link_to "#{t("custom.label.edit")}",
+        edit_admin_site_stat_path(site_stat),
+        data: { 
+          turbo_frame: "main-content",
+          turbo_action: "advance"
+        },
+        class: "text-blue-500 hover:text-blue-700"
+      %>
     </div>
   </td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site_stat.id_site_stat %></td>
