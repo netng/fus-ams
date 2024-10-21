@@ -1,85 +1,91 @@
 <%= form_with model: [:admin, user_asset], data: { turbo_action: "advance" } do |form| %>
 
-  <div class="mb-4">
-    <%= form.label :id_user_asset, "#{t("activerecord.attributes.user_asset.id_user_asset")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_user_asset, class: "block w-full p-3 outline-none border border-gray-300 rounded-lg bg-gray-300", disabled: true %>
-    <% @user_asset.errors.full_messages_for(:id_user_asset).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
+  <div class="md:grid grid-cols-2 gap-2">
+    <div class="mb-2">
+      <%= form.label :id_user_asset, "#{t("activerecord.attributes.user_asset.id_user_asset")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <span class="block w-full p-2 outline-none border border-gray-300 rounded-lg bg-gray-200 text-gray-500">
+        <% if user_asset.persisted? %>
+          <strong><%= user_asset.id_user_asset %></strong>
+        <% else %>
+          <strong>&lt&ltAuto Generate&gt&gt</strong>
+        <% end %>
+      </span>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :username, "#{t("activerecord.attributes.user_asset.username")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :username, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @user_asset.errors.full_messages_for(:username).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :aztec_code, "#{t("activerecord.attributes.user_asset.aztec_code")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :aztec_code, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @user_asset.errors.full_messages_for(:aztec_code).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  
+    <div class="mb-2">
+      <%= form.label :email, "#{t("activerecord.attributes.user_asset.email")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.email_field :email, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @user_asset.errors.full_messages_for(:email).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+    
+    <div class="mb-2">
+      <%= form.label :site, "#{t("activerecord.models.site")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.select :site_id,
+        Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
+        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+      %>
+      <% @user_asset.errors.full_messages_for(:site).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  
+    <div class="mb-2">
+      <%= form.label :department, "#{t("activerecord.models.department")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.select :department_id,
+        Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
+        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+      %>
+      <% @user_asset.errors.full_messages_for(:department).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :location, "#{t("activerecord.attributes.user_asset.location")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :location, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @user_asset.errors.full_messages_for(:location).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  
+    <div class="mb-2">
+      <%= form.label :floor, "#{t("activerecord.attributes.user_asset.floor")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :floor, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @user_asset.errors.full_messages_for(:floor).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+
   </div>
 
-  <div class="mb-4">
-    <%= form.label :username, "#{t("activerecord.attributes.user_asset.username")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :username, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-    <% @user_asset.errors.full_messages_for(:username).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :aztec_code, "#{t("activerecord.attributes.user_asset.aztec_code")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :aztec_code, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-    <% @user_asset.errors.full_messages_for(:aztec_code).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :email, "#{t("activerecord.attributes.user_asset.email")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.email_field :email, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-    <% @user_asset.errors.full_messages_for(:email).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :site, "#{t("activerecord.models.site")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.select :site_id,
-      Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
-      {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
-      { data: { controller: "slim" } }
-    %>
-    <% @user_asset.errors.full_messages_for(:site).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :department, "#{t("activerecord.models.department")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.select :department_id,
-      Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
-      {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
-      { data: { controller: "slim" } }
-    %>
-    <% @user_asset.errors.full_messages_for(:department).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :location, "#{t("activerecord.attributes.user_asset.location")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :location, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-    <% @user_asset.errors.full_messages_for(:location).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :floor, "#{t("activerecord.attributes.user_asset.floor")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :floor, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-    <% @user_asset.errors.full_messages_for(:floor).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
+  <div class="mb-2">
     <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
     <% @user_asset.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
-
 
   <div class="flex flex-col md:flex-row items-center md:gap-2">
     <%= form.submit "#{t('custom.label.save')}",

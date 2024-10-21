@@ -14,7 +14,7 @@
 
 /* flash css */
 .fade-in-out {
-  animation: appear-then-fade 5s both;
+  animation: appear-then-fade 10s both;
 }
 
 @keyframes appear-then-fade {

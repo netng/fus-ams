@@ -16,13 +16,30 @@ module Admin
       authorize :authorization, :create?
 
       @user_asset = UserAsset.new
-      @user_asset.id_user_asset = "U-TEST-123"
     end
-
+    
     def create
       authorize :authorization, :create?
-
+      
       @user_asset = UserAsset.new(user_assets_params)
+
+
+      # Note:
+      # Original query dari fus-online untuk generate id_user_asset
+      #
+      # select 'U-' + cast(max(Cast(Substring(UserId,3,10) as int))+1 as nvarchar(28)) 
+      # from MstAssetUser
+      # where UserId not in (select Distinct UserId from SiteDefault);
+      #
+      # query dibawah ini penyesuaian menggunakan activerecord dan postgres
+      subquery = SiteDefault.select(:id_user_site_default).distinct
+      result = UserAsset
+        .where.not(id_user_asset: subquery)
+        .pluck(Arel.sql("'U-' || CAST(MAX(CAST(SUBSTRING(id_user_asset, 3, 10) AS INT)) + 1 AS VARCHAR(28)) AS next_user_id"))
+
+      @user_asset.id_user_asset = result.first
+
+      logger.info "request_id: #{request.request_id} - #{@user_asset.id_user_asset}"
 
       respond_to do |format|
         if @user_asset.save
@@ -41,8 +58,8 @@ module Admin
       authorize :authorization, :update?
 
       respond_to do |format|
-				if @user_assets.update(user_assets_params)
-					format.html { redirect_to admin_user_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.user_assets")) }
+				if @user_asset.update(user_assets_params)
+					format.html { redirect_to admin_user_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.user_asset")) }
 				else
 					format.html { render :edit, status: :unprocessable_entity }
 				end
@@ -96,6 +113,10 @@ module Admin
       authorize :authorization, :create?
       allowed_extension = [".xlsx", ".csv"]
       file = params[:file]
+      data = []
+      batch_size = 1000
+
+      start_time = Time.now
 
       if file.present?
         if !allowed_extension.include?(File.extname(file.original_filename))
@@ -118,8 +139,8 @@ module Admin
           description: "Description"
         }
 
-        ActiveRecord::Base.transaction do
-          begin
+        begin
+          ActiveRecord::Base.transaction do
             sheet.parse(user_assets_attributes_headers).each do |row|
 
               site = Site.find_by_id_site(row[:site])
@@ -137,43 +158,68 @@ module Admin
                 end
               end
 
-              user_asset = UserAsset.new(
+              data << {
                 id_user_asset: row[:id_user_asset],
                 username: row[:username],
                 aztec_code: row[:aztec_code],
                 email: row[:email],
-                site: site,
-                department: department,
+                site_id: site.id,
+                department_id: department&.id,
                 location: row[:location],
                 floor: row[:floor],
                 description: row[:description]
-              )
-  
-              unless user_asset.save
-                error_message = user_asset.errors.details.map do |field, error_details|
-                  error_details.map do |error|
-                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
-                  end
-                end.flatten.join("")
+              }
 
-                redirect_to import_admin_user_assets_path, alert: error_message
-                raise ActiveRecord::Rollback
+              if data.size >= batch_size
+                UserAsset.insert_all!(data)
+                data.clear
               end
+  
             end
-          rescue Roo::HeaderRowNotFoundError => e
-            return redirect_to import_admin_user_assets_path, alert: t("custom.errors.invalid_import_template", errors: e)
-          end
 
-          respond_to do |format|
-            format.html { redirect_to admin_user_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.user_assets")) }
+            UserAsset.insert_all(data) unless data.empty?
           end
+          
+          respond_to do |format|
+            logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
+            format.html { redirect_to admin_user_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.user_asset")) }
+          end
+        rescue Roo::HeaderRowNotFoundError => e
+          return redirect_to import_admin_user_assets_path, alert: t("custom.errors.invalid_import_template", errors: e)
+      
+        
+        # Penanganan untuk duplikat data
+        rescue ActiveRecord::RecordNotUnique => e
+          logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
+          duplicate_field = e.message.match(/Key \((.*?)\)=/)[1] rescue "data"
+          duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
+          humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
+          return redirect_back_or_to import_admin_user_assets_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
+    
+        # penangan error null violation
+        rescue ActiveRecord::NotNullViolation => e
+          logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
+          error_column = e.message.match(/column "(.*?)"/)[1] # Menangkap nama kolom yang menyebabkan error
+          error_row = data.find { |r| r[error_column.to_sym].nil? }
+
+          error_message = "#{t('activerecord.attributes.user_asset.' + error_column)} " \
+            "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
+          return redirect_back_or_to import_admin_user_assets_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
+        
+        # Penanganan umum untuk semua jenis error lainnya
+        rescue => e
+          logger.error "#{Current.request_id} - General error during import: #{e.message}"
+          return redirect_back_or_to import_admin_user_assets_path, alert: t('custom.errors.general_error')
+
         end
+        
       else
         redirect_back_or_to import_admin_user_assets_path, alert: t("custom.flash.alerts.select_file")
       end
     end
 
-
+   
+    
     private
 
       def user_assets_params

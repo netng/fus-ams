@@ -19,17 +19,18 @@
       <%= link_to "#{t("custom.label.edit")}",
         edit_admin_user_asset_path(user_asset),
         data: {
-          turbo_frame: "main-content"
+          turbo_frame: "main-content",
+          turbo_action: "advance"
         },
         class: "text-blue-500 hover:text-blue-700"
       %>
 
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= user_asset.id_user_asset %></td>
-  <td class="py-3 px-6 text-left"><%= user_asset.username %></td>
-  <td class="py-3 px-6 text-left"><%= user_asset.email %></td>
-  <td class="py-3 px-6 text-left"><%= user_asset.site.name %></td>
-  <td class="py-3 px-6 text-left"><%= user_asset.department&.name %></td>
-  <td class="py-3 px-6 text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.id_user_asset %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.username %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
 <% end %>

@@ -17,10 +17,10 @@
       <%= link_to "#{t("custom.label.edit")}", edit_admin_asset_model_path(asset_model), data: { turbo_frame: "main-content" }, class: "text-blue-500 hover:text-blue-700" %>
     </div>
   </td>
-  <td class="py-3 px-6 text-left"><%= asset_model.id_asset_model %></td>
-  <td class="py-3 px-6 text-left"><%= asset_model.name %></td>
-  <td class="py-3 px-6 text-left"><%= asset_model.brand.name %></td>
-  <td class="py-3 px-6 text-left"><%= asset_model.asset_type.name %></td>
-  <td class="py-3 px-6 text-left"><%= asset_model.asset_item_type.name %></td>
-  <td class="py-3 px-6 text-left"><%= asset_model.description.blank? ? "-" : asset_model.description %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.id_asset_model %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.brand.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.asset_type.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.asset_item_type.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_model.description.blank? ? "-" : asset_model.description %></td>
 <% end %>

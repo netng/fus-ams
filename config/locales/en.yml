@@ -372,6 +372,10 @@ en:
       invalid_import_template: "Header template invalid: %{errors}"
       invalid_allowed_extension: "File extension is not valid"
       activerecord_object_not_found: "%{model} id %{id} is not found"
+      resolve_duplicate: Please check and make sure there are no duplicates
+      duplicate_data: "Dulicate data found: '%{field}' with value '%{value}' already exists"
+      general_error: Something wrong. Please contact admin
+      not_null_violation: 
     
     flash:
       alerts:

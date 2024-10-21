@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_18_090244) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_21_063817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -206,6 +206,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_18_090244) do
     t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
+  create_table "site_defaults", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "site_id", null: false
+    t.string "name"
+    t.string "id_user_site_default"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_site_defaults_on_site_id"
+  end
+
   create_table "site_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -321,6 +330,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_18_090244) do
   add_foreign_key "components", "component_types"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
+  add_foreign_key "site_defaults", "sites"
   add_foreign_key "site_groups", "projects"
   add_foreign_key "sites", "site_groups"
   add_foreign_key "sites", "site_stats"
