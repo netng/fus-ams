@@ -1,11 +1,11 @@
 <%= tag.tr id: dom_id(brand), class: "border-b border-gray-200 hover:bg-gray-100" do %>
-  <td class="sticky left-0 py-3 px-4 bg-white border-r border-gray-300">
+  <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
     <div class="flex items-center space-x-4">
       <%= check_box_tag "brand_ids[]",
         brand.id,
         nil,
         {
-          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-200",
+          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300",
           multiple: true,
           form: :brand_table,
           data: {
