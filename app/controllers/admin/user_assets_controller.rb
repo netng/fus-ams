@@ -177,7 +177,7 @@ module Admin
   
             end
 
-            UserAsset.insert_all(data) unless data.empty?
+            UserAsset.insert_all!(data) unless data.empty?
           end
           
           respond_to do |format|

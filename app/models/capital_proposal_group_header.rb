@@ -1,0 +1,2 @@
+class CapitalProposalGroupHeader < ApplicationRecord
+end

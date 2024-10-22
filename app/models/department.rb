@@ -3,6 +3,7 @@ class Department < ApplicationRecord
   include Downcaseable
 
   has_many :user_assets, dependent: :restrict_with_error
+  has_many :capital_proposals, dependent: :restrict_with_error
 
   # downcase_fields :name
   # downcase_fields :floor

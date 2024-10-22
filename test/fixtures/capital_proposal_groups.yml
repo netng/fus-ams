@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_capital_proposal_group: MyString
+  name: MyString
+  capital_proposal_group_header: one
+
+two:
+  id_capital_proposal_group: MyString
+  name: MyString
+  capital_proposal_group_header: two
