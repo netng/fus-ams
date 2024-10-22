@@ -75,3 +75,5 @@ gem "dotenv", "~> 3.1"
 gem "pundit", "~> 2.4"
 
 gem "roo", "~> 2.10"
+
+gem "inline_svg", "~> 1.10"
