@@ -21,5 +21,7 @@ module FunctionAccessConstant
 
   FA_ASS_REGISTER_USER_ASSET = "FA_ASS_REGISTER_USER_ASSET"
 
+  FA_ASS_CP = "FA_ASS_CP"
+
   freeze
 end

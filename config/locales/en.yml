@@ -18,6 +18,11 @@ en:
       asset_item_type: Asset item type
       asset_model: Asset model
       user_asset: User asset
+      capital_proposal: Capital proposal
+      capital_proposal_type: Type
+      capital_proposal_group: Groups
+      currency: Currency
+      
 
     attributes:
       role:
@@ -104,6 +109,21 @@ en:
         email: Email
         location: Location
         floor: Floor
+      
+      capital_proposal:
+        number: Number
+        real_number: Real No
+        date: Date
+        description: Description
+        equiv_amount: Equiv amount
+        rate: Exchange rate
+        status: Status
+        budget_ref_number: Budget ref. number
+        budget_amount: Budget amount
+      
+      currency:
+        id_currency: ID
+        name: Name
 
       account:
         email: Email

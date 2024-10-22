@@ -4,7 +4,12 @@
     <div class="mt-4 px-4">
       <h3 class="font-semibold text-white">Asset</h3>
       <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
+        <li>
+          <%= link_to "#{t('activerecord.models.capital_proposal')}",
+            admin_capital_proposals_path,
+            class: "px-2 text-white hover:underline",
+            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Delivery order</a></li>

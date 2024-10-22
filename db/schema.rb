@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_21_091734) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_22_032156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -157,9 +157,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_21_091734) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "currency_id", null: false
     t.index ["capital_proposal_group_id"], name: "index_capital_proposals_on_capital_proposal_group_id"
     t.index ["capital_proposal_type_id"], name: "index_capital_proposals_on_capital_proposal_type_id"
+    t.index ["currency_id"], name: "index_capital_proposals_on_currency_id"
     t.index ["department_id"], name: "index_capital_proposals_on_department_id"
+    t.index ["number"], name: "index_capital_proposals_on_number", unique: true
     t.index ["site_id"], name: "index_capital_proposals_on_site_id"
   end
 
@@ -191,6 +194,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_21_091734) do
     t.index ["component_type_id"], name: "index_components_on_component_type_id"
     t.index ["id_component"], name: "index_components_on_id_component", unique: true
     t.index ["name"], name: "index_components_on_name"
+  end
+
+  create_table "currencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_currency", null: false
+    t.string "name", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id_currency"], name: "index_currencies_on_id_currency", unique: true
   end
 
   create_table "departments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -395,6 +410,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_21_091734) do
   add_foreign_key "capital_proposal_groups", "capital_proposal_group_headers"
   add_foreign_key "capital_proposals", "capital_proposal_groups"
   add_foreign_key "capital_proposals", "capital_proposal_types"
+  add_foreign_key "capital_proposals", "currencies"
   add_foreign_key "capital_proposals", "departments"
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
