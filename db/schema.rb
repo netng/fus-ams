@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_22_032156) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_22_091432) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -253,6 +253,29 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_22_032156) do
     t.index ["name"], name: "index_projects_on_name"
   end
 
+  create_table "request_for_purchases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "number", limit: 100, null: false
+    t.uuid "capital_proposal_id"
+    t.uuid "from_department_id", null: false
+    t.uuid "to_department_id", null: false
+    t.datetime "date", null: false
+    t.string "material_code", limit: 100, null: false
+    t.string "remarks", limit: 100
+    t.string "issued_by", limit: 100
+    t.string "authorized_by", limit: 100
+    t.string "status", limit: 100, null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["capital_proposal_id"], name: "index_request_for_purchases_on_capital_proposal_id"
+    t.index ["from_department_id"], name: "index_request_for_purchases_on_from_department_id"
+    t.index ["number"], name: "index_request_for_purchases_on_number", unique: true
+    t.index ["to_department_id"], name: "index_request_for_purchases_on_to_department_id"
+  end
+
   create_table "role_function_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "role_id", null: false
     t.uuid "function_access_id", null: false
@@ -414,6 +437,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_22_032156) do
   add_foreign_key "capital_proposals", "departments"
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
+  add_foreign_key "request_for_purchases", "capital_proposals"
+  add_foreign_key "request_for_purchases", "departments", column: "from_department_id"
+  add_foreign_key "request_for_purchases", "departments", column: "to_department_id"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
   add_foreign_key "site_defaults", "sites"
