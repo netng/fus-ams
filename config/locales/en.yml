@@ -22,6 +22,8 @@ en:
       capital_proposal_type: Type
       capital_proposal_group: Groups
       currency: Currency
+      request_for_purchase: Request for purchase
+      request_for_purchase_detail: Request for purchase detail
       
 
     attributes:
@@ -124,6 +126,24 @@ en:
       currency:
         id_currency: ID
         name: Name
+      
+      request_for_purchase:
+        number: Number
+        date: Date
+        material_code: Material code
+        remarks: Remarks
+        issued_by: Issued by
+        authorized_by: Authorized by
+        status: Status
+
+      request_for_purchase_detail:
+        qty: Qty
+        tentative_date: Tentative date
+        confirm_date: Confirm date
+        specs: Specification & Reamarks
+        rate: Rate
+        price: Quote price
+        sub_total: Total
 
       account:
         email: Email
@@ -383,6 +403,10 @@ en:
       default_index_header: "%{model}"
       all: All # awalnya All %{model}, namun diubah cukup all saja
       select: "Select %{model}"
+      from_department: From department
+      to_department: To department
+      total_po: Total PO
+      cost_log_number: Cost log number
 
     format: "%{attribute} %{message}"
     errors:

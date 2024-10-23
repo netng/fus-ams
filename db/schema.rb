@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_22_091432) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_23_073005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -253,6 +253,23 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_22_091432) do
     t.index ["name"], name: "index_projects_on_name"
   end
 
+  create_table "request_for_purchase_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "qty"
+    t.datetime "tentative_date"
+    t.datetime "confirm_date"
+    t.string "specs", limit: 500
+    t.uuid "currency_id"
+    t.decimal "rate", precision: 18, scale: 2
+    t.uuid "request_for_purchase_id"
+    t.decimal "price", precision: 18, scale: 2
+    t.decimal "sub_total", precision: 18, scale: 2
+    t.string "status", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency_id"], name: "index_request_for_purchase_details_on_currency_id"
+    t.index ["request_for_purchase_id"], name: "index_request_for_purchase_details_on_request_for_purchase_id"
+  end
+
   create_table "request_for_purchases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "number", limit: 100, null: false
     t.uuid "capital_proposal_id"
@@ -437,6 +454,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_22_091432) do
   add_foreign_key "capital_proposals", "departments"
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
+  add_foreign_key "request_for_purchase_details", "currencies"
+  add_foreign_key "request_for_purchase_details", "request_for_purchases"
   add_foreign_key "request_for_purchases", "capital_proposals"
   add_foreign_key "request_for_purchases", "departments", column: "from_department_id"
   add_foreign_key "request_for_purchases", "departments", column: "to_department_id"

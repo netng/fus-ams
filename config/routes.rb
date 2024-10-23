@@ -140,5 +140,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :request_for_purchases do
+      collection do
+        delete "destroy_many"
+        get "import"
+        post "process_import"
+      end
+    end
+
   end
 end

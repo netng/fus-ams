@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  qty: 1
+  tentative_date: 2024-10-23 14:30:05
+  confirm_date: 2024-10-23 14:30:05
+  specs: MyString
+  currency: one
+  rate: 9.99
+  request_for_purchase: one
+  price: 9.99
+  sub_total: 9.99
+  status: MyString
+
+two:
+  qty: 1
+  tentative_date: 2024-10-23 14:30:05
+  confirm_date: 2024-10-23 14:30:05
+  specs: MyString
+  currency: two
+  rate: 9.99
+  request_for_purchase: two
+  price: 9.99
+  sub_total: 9.99
+  status: MyString
