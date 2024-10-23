@@ -8,7 +8,7 @@ module Admin
 
       @q = RequestForPurchase.ransack(params[:q])
       @q.sorts = ["date desc"] if @q.sorts.empty?
-			scope = @q.result.includes(:department, :capital_proposal)
+			scope = @q.result.includes(:from_department, :to_department, :capital_proposal)
 			@pagy, @request_for_purchases = pagy(scope)
     end
 
@@ -16,9 +16,20 @@ module Admin
       authorize :authorization, :create?
 
       @request_for_purchase = RequestForPurchase.new
-      @request_for_purchase.request_for_purchase_details.build
+      puts "#{params.inspect}"
+      if params[:add_rfp_details] == "add_rfp_details"
+        @request_for_purchase.request_for_purchase_details.build
+      end
       @request_for_purchase.date ||= Date.today.strftime("%Y-%m-%d")
       render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase }
+    end
+    
+    def add_rfp_details
+      authorize :authorization, :create?
+      puts "Params => #{request_for_purchase_params}"
+      @request_for_purchase = RequestForPurchase.new(request_for_purchase_params.merge({id: params[:id]}))
+      @request_for_purchase.request_for_purchase_details.build
+
     end
 
     def create
@@ -26,7 +37,9 @@ module Admin
 
       @request_for_purchase = RequestForPurchase.new(request_for_purchase_params)
       @request_for_purchase.date ||= Date.today.strftime("%Y-%m-%d")
-      @request_for_purchase.amount = @request_for_purchase.equiv_amount * @request_for_purchase.rate
+      @request_for_purchase.request_for_purchase_details.build
+
+      # @request_for_purchase.total = @request_for_purchase.qty * @request_for_purchase.price * @request_for_purchase.rate
 
       respond_to do |format|
         if @request_for_purchase.save
@@ -240,19 +253,24 @@ module Admin
       def request_for_purchase_params
         params.expect(request_for_purchase: [ 
           :number,
-          :real_number,
-          :request_for_purchase_type_id,
-          :request_for_purchase_group_id,
-          :site_id,
-          :department_id,
+          :capital_proposal_id,
+          :from_department_id,
+          :to_department_id,
           :date,
-          :description,
-          :currency_id,
-          :equiv_amount,
-          :rate,
-          :budget_ref_number,
-          :budget_amount,
-          :status
+          :material_code,
+          :remarks,
+          :issued_by,
+          :authorized_by,
+          :status,
+          request_for_purchase_details_attributes: [
+            :qty,
+            :tentative_date,
+            :confirm_date,
+            :specs,
+            :currency_id,
+            :rate,
+            :price
+          ]
         ])
       end
 

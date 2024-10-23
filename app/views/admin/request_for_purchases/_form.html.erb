@@ -40,7 +40,7 @@
         {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
         { data: { controller: "slim" }, class: "p-2 rounded-lg" }
       %>
-      <% @request_for_purchase.errors.full_messages_for(:from_department).each do |message| %>
+      <% @request_for_purchase.errors.full_messages_for(:to_department).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
@@ -99,13 +99,28 @@
 
   </div>
 
-  <hr class="my-4" />
+  <hr class="my-4 mx-6" />
+  <div class="mb-4 flex justify-between items-center">
+    <div>Request for purchase details</div>
+    <div>
+      <%= link_to "Add details", 
+        new_admin_request_for_purchase_path(add_rfp_details: :add_rfp_details),
+        data: { turbo_frame: "add_rfp_details"},
+        class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto" 
+      %>
+    </div>
+  </div>
 
   <div class="bg-slate-50 p-2 overflow-x-auto rounded-lg">
     <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
       <table class="min-w-full bg-white table-auto">
         <thead class="rounded-lg">
           <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
+            <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
+              <div class="flex items-center space-x-2">
+              </div>
+            </th>
+
             <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
               <%= t("activerecord.attributes.request_for_purchase_detail.qty") %>
             </th>
@@ -139,14 +154,21 @@
             </th>
           </tr>
         </thead>
-        <tbody class="text-gray-600 text-sm font-light">
-          <%= tag.div id: :rfp_details %>
+        <tbody class="text-gray-600 text-sm font-light" id="rfp_details">
 
           <%= turbo_frame_tag :add_rfp_details do %>
+            
+
             <%= turbo_stream.append :rfp_details do %>
               <%= form.fields_for :request_for_purchase_details, child_index: -> { Process.clock_gettime(Process::CLOCK_REALTIME, :microsecond) } do |rfp_detail_form| %>
     
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
+
+                  <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+                    <%= inline_svg_tag "trash.svg", class: "w-5 h-5 text-slate-400" %>
+                  </td>
+
+                
                   <td class="py-2 px-2 text-left whitespace-nowrap">
                     <%= rfp_detail_form.number_field :qty, class: "block text-xs w-[60px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
                     <% @request_for_purchase.errors.full_messages_for(:qty).each do |message| %>
@@ -209,7 +231,6 @@
               <% end %>
             <% end %>
 
-            <%= link_to "Add Details", new_admin_request_for_purchase_path, class: "text-blue-500 hover:underline" %>
           <% end %>
         </tbody>
       </table>

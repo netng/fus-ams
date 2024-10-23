@@ -145,6 +145,7 @@ Rails.application.routes.draw do
         delete "destroy_many"
         get "import"
         post "process_import"
+        get "add_rfp_details"
       end
     end
 

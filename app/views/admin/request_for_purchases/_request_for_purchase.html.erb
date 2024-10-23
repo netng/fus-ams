@@ -31,6 +31,6 @@
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= request_for_purchase.from_department.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= request_for_purchase.to_department.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= request_for_purchase.authorized_by %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= request_for_purchase.capital_proposal.number %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= request_for_purchase&.capital_proposal&.number %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap">TODO</td>
 <% end %>
