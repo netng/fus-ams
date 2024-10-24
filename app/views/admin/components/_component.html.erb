@@ -5,13 +5,14 @@
         component.id,
         nil,
         {
-          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300",
+          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
           multiple: true,
           form: :component_table,
           data: {
             table_target: "childCheckbox",
             action: "change->table#toggleParentCheckbox"
-          }
+          },
+          title: t("custom.label.select_to_delete")
         }
        %>
       <%= link_to "#{t("custom.label.edit")}", edit_admin_component_path(component), data: { turbo_frame: "main-content", turbo_action: "advance" }, class: "text-blue-500 hover:text-blue-700" %>
