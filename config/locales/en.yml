@@ -367,6 +367,7 @@ en:
   
   custom:
     label:
+      request_for_purchase_details: Requst for purchase details
       clear_filter: Clear
       sign_in: Sign in
       sign_in_anchor: Sign in
@@ -391,6 +392,7 @@ en:
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
       import_form: Import data %{model}
+      select_to_delete: Select to delete
       default_new_form: "%{model} registration"
       filter: Filter
       register: Register

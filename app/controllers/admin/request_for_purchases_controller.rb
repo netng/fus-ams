@@ -16,36 +16,34 @@ module Admin
       authorize :authorization, :create?
 
       @request_for_purchase = RequestForPurchase.new
-      puts "#{params.inspect}"
+
       if params[:add_rfp_details] == "add_rfp_details"
         @request_for_purchase.request_for_purchase_details.build
+        @request_for_purchase.request_for_purchase_details.each do |rfp_detail|
+          rfp_detail.tentative_date = Date.today
+          rfp_detail.confirm_date = Date.today
+        end
       end
+
       @request_for_purchase.date ||= Date.today.strftime("%Y-%m-%d")
+
       render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase }
     end
     
-    def add_rfp_details
-      authorize :authorization, :create?
-      puts "Params => #{request_for_purchase_params}"
-      @request_for_purchase = RequestForPurchase.new(request_for_purchase_params.merge({id: params[:id]}))
-      @request_for_purchase.request_for_purchase_details.build
-
-    end
-
     def create
       authorize :authorization, :create?
 
       @request_for_purchase = RequestForPurchase.new(request_for_purchase_params)
       @request_for_purchase.date ||= Date.today.strftime("%Y-%m-%d")
-      @request_for_purchase.request_for_purchase_details.build
 
-      # @request_for_purchase.total = @request_for_purchase.qty * @request_for_purchase.price * @request_for_purchase.rate
+
+      puts @request_for_purchase.inspect
 
       respond_to do |format|
         if @request_for_purchase.save
           format.html { redirect_to admin_request_for_purchases_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.request_for_purchase"))}
         else
-          format.html { render :new, status: :unprocessable_entity }
+          format.html { render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase } }
         end
       end
     end
@@ -104,6 +102,8 @@ module Admin
       data = []
       batch_size = 1000
 
+      log = File.open("/home/hellodev/dev/fus/fus-ams/request_for_purchases_import_error_log.txt", "a")
+
       start_time = Time.now
       
       created_by = Current.account.username
@@ -122,77 +122,62 @@ module Admin
 
         request_for_purchase_attributes_headers = {
           number: "Number",
-          real_number: "Real number",
-          request_for_purchase_type: "Type",
-          request_for_purchase_group: "Group",
-          currency: "Currency id",
-          site: "Site id",
-          department: "Department id",
+          capital_proposal: "Capital proposal number",
+          from_department: "From department id",
+          to_department: "To department id",
           date: "Date",
-          description: "Description",
-          equiv_amount: "Equiv amount",
-          rate: "Exchange rate",
-          status: "Status",
-          budget_ref_number: "Budget ref number",
-          budget_amount: "Budget amount"
+          material_code: "Material code",
+          remarks: "Remarks",
+          issued_by: "Issued by",
+          authorized_by: "Authorized by",
+          status: "Status"
+
         }
 
         begin
           ActiveRecord::Base.transaction do
             sheet.parse(request_for_purchase_attributes_headers).each do |row|
 
-              request_for_purchase_type = RequestForPurchaseType.find_by_id_request_for_purchase_type(row[:request_for_purchase_type])
-              request_for_purchase_group = RequestForPurchaseGroup.find_by_id_request_for_purchase_group(row[:request_for_purchase_group].upcase)
-              site = Site.find_by_id_site(row[:site])
-              department = Department.find_by_id_department(row[:department])
-              currency = Currency.find_by_id_currency(row[:currency])
+              from_department = Department.find_by_id_department(row[:from_department])
+              to_department = Department.find_by_id_department(row[:to_department])
+              capital_proposal = CapitalProposal.find_by_number(row[:capital_proposal])
 
-              if request_for_purchase_type.nil?
-                redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.request_for_purchase_type"), id: row[:request_for_purchase_type])
-                raise ActiveRecord::Rollback
-                return
+              if from_department.nil?
+                # redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("custom.label.from_department"), id: row[:from_department])
+                # raise ActiveRecord::Rollback
+                # return
+                log.puts "From department id : #{row[:from_dapartment]} is not found"
+                next
               end
 
-              if request_for_purchase_group.nil?
-                redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.request_for_purchase_group"), id: row[:request_for_purchase_group])
-                raise ActiveRecord::Rollback
-                return
+              if to_department.nil?
+                # redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("custom.label.to_department"), id: row[:to_department])
+                # raise ActiveRecord::Rollback
+                # return
+                log.puts "To department id : #{row[:to_dapartment]} is not found"
+                next
               end
 
-              if site.nil?
-                redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.site"), id: row[:site])
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if department.nil?
-                redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.department"), id: row[:department])
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if currency.nil?
-                redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.currency"), id: row[:currency])
-                raise ActiveRecord::Rollback
-                return
+              if row[:capital_proposal].present?
+                if capital_proposal.nil?
+                  log.puts "Capital proposal number : #{row[:capital_proposal]} is not found"
+                  # redirect_back_or_to import_admin_request_for_purchases_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.capital_proposal"), id: row[:capital_proposal])
+                  # raise ActiveRecord::Rollback
+                  next
+                end
               end
 
               data << {
                 number: row[:number],
-                real_number: row[:real_number],
-                request_for_purchase_type_id: request_for_purchase_type.id,
-                request_for_purchase_group_id: request_for_purchase_group.id,
-                currency_id: currency.id,
-                site_id: site.id,
-                department_id: department.id,
+                capital_proposal_id: capital_proposal&.id,
+                from_department_id: from_department.id,
+                to_department_id: to_department.id,
                 date: row[:date],
-                description: row[:description],
-                equiv_amount: row[:equiv_amount],
-                rate: row[:rate],
+                material_code: row[:material_code],
+                remarks: row[:remarks],
+                issued_by: row[:issued_by],
+                authorized_by: row[:authorized_by],
                 status: row[:status],
-                budget_ref_number: row[:budget_ref_number],
-                budget_amount: row[:budget_amount],
-                amount: row[:equiv_amount].to_i * row[:rate].to_i,
                 created_by: created_by,
                 request_id: request_id,
                 user_agent: user_agent,
@@ -211,6 +196,7 @@ module Admin
           
           respond_to do |format|
             logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
+            file.close()
             format.html { redirect_to admin_request_for_purchases_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.request_for_purchase")) }
           end
         rescue Roo::HeaderRowNotFoundError => e
@@ -262,24 +248,30 @@ module Admin
           :issued_by,
           :authorized_by,
           :status,
-          request_for_purchase_details_attributes: [
+          request_for_purchase_details_attributes: [[
+            :id,
             :qty,
             :tentative_date,
             :confirm_date,
             :specs,
             :currency_id,
             :rate,
-            :price
-          ]
+            :price,
+            :_destroy
+          ]]
         ])
       end
 
       def set_request_for_purchase
         @request_for_purchase = RequestForPurchase.find(params[:id])
         @request_for_purchase.date = @request_for_purchase.date.strftime("%Y-%m-%d")
-        @request_for_purchase.equiv_amount = @request_for_purchase.equiv_amount.to_i
-        @request_for_purchase.rate = @request_for_purchase.rate.to_i
-        @request_for_purchase.budget_amount = @request_for_purchase.budget_amount.to_i
+        if @request_for_purchase.request_for_purchase_details.present?
+          @request_for_purchase.request_for_purchase_details.each do |rfp_detail|
+            rfp_detail.rate = rfp_detail.rate.to_i unless rfp_detail.rate.nil?
+            rfp_detail.price = rfp_detail.price.to_i unless rfp_detail.price.nil?
+            rfp_detail.sub_total = rfp_detail.sub_total.to_i unless rfp_detail.sub_total.nil?
+          end
+        end
       end
 
       def set_function_access_code

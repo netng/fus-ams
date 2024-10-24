@@ -1,0 +1,50 @@
+<%= tag.tr class: "request-for-purchase-detail border-b border-gray-200 hover:bg-gray-100",
+  data: {
+    dynamic_remove_target: "container"
+  } do %>
+
+  <%= rfp_detail_form.hidden_field :_destroy, 
+    class: 'destroy-field',
+    data: { dynamic_remove_target: "destroyField" }
+  %>
+
+
+  <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+    <%= link_to '#', class: 'delete-detail', data: { action: 'click->dynamic-remove#removeDetail' } do %>
+      <%= inline_svg_tag "trash.svg", class: "w-5 h-5 text-slate-400 cursor-pointer" %>
+    <% end %>
+  </td>
+
+
+  <td class="py-2 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.number_field :qty, class: "block text-xs w-[60px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.date_field :tentative_date, class: "block text-xs w-[105px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.date_field :confirm_date, class: "block text-xs w-[105px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.text_field :specs, class: "block text-xs w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.select :currency_id, Currency.pluck(:name, :id).map { |name, id| [name, id]}, {}, { data: { controller: "slim-no-search" }, class: "w-[70px] p-2 rounded-lg text-xs font-bold"} %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.number_field :rate, class: "block text-xs w-[80px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.number_field :price, class: "block text-xs w-[120px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+  </td>
+
+  <td class="py-3 px-2 text-left whitespace-nowrap">
+    <%= rfp_detail_form.number_field :sub_total, class: "block text-xs w-[120px] p-2 border bg-gray-300 border-gray-300 rounded-lg", disabled: true %>
+  </td>
+<% end %>
