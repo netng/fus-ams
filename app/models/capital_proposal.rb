@@ -8,6 +8,7 @@ class CapitalProposal < ApplicationRecord
   belongs_to :department
   belongs_to :currency
 
+  has_many :request_for_purchases, dependent: :restrict_with_error
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
   validates :real_number, length: { maximum: 100 }

@@ -10,7 +10,14 @@
             class: "px-2 text-white hover:underline",
             data: { turbo_frame: "main-content", turbo_action: "advance"} %>
         </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
+
+        <li>
+          <%= link_to "#{t('activerecord.models.request_for_purchase')}",
+            admin_request_for_purchases_path,
+            class: "px-2 text-white hover:underline",
+            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
+        </li>
+
         <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Delivery order</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Register asset</a></li>
