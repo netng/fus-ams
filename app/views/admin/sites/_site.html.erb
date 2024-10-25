@@ -15,7 +15,15 @@
           title: t("custom.label.select_to_delete")
         }
        %>
-      <%= link_to "#{t("custom.label.edit")}", edit_admin_site_path(site), data: { turbo_frame: "main-content", turbo_action: "advance" }, class: "text-blue-500 hover:text-blue-700" %>
+
+      <%= link_to edit_admin_site_path(site),
+        data: {
+          turbo_frame: "main-content",
+          turbo_action: "advance"
+        } do %>
+          <%= inline_svg_tag "edit.svg", class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer", title: t("custom.label.edit") %>
+      <% end %>
+
     </div>
   </td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.id_site %></td>

@@ -27,7 +27,7 @@ module Admin
 
       @request_for_purchase.date ||= Date.today.strftime("%Y-%m-%d")
 
-      render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase }
+      # render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase }
     end
     
     def create
@@ -43,7 +43,8 @@ module Admin
         if @request_for_purchase.save
           format.html { redirect_to admin_request_for_purchases_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.request_for_purchase"))}
         else
-          format.html { render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase } }
+          # format.html { render ("_form" if turbo_frame_request?), locals: { request_for_purchase: @request_for_purchase } }
+          format.html { render :new, status: :unprocessable_entity }
         end
       end
     end
