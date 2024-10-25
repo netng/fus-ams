@@ -1,0 +1,120 @@
+<%= form_with model: [:admin, purchase_order], data: { turbo_action: "advance" } do |form| %>
+
+  <div class="md:grid grid-cols-2 gap-2">
+    <div class="mb-2">
+      <%= form.label :number, "#{t("activerecord.attributes.purchase_order.number")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @purchase_order.errors.full_messages_for(:number).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :date, "#{t("activerecord.attributes.purchase_order.date")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
+      <%= form.date_field :date, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @purchase_order.errors.full_messages_for(:date).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :vendor, "#{t("activerecord.models.vendor")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
+      <%= form.select :vendor_id,
+        Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
+        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+      %>
+      <% @purchase_order.errors.full_messages_for(:vendor).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="w-full mb-2">
+      <%= form.label "#{t('activerecord.attributes.purchase_order.request_for_purchase_id')} *", class: "block text-gray-700" %>
+      <%= form.select :request_for_purchase_id,
+        @request_for_purchases.pluck(:number, :id).map { |number, id| [number.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.request_for_purchase")).capitalize},
+        data: { 
+          controller: "po-rfp-details",
+          po_rfp_details_target: "select",
+          action: "po-rfp-details#updateTable"
+        },
+        class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
+        required: true
+      %>
+    </div>
+  </div>
+
+
+  <div class="md:grid grid-cols-2 gap-2">
+    <div class="mb-2">
+      <%= form.label :delivery_date, "#{t("activerecord.attributes.purchase_order.delivery_date")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
+      <%= form.date_field :delivery_date, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <% @purchase_order.errors.full_messages_for(:delivery_date).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="w-full mb-2">
+      <%= form.label "#{t('activerecord.attributes.purchase_order.ship_to_site_id')} *", class: "block text-gray-700" %>
+      <%= form.select :ship_to_site_id,
+        Site.pluck(:name, :id).map { |name, id| [name, id]},
+        {include_blank: t("custom.label.all", model: t("activerecord.models.vendor")).capitalize},
+        data: { action: "filters#submit", controller: "slim" },
+        class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
+        required: true
+      %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :payment_remarks, class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.text_field :payment_remarks, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      <% @purchase_order.errors.full_messages_for(:payment_remarks).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :approved_by, "#{t("activerecord.attributes.purchase_order.approved_by_id")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.select :approved_by_id,
+        PersonalBoard.pluck(:username, :id).map { |username, id| [username.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.attributes.purchase_order.approved_by_id")).capitalize},
+        { data: { controller: "slim-no-search" }, class: "p-2 rounded-lg" }
+      %>
+      <% @purchase_order.errors.full_messages_for(:approved_by).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+    
+    <div class="mb-2">
+      <%= form.label :status, "#{t("activerecord.attributes.purchase_order.status")}", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.select :status,
+        [["Open", "Open"], ["Closed", "Closed"]],
+        {},
+        { data: { controller: "slim-no-search" }, class: "p-2 rounded-lg" }
+      %>
+      <% @purchase_order.errors.full_messages_for(:status).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+  </div>
+
+  <div id="rfp_details_table">
+  <%= render "rfp_details_table", rfp_details: @request_for_purchase_details, selected_details: @selected_details %>
+  </div>
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit "#{t('custom.label.save')}",
+      class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+
+    <%= link_to "#{t('custom.label.cancel')}",
+      admin_purchase_orders_path,
+      data: {
+        turbo_action: "advance"
+      },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

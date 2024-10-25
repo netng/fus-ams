@@ -1,6 +1,8 @@
 class Vendor < ApplicationRecord
   include Trackable
   include Downcaseable
+
+  has_many :purchase_orders, dependent: :restrict_with_error
   
   downcase_fields :email
    

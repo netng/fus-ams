@@ -24,6 +24,7 @@ en:
       currency: Currency
       request_for_purchase: Request for purchase
       request_for_purchase_detail: Request for purchase detail
+      purchase_order: Purchase order
       
 
     attributes:
@@ -123,6 +124,18 @@ en:
         budget_ref_number: Budget ref. number
         budget_amount: Budget amount
       
+      purchase_order:
+        number: Number
+        date: Date
+        vendor_id: Supplier name
+        request_for_purchase_id: RFP no
+        delivery_date: Delivery date
+        ship_to_site_id: Delivery to
+        payment_remarks: Payment remarks
+        approved_by_id: Approved by
+        description: Description
+        status: Status
+
       currency:
         id_currency: ID
         name: Name
@@ -367,6 +380,8 @@ en:
   
   custom:
     label:
+      delivery_to: Delivery to
+      approved_by: Approved by
       request_for_purchase_details: Requst for purchase details
       clear_filter: Clear
       sign_in: Sign in
@@ -408,6 +423,7 @@ en:
       from_department: From department
       to_department: To department
       total_po: Total PO
+      total_do: Total DO
       cost_log_number: Cost log number
 
     format: "%{attribute} %{message}"

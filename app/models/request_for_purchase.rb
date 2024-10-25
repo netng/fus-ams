@@ -9,6 +9,8 @@ class RequestForPurchase < ApplicationRecord
   has_many :request_for_purchase_details, inverse_of: :request_for_purchase, dependent: :destroy
   accepts_nested_attributes_for :request_for_purchase_details, allow_destroy: true, reject_if: :all_blank
 
+  has_many :purchase_orders, dependent: :restrict_with_error
+
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
   validates :date, presence: true
   validates :material_code, presence: true, length: { maximum: 100 }

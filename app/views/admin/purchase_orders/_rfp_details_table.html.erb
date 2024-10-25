@@ -1,0 +1,18 @@
+<tbody class="text-gray-600 text-sm font-light" id="rfp_details_table">
+  <% (rfp_details || []).each do |detail| %>
+    <tr>
+      <%= selected_details.inspect %>
+      <td>
+        <input type="checkbox" name="selected_details[]" value="<%= detail.id %>" <%= "checked" if (selected_details || []).include?(detail.id.to_s) %> />
+      </td>
+      <td><%= detail.qty %></td>
+      <td><%= detail.tentative_date %></td>
+      <td><%= detail.confirm_date %></td>
+      <td><%= detail.specs %></td>
+      <td><%= detail.currency&.id_currency %></td>
+      <td><%= detail.rate %></td>
+      <td><%= detail.price %></td>
+      <td><%= detail.sub_total %></td>
+    </tr>
+  <% end %>
+</tbody>
