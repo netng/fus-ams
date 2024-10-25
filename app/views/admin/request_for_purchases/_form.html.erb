@@ -113,16 +113,19 @@
     </div>
   </div>
 
-  <% if @request_for_purchase.errors.any? %>
-    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
-        <% @request_for_purchase.request_for_purchase_details.each_with_index do |detail| %>
-          <% if detail.errors.any? %>
-            <span class="text-xs text-red-500"><%= detail.errors.full_messages.join(", ") %></li>
-          <% end %>
-        <% end %>
-    </div>
+  <% error_messages = [] %>
+
+  <% @request_for_purchase.request_for_purchase_details.each_with_index do |detail| %>
+    <% if detail.errors.any? %>
+      <% error_messages << detail.errors.full_messages.uniq %>
+    <% end %>
   <% end %>
 
+  <% if error_messages.any? %>
+    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
+      <span class="text-xs text-red-500"><%= error_messages.flatten.uniq.join(", ") %></li>
+    </div>
+  <% end %>
 
   <div class="bg-slate-50 p-2 overflow-x-auto rounded-lg">
     <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
