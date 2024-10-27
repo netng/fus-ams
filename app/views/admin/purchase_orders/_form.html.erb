@@ -1,6 +1,7 @@
 <%= form_with model: [:admin, purchase_order], data: { turbo_action: "advance" } do |form| %>
 
   <div class="md:grid grid-cols-2 gap-2">
+  
     <div class="mb-2">
       <%= form.label :number, "#{t("activerecord.attributes.purchase_order.number")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
       <%= form.text_field :number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
@@ -10,19 +11,24 @@
     </div>
 
     <div class="mb-2">
-      <%= form.label :date, "#{t("activerecord.attributes.purchase_order.date")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
-      <%= form.date_field :date, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :date, "#{t("activerecord.attributes.purchase_order.date")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.date_field :date, 
+        class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+        required: true 
+      %>
       <% @purchase_order.errors.full_messages_for(:date).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
     <div class="mb-2">
-      <%= form.label :vendor, "#{t("activerecord.models.vendor")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
+      <%= form.label :vendor, "#{t("activerecord.models.vendor")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
       <%= form.select :vendor_id,
-        Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
-        {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        Vendor.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.vendor")).capitalize},
+        data: { controller: "slim" },
+        class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
+        required: true
       %>
       <% @purchase_order.errors.full_messages_for(:vendor).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -42,14 +48,24 @@
         class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
         required: true
       %>
+      <% @purchase_order.errors.full_messages_for(:request_for_purchase).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
     </div>
+  </div>
+
+  <div id="rfp_details_table">
+    <%= render "rfp_details_table", rfp_details: rfp_details, selected_details: selected_details %>
   </div>
 
 
   <div class="md:grid grid-cols-2 gap-2">
     <div class="mb-2">
-      <%= form.label :delivery_date, "#{t("activerecord.attributes.purchase_order.delivery_date")} *", class: "block text-sm font-medium text-gray-500 mb-2", required: true %>
-      <%= form.date_field :delivery_date, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :delivery_date, "#{t("activerecord.attributes.purchase_order.delivery_date")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.date_field :delivery_date,
+        class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+        required: true 
+      %>
       <% @purchase_order.errors.full_messages_for(:delivery_date).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
@@ -59,11 +75,14 @@
       <%= form.label "#{t('activerecord.attributes.purchase_order.ship_to_site_id')} *", class: "block text-gray-700" %>
       <%= form.select :ship_to_site_id,
         Site.pluck(:name, :id).map { |name, id| [name, id]},
-        {include_blank: t("custom.label.all", model: t("activerecord.models.vendor")).capitalize},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.vendor")).capitalize},
         data: { action: "filters#submit", controller: "slim" },
         class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
         required: true
       %>
+      <% @purchase_order.errors.full_messages_for(:ship_to_site).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
     </div>
 
     <div class="mb-2">
@@ -79,7 +98,9 @@
       <%= form.select :approved_by_id,
         PersonalBoard.pluck(:username, :id).map { |username, id| [username.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.attributes.purchase_order.approved_by_id")).capitalize},
-        { data: { controller: "slim-no-search" }, class: "p-2 rounded-lg" }
+        data: { controller: "slim-no-search" },
+        class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
+        required: true
       %>
       <% @purchase_order.errors.full_messages_for(:approved_by).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -98,10 +119,6 @@
       <% end %>
     </div>
 
-  </div>
-
-  <div id="rfp_details_table">
-  <%= render "rfp_details_table", rfp_details: @request_for_purchase_details, selected_details: @selected_details %>
   </div>
 
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">

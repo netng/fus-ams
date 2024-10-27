@@ -13,7 +13,7 @@ export default class extends Controller {
     const requestForPurchaseId = this.selectTarget.value
     console.log(requestForPurchaseId)
 
-    if (requestForPurchaseId) {
+    // if (requestForPurchaseId) {
       const response = await get(`/admin/purchase_orders/load_rfp_details?id=${requestForPurchaseId}`, {
         responseKind: "turbo-stream"
       })
@@ -21,7 +21,7 @@ export default class extends Controller {
       if (!response.ok) {
         console.error("failed to fetch rfp details")
       }
-    }
+    // }
   }
 
   updateTable() {

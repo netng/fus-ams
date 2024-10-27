@@ -3,7 +3,6 @@ en:
     models:
       role: Role
       account: Account
-      project: Project
       brand: Brand
       vendor: Vendor
       department: Department

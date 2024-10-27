@@ -17,7 +17,6 @@ module Admin
       authorize :authorization, :create?
 
       @purchase_order = PurchaseOrder.new
-      @request_for_purchase_details = RequestForPurchaseDetail.where(request_for_purchase_id: params[:request_for_purchase_id])
       @selected_details = []
     end
 
@@ -27,21 +26,15 @@ module Admin
       @purchase_order = PurchaseOrder.new(purchase_order_params)
       @purchase_order.date ||= Date.today.strftime("%Y-%m-%d")
       @selected_details = (params[:selected_details] || []).map(&:to_s)
-      @request_for_purchase_details = RequestForPurchaseDetail.where(request_for_purchase_id: params[:request_for_purchase_id])
-
-
-
-      puts @request_for_purchase_details.inspect
-
-      puts "SELECTED DETAILS : #{params.inspect}"
+      @request_for_purchase_details = RequestForPurchaseDetail.where(request_for_purchase_id: params[:purchase_order][:request_for_purchase_id])
 
       respond_to do |format|
         if @purchase_order.save
           format.html { redirect_to admin_purchase_orders_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.purchase_order"))}
         else
+          puts @purchase_order.errors.messages
           # format.html { render ("_form" if turbo_frame_request?), locals: { purchase_order: @purchase_order } }
-          @request_for_purchase_details = RequestForPurchaseDetail.where(request_for_purchase_id: @purchase_order.id)
-          format.html { render :new, status: :unprocessable_entity, locals: { rfp_details: @request_for_purchase_details ,selected_details: @selected_details } }
+          format.html { render :new, status: :unprocessable_entity }
         end
       end
     end
@@ -65,7 +58,7 @@ module Admin
         "rfp_details_table",
         partial: "admin/purchase_orders/rfp_details_table",
         locals: { rfp_details: @request_for_purchase_details, selected_details: @selected_details })
-
+      
       puts @request_for_purchase_details.inspect
     end
 
