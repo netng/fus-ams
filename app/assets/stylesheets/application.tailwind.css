@@ -2,15 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
+
 
 @layer components {
-  .btn-primary {
+  /* .btn-primary {
     @apply py-2 px-4 bg-blue-200;
+  } */
+
+  .fus-input {
+    @apply block w-full text-slate-600 font-light p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-select {
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
   }
 }
 
-*/
 
 /* flash css */
 .fade-in-out {

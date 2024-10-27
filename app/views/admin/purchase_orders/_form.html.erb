@@ -4,7 +4,7 @@
   
     <div class="mb-2">
       <%= form.label :number, "#{t("activerecord.attributes.purchase_order.number")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.text_field :number, class: "fus-input", required: true %>
       <% @purchase_order.errors.full_messages_for(:number).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
@@ -13,7 +13,7 @@
     <div class="mb-2">
       <%= form.label :date, "#{t("activerecord.attributes.purchase_order.date")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
       <%= form.date_field :date, 
-        class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+        class: "fus-input",
         required: true 
       %>
       <% @purchase_order.errors.full_messages_for(:date).each do |message| %>
@@ -27,7 +27,7 @@
         Vendor.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.vendor")).capitalize},
         data: { controller: "slim" },
-        class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300",
+        class: "fus-select",
         required: true
       %>
       <% @purchase_order.errors.full_messages_for(:vendor).each do |message| %>
