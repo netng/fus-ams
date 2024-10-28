@@ -1,5 +1,5 @@
 <% if rfp_details.present? %>
-<div class="bg-slate-50 p-2 overflow-x-auto rounded-lg" id="rfp_details_table">
+<div class="overflow-x-auto rounded-lg my-2" id="rfp_details_table">
   <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
       <table class="min-w-full bg-white table-auto">
         <thead class="rounded-lg">
@@ -16,6 +16,10 @@
 
             <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
               <%= t("activerecord.attributes.request_for_purchase_detail.tentative_date") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.confirm_date") %>
             </th>
 
             <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
@@ -41,13 +45,16 @@
         </thead>
         
         <tbody class="text-gray-600 text-sm font-light">
-
           <% (rfp_details || []).each do |detail| %>
             <%= tag.tr class: "request-for-purchase-detail border-b border-gray-200 hover:bg-gray-100" do %>
-
-              <td>
-                <input type="checkbox" name="selected_details[]" value="<%= detail.id %>" <%= "checked" if (selected_details || []).include?(detail.id.to_s) %> />
+              <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+                <%= check_box_tag "selected_details[]",
+                  detail.id,
+                  (selected_details || []).include?(detail.id.to_s),
+                  class: "h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+                  multiple: true %>
               </td>
+
 
               <td class="py-2 px-2 text-left whitespace-nowrap">
                 <span class="block text-xs w-[60px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -60,6 +67,12 @@
                   <%= detail.tentative_date.strftime("%Y-%m-%d") %>
                 </span>
               </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+              <span class="block text-xs w-[105px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <%= detail.confirm_date.strftime("%Y-%m-%d") %>
+              </span>
+            </td>
 
               <td class="py-3 px-2 text-left whitespace-nowrap">
                 <span class="block text-xs w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">

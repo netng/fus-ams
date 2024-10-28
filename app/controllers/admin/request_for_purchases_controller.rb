@@ -81,7 +81,7 @@ module Admin
 				request_for_purchases.each do |request_for_purchase|
 					unless request_for_purchase.destroy
             error_message = request_for_purchase.errors.full_messages.join("")
-            redirect_to admin_request_for_purchases_path, alert: "#{error_message} - #{t('activerecord.models.request_for_purchase')} id: #{request_for_purchase.id_request_for_purchase}"
+            redirect_to admin_request_for_purchases_path, alert: "#{error_message} - #{t('activerecord.models.request_for_purchase')} id: #{request_for_purchase.number}"
             raise ActiveRecord::Rollback
 					end
 				end

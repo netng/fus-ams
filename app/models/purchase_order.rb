@@ -8,7 +8,7 @@ class PurchaseOrder < ApplicationRecord
   belongs_to :currency
   belongs_to :approved_by, class_name: "PersonalBoard"
 
-  has_many :request_for_purchase_details, dependent: :restrict_with_error
+  has_many :request_for_purchase_details, dependent: :nullify
   accepts_nested_attributes_for :request_for_purchase_details, reject_if: :all_blank
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }

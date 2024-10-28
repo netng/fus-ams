@@ -14,7 +14,23 @@
   }
 
   .fus-select {
-    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-label {
+    @apply block text-sm font-medium text-gray-400;
+  }
+
+  .fus-primary-btn {
+    @apply bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ;
+  }
+
+  .fus-secondary-btn {
+    @apply text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300;
+  }
+
+  .fus-form-header {
+    @apply text-2xl font-bold text-gray-500;
   }
 }
 
