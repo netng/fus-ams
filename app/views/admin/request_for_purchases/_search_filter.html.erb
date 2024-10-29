@@ -9,28 +9,28 @@
   
       <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim-dependent-select-search"> 
         <div class="w-full mb-2">
-          <%= f.label "#{t('custom.label.from_department')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('custom.label.from_department')}", class: "fus-label" %>
           <%= f.select :from_department_id_eq,
             Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('custom.label.to_department')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('custom.label.to_department')}", class: "fus-label" %>
           <%= f.select :to_department_id_eq,
             Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.request_for_purchase.number')}", class: "block text-gray-700" %>
-          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+          <%= f.label "#{t('activerecord.attributes.request_for_purchase.number')}", class: "fus-label" %>
+          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
       </div>

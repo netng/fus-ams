@@ -1,16 +1,16 @@
 <%= form_with model: [:admin, asset_model], data: { turbo_action: "advance" } do |form| %>
 
   <div class="mb-2">
-    <%= form.label :id_asset_model, "#{t("activerecord.attributes.asset_model.id_asset_model")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_asset_model, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.label :id_asset_model, "#{t("activerecord.attributes.asset_model.id_asset_model")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :id_asset_model, class: "fus-input", required: true %>
     <% @asset_model.errors.full_messages_for(:id_asset_model).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
   <div class="mb-2">
-    <%= form.label :name, "#{t("activerecord.attributes.asset_model.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :name, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.label :name, "#{t("activerecord.attributes.asset_model.name")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :name, class: "fus-input", required: true %>
     <% @asset_model.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
@@ -18,11 +18,11 @@
 
 
   <div class="mb-2">
-    <%= form.label :brand, "#{t("activerecord.models.brand")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.label :brand, "#{t("activerecord.models.brand")} *", class: "fus-label mb-2" %>
     <%= form.select :brand_id,
       Brand.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
       {include_blank: t("custom.label.select", model: t("activerecord.models.brand")).capitalize},
-      { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+      { data: { controller: "slim" }, class: "fus-select" }
     %>
     <% @asset_model.errors.full_messages_for(:brand).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -31,7 +31,7 @@
 
   <div data-controller="slim-dependent-select-insert">
     <div class="mb-2">
-      <%= form.label :asset_type, "#{t("activerecord.models.asset_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :asset_type, "#{t("activerecord.models.asset_type")} *", class: "fus-label mb-2" %>
       <%= form.select :asset_type_id,
         AssetType.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.asset_type")).capitalize},
@@ -41,7 +41,7 @@
             slim_dependent_select_insert_target: "parent",
             endpoint: "#{asset_item_types_admin_asset_models_path}"
           },
-          class: "p-2 rounded-lg"
+          class: "fus-select"
         }
       %>
 
@@ -52,7 +52,7 @@
 
 
     <div class="mb-2">
-      <%= form.label :asset_item_type, "#{t("activerecord.models.asset_item_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :asset_item_type, "#{t("activerecord.models.asset_item_type")} *", class: "fus-label mb-2" %>
       <%= form.select :asset_item_type_id,
         @asset_item_types,
         {include_blank: t("custom.label.select", model: t("activerecord.models.asset_item_type")).capitalize},
@@ -62,7 +62,7 @@
             default_option: t("custom.label.select", model: t("activerecord.models.asset_item_type")).capitalize,
             slim_dependent_select_insert_target: "child"
           },
-          class: "p-2 rounded-lg"
+          class: "fus-select"
         }
       %>
   
@@ -74,8 +74,8 @@
   </div>
 
   <div class="mb-2">
-    <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.label :description, class: "fus-label mb-2" %>
+    <%= form.textarea :description, class: "fus-input" %>
     <% @asset_model.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>

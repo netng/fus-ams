@@ -1,27 +1,27 @@
 <%= form_with model: [:admin, asset_item_type], data: { turbo_action: "advance" } do |form| %>
 
   <div class="mb-2">
-    <%= form.label :id_asset_item_type, "#{t("activerecord.attributes.asset_item_type.id_asset_item_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :id_asset_item_type, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.label :id_asset_item_type, "#{t("activerecord.attributes.asset_item_type.id_asset_item_type")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :id_asset_item_type, class: "fus-input", required: true %>
     <% @asset_item_type.errors.full_messages_for(:id_asset_item_type).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
   <div class="mb-2">
-    <%= form.label :name, "#{t("activerecord.attributes.asset_item_type.name")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.text_field :name, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+    <%= form.label :name, "#{t("activerecord.attributes.asset_item_type.name")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :name, class: "fus-input", required: true %>
     <% @asset_item_type.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>
   </div>
 
   <div class="mb-2">
-    <%= form.label :asset_type, "#{t("activerecord.models.asset_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+    <%= form.label :asset_type, "#{t("activerecord.models.asset_type")} *", class: "fus-label mb-2" %>
     <%= form.select :asset_type_id, 
       AssetType.pluck(:name, :id).map { |name, id| [name.capitalize, id] },
       {include_blank: t("custom.label.select", model: t("activerecord.models.asset_type")).capitalize},
-      {data: { controller: 'slim' }, class: "p-2 rounded-lg"}
+      {data: { controller: 'slim' }, class: "fus-select"}
     %>
     <% @asset_item_type.errors.full_messages_for(:asset_type).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -29,8 +29,8 @@
   </div>
 
   <div class="mb-2">
-    <%= form.label :description, class: "block text-sm font-medium text-gray-500 mb-2" %>
-    <%= form.textarea :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= form.label :description, class: "fus-label mb-2" %>
+    <%= form.textarea :description, class: "fus-input" %>
     <% @asset_item_type.errors.full_messages_for(:description).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>

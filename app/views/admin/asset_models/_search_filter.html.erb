@@ -9,27 +9,27 @@
   
       <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim-dependent-select-search">
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.asset_model.id_asset_model')}", class: "block text-gray-700" %>
-          <%= f.search_field :id_asset_model_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+          <%= f.label "#{t('activerecord.attributes.asset_model.id_asset_model')}", class: "fus-label" %>
+          <%= f.search_field :id_asset_model_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.asset_model.name')}", class: "block text-gray-700" %>
-          <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+          <%= f.label "#{t('activerecord.attributes.asset_model.name')}", class: "fus-label" %>
+          <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
   
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.brand')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.brand')}", class: "fus-label" %>
           <%= f.select :brand_id_eq,
             Brand.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.brand")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
   
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.asset_type')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.asset_type')}", class: "fus-label" %>
           <%= f.select :asset_type_id_eq,
             options_for_select(AssetType.pluck(:name, :id).map { |name, id| [name.capitalize, id]}),
             {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
@@ -38,12 +38,12 @@
               slim_dependent_select_search_target: "parent",
               endpoint: "#{asset_item_types_admin_asset_models_path}",
             },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
   
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.asset_item_type')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.asset_item_type')}", class: "fus-label" %>
           <%= f.select :asset_item_type_name_cont,
             [],
             {include_blank: t("custom.label.all", model: t("activerecord.models.asset_item_type")).capitalize},
@@ -53,7 +53,7 @@
               default_option: t("custom.label.all", model: t("activerecord.models.asset_item_type")).capitalize
             },
             
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
       </div>

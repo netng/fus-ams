@@ -10,17 +10,17 @@
     <div class="flex flex-wrap md:flex md:flex-nowrap gap-2">
 
       <div class="w-full mb-2">
-        <%= f.label "#{t('activerecord.attributes.site_group.id_site_group')}", class: "block text-gray-700" %>
-        <%= f.search_field :id_site_group_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+        <%= f.label "#{t('activerecord.attributes.site_group.id_site_group')}", class: "fus-label" %>
+        <%= f.search_field :id_site_group_cont, data: { action: "filters#submit" }, class: "fus-input" %>
       </div>
 
       <div class="w-full mb-2">
-        <%= f.label "#{t('activerecord.attributes.site_group.name')}", class: "block text-gray-700" %>
-        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+        <%= f.label "#{t('activerecord.attributes.site_group.name')}", class: "fus-label" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
       </div>
 
       <div class="w-full mb-2">
-        <%= f.label "#{t('activerecord.models.project')}", class: "block text-gray-700" %>
+        <%= f.label "#{t('activerecord.models.project')}", class: "fus-label" %>
         <%= f.select :project_id_eq,
           Project.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
           {include_blank: t("custom.label.all", model: t("activerecord.models.project")).capitalize},
@@ -28,7 +28,7 @@
             action: "filters#submit",
             controller: "slim"
           },
-          class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          class: "fus-select"
         %>
       </div>
     </div>

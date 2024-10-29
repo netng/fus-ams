@@ -9,13 +9,13 @@
 
     <div class="md:flex gap-2">
       <div class="w-full mb-2">
-        <%= f.label "#{t('activerecord.attributes.brand.id_brand')}", class: "block text-gray-700" %>
-        <%= f.search_field :id_brand_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+        <%= f.label "#{t('activerecord.attributes.brand.id_brand')}", class: "fus-label" %>
+        <%= f.search_field :id_brand_cont, data: { action: "filters#submit" }, class: "fus-input" %>
       </div>
 
       <div class="w-full mb-2">
-        <%= f.label "#{t('activerecord.attributes.brand.name')}", class: "block text-gray-700" %>
-        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+        <%= f.label "#{t('activerecord.attributes.brand.name')}", class: "fus-label" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
       </div>
     </div>
     

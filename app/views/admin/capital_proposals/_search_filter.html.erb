@@ -9,47 +9,47 @@
   
       <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim-dependent-select-search"> 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.site')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.site')}", class: "fus-label" %>
           <%= f.select :site_id_eq,
             Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.site")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.department')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.department')}", class: "fus-label" %>
           <%= f.select :department_id_eq,
             Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.capital_proposal.number')}", class: "block text-gray-700" %>
-          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+          <%= f.label "#{t('activerecord.attributes.capital_proposal.number')}", class: "fus-label" %>
+          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.capital_proposal_type')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.capital_proposal_type')}", class: "fus-label" %>
           <%= f.select :capital_proposal_type_id_eq,
             CapitalProposalType.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.capital_proposal_type")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.capital_proposal_group')}", class: "block text-gray-700" %>
+          <%= f.label "#{t('activerecord.models.capital_proposal_group')}", class: "fus-label" %>
           <%= f.select :capital_proposal_group_id_eq,
             CapitalProposalGroup.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.models.capital_proposal_group")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
-            class: "w-full border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class: "fus-select"
           %>
         </div>
       </div>

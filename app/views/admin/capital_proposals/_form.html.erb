@@ -2,27 +2,27 @@
 
   <div class="md:grid grid-cols-2 gap-2">
     <div class="mb-2">
-      <%= form.label :number, "#{t("activerecord.attributes.capital_proposal.number")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :number, "#{t("activerecord.attributes.capital_proposal.number")} *", class: "fus-label mb-2" %>
+      <%= form.text_field :number, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:number).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
     <div class="mb-2">
-      <%= form.label :real_number, "#{t("activerecord.attributes.capital_proposal.real_number")}", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :real_number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      <%= form.label :real_number, "#{t("activerecord.attributes.capital_proposal.real_number")}", class: "fus-label mb-2" %>
+      <%= form.text_field :real_number, class: "fus-input" %>
       <% @capital_proposal.errors.full_messages_for(:real_number).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
     <div class="mb-2">
-      <%= form.label :capital_proposal_type, "#{t("activerecord.models.capital_proposal_type")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :capital_proposal_type, "#{t("activerecord.models.capital_proposal_type")} *", class: "fus-label mb-2" %>
       <%= form.select :capital_proposal_type_id,
         CapitalProposalType.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.capital_proposal_type")).capitalize},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        { data: { controller: "slim-no-search" }, class: "fus-select" }
       %>
       <% @capital_proposal.errors.full_messages_for(:capital_proposal_type).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -30,11 +30,11 @@
     </div>
   
     <div class="mb-2">
-      <%= form.label :capital_proposal_group, "#{t("activerecord.models.capital_proposal_group")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :capital_proposal_group, "#{t("activerecord.models.capital_proposal_group")} *", class: "fus-label mb-2" %>
       <%= form.select :capital_proposal_group_id,
         CapitalProposalGroup.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.capital_proposal_group")).capitalize},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        { data: { controller: "slim" }, class: "fus-select" }
       %>
       <% @capital_proposal.errors.full_messages_for(:capital_proposal_group).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -42,11 +42,11 @@
     </div>
     
     <div class="mb-2">
-      <%= form.label :site, "#{t("activerecord.models.site")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
       <%= form.select :site_id,
         Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        { data: { controller: "slim" }, class: "fus-select" }
       %>
       <% @capital_proposal.errors.full_messages_for(:site).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -54,11 +54,11 @@
     </div>
   
     <div class="mb-2">
-      <%= form.label :department, "#{t("activerecord.models.department")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :department, "#{t("activerecord.models.department")} *", class: "fus-label mb-2" %>
       <%= form.select :department_id,
         Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
         {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        { data: { controller: "slim" }, class: "fus-select" }
       %>
       <% @capital_proposal.errors.full_messages_for(:department).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -66,26 +66,26 @@
     </div>
 
     <div class="mb-2">
-      <%= form.label :date, "#{t("activerecord.attributes.capital_proposal.date")} (yyyy-mm-dd) *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :date, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :date, "#{t("activerecord.attributes.capital_proposal.date")} (yyyy-mm-dd) *", class: "fus-label mb-2" %>
+      <%= form.text_field :date, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:date).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
   
     <div class="mb-2">
-      <%= form.label :description, "#{t("activerecord.attributes.capital_proposal.description")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :description, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :description, "#{t("activerecord.attributes.capital_proposal.description")} *", class: "fus-label mb-2" %>
+      <%= form.text_field :description, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:description).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
     <div class="mb-2">
-      <%= form.label :equiv_amount, "#{t("activerecord.attributes.capital_proposal.equiv_amount")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :equiv_amount, "#{t("activerecord.attributes.capital_proposal.equiv_amount")} *", class: "fus-label mb-2" %>
       <div class="flex gap-2">
-        <%= form.select :currency_id, Currency.pluck(:name, :id).map { |name, id| [name, id]}, {}, { data: { controller: "slim" }, class: "max-w-[100px] p-2 rounded-lg text-sm font-bold"} %>
-        <%= form.number_field :equiv_amount, step: 1, class: "w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+        <%= form.select :currency_id, Currency.pluck(:name, :id).map { |name, id| [name, id]}, {}, { data: { controller: "slim-no-search" }, class: "max-w-[100px] fus-select"} %>
+        <%= form.number_field :equiv_amount, step: 1, class: "fus-input", required: true %>
         <% @capital_proposal.errors.full_messages_for(:equiv_amount).each do |message| %>
           <p class="text-red-500 text-sm mt-1"><%= message %></p>
         <% end %>
@@ -93,35 +93,35 @@
     </div>
   
     <div class="mb-2">
-      <%= form.label :rate, "#{t("activerecord.attributes.capital_proposal.rate")} (Rp.) *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.number_field :rate, step: 1, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :rate, "#{t("activerecord.attributes.capital_proposal.rate")} (Rp.) *", class: "fus-label mb-2" %>
+      <%= form.number_field :rate, step: 1, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:rate).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
     
     <div class="mb-2">
-      <%= form.label :budget_ref_number, "#{t("activerecord.attributes.capital_proposal.budget_ref_number")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.text_field :budget_ref_number, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :budget_ref_number, "#{t("activerecord.attributes.capital_proposal.budget_ref_number")} *", class: "fus-label mb-2" %>
+      <%= form.text_field :budget_ref_number, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:budget_ref_number).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
   
     <div class="mb-2">
-      <%= form.label :budget_amount, "#{t("activerecord.attributes.capital_proposal.budget_amount")} (Rp.) *", class: "block text-sm font-medium text-gray-500 mb-2" %>
-      <%= form.number_field :budget_amount, step: 1, class: "block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+      <%= form.label :budget_amount, "#{t("activerecord.attributes.capital_proposal.budget_amount")} (Rp.) *", class: "fus-label mb-2" %>
+      <%= form.number_field :budget_amount, step: 1, class: "fus-input", required: true %>
       <% @capital_proposal.errors.full_messages_for(:budget_amount).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
     <div class="mb-2">
-      <%= form.label :status, "#{t("activerecord.attributes.capital_proposal.status")} *", class: "block text-sm font-medium text-gray-500 mb-2" %>
+      <%= form.label :status, "#{t("activerecord.attributes.capital_proposal.status")} *", class: "fus-label mb-2" %>
       <%= form.select :status,
         [["Open", "Open"], ["Closed", "Closed"]],
         {},
-        { data: { controller: "slim" }, class: "p-2 rounded-lg" }
+        { data: { controller: "slim-no-search" }, class: "fus-select" }
       %>
       <% @capital_proposal.errors.full_messages_for(:status).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
