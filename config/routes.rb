@@ -149,5 +149,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :purchase_orders do
+      collection do
+        delete "destroy_many"
+        get "import"
+        post "process_import"
+        get :load_rfp_details
+      end
+    end
+
   end
 end

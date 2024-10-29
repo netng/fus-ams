@@ -18,7 +18,12 @@
             data: { turbo_frame: "main-content", turbo_action: "advance"} %>
         </li>
 
-        <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
+        <li>
+          <%= link_to "#{t('activerecord.models.purchase_order')}",
+            admin_purchase_orders_path,
+            class: "px-2 text-white hover:underline",
+            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Delivery order</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Register asset</a></li>
         <li><a href="#" class="px-2 text-white hover:underline">Update asset</a></li>
