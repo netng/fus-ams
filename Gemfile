@@ -66,7 +66,7 @@ end
 
 gem "bcrypt", "~> 3.1"
 
-gem "pagy", "~> 9.0"
+gem "pagy", "~> 9.1"
 
 gem "ransack", "~> 4.2"
 
