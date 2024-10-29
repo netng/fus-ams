@@ -86,6 +86,8 @@ module Admin
       respond_to do |format|
         ActiveRecord::Base.transaction do
           if @purchase_order.update(purchase_order_params)
+            puts "PO INSPECT: #{@purchase_order.inspect}"
+
 
             # jika rfp nya berubah
             if @purchase_order.request_for_purchase != prev_request_for_purchase
@@ -114,7 +116,11 @@ module Admin
                   @purchase_order.request_for_purchase.request_for_purchase_details.find(selected_id).update_attribute(:purchase_order, @purchase_order)
                 end
 
+                @purchase_order.rate = @purchase_order.request_for_purchase_details.first.rate unless @purchase_order.request_for_purchase_details.empty?
+
                 amount_by_currency = @purchase_order.request_for_purchase_details.select(:qty, :price).sum { |detail| detail.price * detail.qty }
+                puts "AMOUNT BY CURRENCY: #{amount_by_currency}"
+                puts "RATE: #{@purchase_order.inspect}"
                 amount_by_rate = amount_by_currency * @purchase_order.rate
                 @purchase_order.update_attribute(:amount_by_currency, amount_by_currency)
                 @purchase_order.update_attribute(:amount_by_rate, amount_by_rate)
