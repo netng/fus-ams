@@ -67,7 +67,7 @@ module Admin
 				capital_proposals.each do |capital_proposal|
 					unless capital_proposal.destroy
             error_message = capital_proposal.errors.full_messages.join("")
-            redirect_to admin_capital_proposals_path, alert: "#{error_message} - #{t('activerecord.models.capital_proposal')} id: #{capital_proposal.id_capital_proposal}"
+            redirect_to admin_capital_proposals_path, alert: "#{error_message} - #{t('activerecord.models.capital_proposal')} id: #{capital_proposal.number}"
             raise ActiveRecord::Rollback
 					end
 				end

@@ -31,7 +31,7 @@
   </td>
 
   <td class="py-3 px-6 text-left whitespace-nowrap">
-    <%= delivery_order.date %>
+    <%= delivery_order.date.strftime("%Y-%m-%d") %>
   </td>
 
   <td class="py-3 px-6 text-left whitespace-nowrap">
@@ -39,7 +39,7 @@
   </td>
 
   <td class="py-3 px-6 text-left whitespace-nowrap">
-    <%= delivery_order.description.blank? ? "-" : delivery_order.description %>
+    <%= delivery_order.description.blank? ? "-" : delivery_order.description.truncate(50) %>
   </td>
 
   <td class="py-3 px-6 text-left whitespace-nowrap">

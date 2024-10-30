@@ -57,11 +57,18 @@ module Admin
       authorize :authorization, :update?
 
       respond_to do |format|
-				if @request_for_purchase.update(request_for_purchase_params)
+        begin
+          @request_for_purchase.update(request_for_purchase_params)
 					format.html { redirect_to admin_request_for_purchases_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.request_for_purchase")) }
-				else
+        rescue ActiveRecord::RecordNotDestroyed => e
+          logger.debug "ERROR => #{e.inspect}"
 					format.html { render :edit, status: :unprocessable_entity }
-				end
+        end
+				# if @request_for_purchase.update(request_for_purchase_params)
+				# 	format.html { redirect_to admin_request_for_purchases_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.request_for_purchase")) }
+				# else
+				# 	format.html { render :edit, status: :unprocessable_entity }
+				# end
 			end
     end
 
@@ -80,6 +87,7 @@ module Admin
 
 				request_for_purchases.each do |request_for_purchase|
 					unless request_for_purchase.destroy
+            logger.debug "RFP Destroy error - #{request_for_purchase.errors.inspect}"
             error_message = request_for_purchase.errors.full_messages.join("")
             redirect_to admin_request_for_purchases_path, alert: "#{error_message} - #{t('activerecord.models.request_for_purchase')} id: #{request_for_purchase.number}"
             raise ActiveRecord::Rollback
