@@ -10,8 +10,15 @@
 
 
   <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
-    <%= link_to '#', class: 'delete-detail', data: { action: 'click->dynamic-remove#removeDetail' } do %>
-      <%= inline_svg_tag "trash.svg", class: "w-5 h-5 text-slate-400 cursor-pointer" %>
+    <% if rfp_detail_form.object.purchase_order.present? %>
+      <%= inline_svg_tag "linked.svg", 
+        class: "w-5 h-5 text-slate-400",
+        title: "Has PO number: #{rfp_detail_form.object.purchase_order.number}"
+      %>
+    <% else %>
+      <%= link_to '#', class: 'delete-detail', data: { action: 'click->dynamic-remove#removeDetail' } do %>
+        <%= inline_svg_tag "trash.svg", class: "w-5 h-5 text-slate-400 cursor-pointer" %>
+      <% end %>
     <% end %>
   </td>
 

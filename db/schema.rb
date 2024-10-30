@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_30_020835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -208,6 +208,22 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
     t.index ["id_currency"], name: "index_currencies_on_id_currency", unique: true
   end
 
+  create_table "delivery_orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "number", limit: 100, null: false
+    t.datetime "date", null: false
+    t.uuid "purchase_order_id"
+    t.datetime "warranty_expired"
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_delivery_orders_on_number", unique: true
+    t.index ["purchase_order_id"], name: "index_delivery_orders_on_purchase_order_id"
+  end
+
   create_table "departments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "floor"
@@ -251,6 +267,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
     t.index ["id_personal_board"], name: "index_personal_boards_on_id_personal_board", unique: true
   end
 
+  create_table "po_delivery_sites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_po_delivery_site", limit: 100, null: false
+    t.string "name", limit: 100
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id_po_delivery_site"], name: "index_po_delivery_sites_on_id_po_delivery_site", unique: true
+  end
+
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -271,11 +299,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
     t.uuid "vendor_id", null: false
     t.uuid "request_for_purchase_id", null: false
     t.datetime "delivery_date", null: false
-    t.uuid "ship_to_site_id", null: false
     t.string "payment_remarks", limit: 100
     t.string "description", limit: 500
     t.string "status", null: false
-    t.uuid "currency_id", null: false
+    t.uuid "currency_id"
     t.decimal "amount_by_currency", precision: 18, scale: 2
     t.decimal "rate", precision: 18, scale: 2
     t.decimal "amount_by_rate", precision: 18, scale: 2
@@ -286,6 +313,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "approved_by_id", null: false
+    t.uuid "ship_to_site_id", null: false
     t.index ["approved_by_id"], name: "index_purchase_orders_on_approved_by_id"
     t.index ["currency_id"], name: "index_purchase_orders_on_currency_id"
     t.index ["number"], name: "index_purchase_orders_on_number", unique: true
@@ -308,6 +336,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "purchase_order_id"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
     t.index ["currency_id"], name: "index_request_for_purchase_details_on_currency_id"
     t.index ["purchase_order_id"], name: "index_request_for_purchase_details_on_purchase_order_id"
     t.index ["request_for_purchase_id"], name: "index_request_for_purchase_details_on_request_for_purchase_id"
@@ -497,10 +529,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_25_064748) do
   add_foreign_key "capital_proposals", "departments"
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
+  add_foreign_key "delivery_orders", "purchase_orders"
   add_foreign_key "purchase_orders", "currencies"
   add_foreign_key "purchase_orders", "personal_boards", column: "approved_by_id"
+  add_foreign_key "purchase_orders", "po_delivery_sites", column: "ship_to_site_id"
   add_foreign_key "purchase_orders", "request_for_purchases"
-  add_foreign_key "purchase_orders", "sites", column: "ship_to_site_id"
   add_foreign_key "purchase_orders", "vendors"
   add_foreign_key "request_for_purchase_details", "currencies"
   add_foreign_key "request_for_purchase_details", "purchase_orders"

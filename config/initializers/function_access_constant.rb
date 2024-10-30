@@ -23,6 +23,7 @@ module FunctionAccessConstant
 
   FA_ASS_CP = "FA_ASS_CP"
   FA_ASS_PO = "FA_ASS_PO"
+  FA_ASS_DO = "FA_ASS_DO`"
 
   freeze
 end

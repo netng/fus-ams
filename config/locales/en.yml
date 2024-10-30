@@ -24,6 +24,9 @@ en:
       request_for_purchase: Request for purchase
       request_for_purchase_detail: Request for purchase detail
       purchase_order: Purchase order
+      delivery_order: Delivery order
+      personal_board: Personal board
+      po_delivery_site: Delivery site
       
 
     attributes:
@@ -156,6 +159,17 @@ en:
         rate: Rate
         price: Quote price
         sub_total: Total
+
+      delivery_order:
+        number: DO number
+        purchase_order_id: PO number
+        date: Date
+        warranty_expired: Warranty expired date
+        description: Description
+      
+      personal_board:
+        id_personal_board: ID
+        username: Username
 
       account:
         email: Email

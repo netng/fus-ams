@@ -1,0 +1,25 @@
+<div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4 hidden" data-toggle-target="toggle">
+  <%= search_form_for [:admin, @q], url: admin_delivery_orders_path, data: { 
+    controller: "filters",
+    turbo_frame: :table,
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-delivery_order"
+  } do |f| %>
+
+    <div class="flex flew-wrap md:flex md:flew-nowrap gap-2">
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.delivery_order.number')}", class: "fus-label" %>
+        <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.delivery_order.purchase_order_id')}", class: "fus-label" %>
+        <%= f.search_field :purchase_order_number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+    </div>
+    
+  <% end %>
+</div>
