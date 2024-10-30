@@ -8,7 +8,7 @@ module Admin
       authorize :authorization, :index?
 
       @q = PurchaseOrder.ransack(params[:q])
-      @q.sorts = ["date asc"] if @q.sorts.empty?
+      @q.sorts = ["date desc"] if @q.sorts.empty?
 			scope = @q.result.includes(:vendor, :request_for_purchase, :ship_to_site, :approved_by)
 			@pagy, @purchase_orders = pagy(scope)
     end
@@ -185,6 +185,179 @@ module Admin
         locals: { rfp_details: @request_for_purchase_details, selected_details: @selected_details })
       
       puts @request_for_purchase_details.inspect
+    end
+
+
+    def import
+      authorize :authorization, :create?
+    end
+
+    def process_import
+      authorize :authorization, :create?
+      allowed_extension = [".xlsx", ".csv"]
+      file = params[:file]
+      data = []
+      batch_size = 1000
+      maybe_error = false
+
+      start_time = Time.now
+      
+      created_by = Current.account.username
+      request_id = Current.request_id
+      user_agent = Current.user_agent
+      ip_address = Current.ip_address
+
+      if file.present?
+        if !allowed_extension.include?(File.extname(file.original_filename))
+          return redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        xlsx = Roo::Spreadsheet.open(file.path)
+
+        sheet = xlsx.sheet(0)
+
+        purchase_order_attributes_headers = {
+          number: "Number",
+          date: "Date",
+          vendor: "Vendor id",
+          request_for_purchase: "RFP number",
+          amount_by_rate: "Amount by rate",
+          currency: "Currency id",
+          amount_by_currency: "Amount by currency",
+          rate: "Rate",
+          delivery_date: "Delivery date",
+          ship_to_site: "Delivery to id",
+          payment_remarks: "Payment remarks",
+          approved_by: "Approved by id",
+          description: "Description",
+          status: "Status"
+
+        }
+
+        begin
+          ActiveRecord::Base.transaction do
+            sheet.parse(purchase_order_attributes_headers).each do |row|
+
+              vendor = Vendor.find_by_id_vendor(row[:vendor]&.strip)
+              rfp = RequestForPurchase.find_by_number(row[:request_for_purchase]&.strip)
+              ship_to_site = PoDeliverySite.find_by_id_po_delivery_site(row[:ship_to_site]&.strip)
+              approved_by = PersonalBoard.find_by_id_personal_board(row[:approved_by]&.strip)
+              currency = Currency.find_by_id_currency(row[:currency]&.strip)
+
+              if vendor.nil?
+                maybe_error = true
+                redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.vendor"), id: row[:vendor])
+                logger.debug "request_id: #{request.request_id} - data_id: #{row[:number]} - reason: vendor `#{row[:vendor]}` is not found"
+                raise ActiveRecord::Rollback
+                return
+              end
+
+              if rfp.nil?
+                maybe_error = true
+                redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.request_for_purchase"), id: row[:request_for_purchase])
+                logger.debug "request_id: #{request.request_id} - data_id: #{row[:number]} - reason: rfp `#{row[:request_for_purchase]}` is not found"
+                raise ActiveRecord::Rollback
+                return
+              end
+
+              if ship_to_site.nil?
+                maybe_error = true
+                redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.po_delivery_site"), id: row[:ship_to_site])
+                logger.debug "request_id: #{request.request_id} - data_id: #{row[:number]} - reason: Delivery to site `#{row[:ship_to_site]}` is not found"
+                raise ActiveRecord::Rollback
+                return
+              end
+
+              if approved_by.nil?
+                maybe_error = true
+                redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.personal_board"), id: row[:approved_by])
+                logger.debug "request_id: #{request.request_id} - data_id: #{row[:number]} - reason: approved by `#{row[:approved_by]}` is not found"
+                raise ActiveRecord::Rollback
+                return
+              end
+
+              if row[:currency].present?
+                if currency.nil?
+                  maybe_error = true
+                  redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.currency"), id: row[:currency])
+                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:number]} - reason: currency #{row[:currency]} is not found"
+                  raise ActiveRecord::Rollback
+                  return
+                end
+              end
+
+              data << {
+                number: row[:number]&.strip,
+                date: row[:date],
+                vendor_id: vendor.id,
+                request_for_purchase_id: rfp.id,
+                amount_by_rate: row[:amount_by_rate],
+                currency_id: currency&.id,
+                amount_by_currency: row[:amount_by_currency],
+                rate: row[:rate],
+                delivery_date: row[:delivery_date],
+                ship_to_site_id: ship_to_site.id,
+                payment_remarks: row[:payment_remarks],
+                approved_by_id: approved_by.id,
+                status: row[:status],
+                created_by: created_by,
+                request_id: request_id,
+                user_agent: user_agent,
+                ip_address: ip_address
+              }
+
+              if data.size >= batch_size
+                PurchaseOrder.insert_all!(data)
+                data.clear
+              end
+  
+            end
+
+            PurchaseOrder.insert_all!(data) unless data.empty?
+          end
+          
+        rescue Roo::HeaderRowNotFoundError => e
+          redirect_to import_admin_purchase_orders_path, alert: t("custom.errors.invalid_import_template", errors: e)
+          return
+      
+        
+        # Penanganan untuk duplikat data
+        rescue ActiveRecord::RecordNotUnique => e
+          logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
+          duplicate_field = e.message.match(/Key \((.*?)\)=/)[1] rescue "data"
+          duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
+          humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
+          redirect_back_or_to import_admin_purchase_orders_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
+          return
+    
+        # penangan error null violation
+        rescue ActiveRecord::NotNullViolation => e
+          logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
+          error_column = e.message.match(/column "(.*?)"/)[1] # Menangkap nama kolom yang menyebabkan error
+          error_row = data.find { |r| r[error_column.to_sym].nil? }
+
+          error_message = "#{t('activerecord.attributes.purchase_order.' + error_column)} " \
+            "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
+          redirect_back_or_to import_admin_purchase_orders_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
+          return
+        
+        # Penanganan umum untuk semua jenis error lainnya
+        rescue => e
+          logger.error "#{Current.request_id} - General error during import: #{e.message}"
+          redirect_back_or_to import_admin_purchase_orders_path, alert: t('custom.errors.general_error')
+          return
+
+        end
+        
+        unless maybe_error
+          logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
+          redirect_to admin_purchase_orders_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.purchase_order"))
+          return
+        end
+
+      else
+        redirect_back_or_to import_admin_purchase_orders_path, alert: t("custom.flash.alerts.select_file")
+      end
     end
 
     private

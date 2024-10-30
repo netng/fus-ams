@@ -1,0 +1,65 @@
+<%= form_with model: [:admin, delivery_order], data: { turbo_action: "advance" } do |form| %>
+
+  <div class="md:grid grid-cols-2 gap-2 mb-2">
+    <div class="mb-2">
+      <%= form.label :number, "#{t("activerecord.attributes.delivery_order.number")} *", class: "fus-label mb-2" %>
+      <%= form.text_field :number, class: "fus-input", required: true %>
+      <% @delivery_order.errors.full_messages_for(:number).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :purchase_order, "#{t("activerecord.attributes.delivery_order.purchase_order_id")}", class: "fus-label mb-2" %>
+      <%= form.select :purchase_order_id, 
+        PurchaseOrder.pluck(:number, :id).map { |number, id| [number.capitalize, id] },
+        {include_blank: t("custom.label.select", model: t("activerecord.models.purchase_order")).capitalize},
+        {data: { controller: 'slim' }, class: "fus-select"}
+      %>
+      <% @delivery_order.errors.full_messages_for(:purchase_order).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="md:grid grid-cols-2 gap-2 mb-2">
+    <div class="mb-2">
+      <%= form.label :date, "#{t("activerecord.attributes.delivery_order.date")} *", class: "fus-label mb-2" %>
+      <%= form.date_field :date, class: "fus-input", required: true %>
+      <% @delivery_order.errors.full_messages_for(:date).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :warranty_expired, "#{t("activerecord.attributes.delivery_order.warranty_expired")} *", class: "fus-label mb-2" %>
+      <%= form.date_field :warranty_expired, class: "fus-input", required: true %>
+      <% @delivery_order.errors.full_messages_for(:warranty_expired).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  </div>
+
+
+  <div class="mb-2">
+    <%= form.label :description, class: "fus-label mb-2" %>
+    <%= form.textarea :description, class: "fus-input" %>
+    <% @delivery_order.errors.full_messages_for(:description).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit "#{t('custom.label.save')}",
+      class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+
+    <%= link_to "#{t('custom.label.cancel')}",
+      admin_delivery_orders_path,
+      data: {
+        turbo_action: "advance"
+      },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

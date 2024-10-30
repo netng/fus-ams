@@ -5,6 +5,7 @@ class Vendor < ApplicationRecord
   has_many :purchase_orders, dependent: :restrict_with_error
   
   downcase_fields :email
+  before_validation :remove_trailing_whitespace
    
   # validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :id_vendor, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
@@ -16,8 +17,8 @@ class Vendor < ApplicationRecord
   validates :phone_number, length: { maximum: 100 }
   validates :fax_number, length: { maximum: 100 }
   validates :contact_person, length: { maximum: 100 }
-  # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }, allow_nil: true
-  validates :email, length: { maximum: 100 }, allow_nil: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }, allow_nil: true
+  # validates :email, length: { maximum: 100 }, allow_nil: true
   validates :description, length: { maximum: 500 }
 
 
@@ -29,5 +30,11 @@ class Vendor < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
+
+  private
+    def remove_trailing_whitespace
+      self.id_vendor = id_vendor.strip
+      self.email = email.strip unless email.blank?
+    end
 
 end

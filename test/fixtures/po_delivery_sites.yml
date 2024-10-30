@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  po_delivery_site_id: MyString
+  name: MyString
+
+two:
+  po_delivery_site_id: MyString
+  name: MyString

@@ -88,6 +88,7 @@ module Admin
       file = params[:file]
       data = []
       batch_size = 1000
+      maybe_error = false
 
       start_time = Time.now
       
@@ -130,33 +131,39 @@ module Admin
               capital_proposal_group = CapitalProposalGroup.find_by_id_capital_proposal_group(row[:capital_proposal_group].upcase)
               site = Site.find_by_id_site(row[:site])
               department = Department.find_by_id_department(row[:department])
+              puts "DEPARTMENT ===>>  #{department}"
               currency = Currency.find_by_id_currency(row[:currency])
 
               if capital_proposal_type.nil?
+                maybe_error = true
                 redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.capital_proposal_type"), id: row[:capital_proposal_type])
                 raise ActiveRecord::Rollback
                 return
               end
 
               if capital_proposal_group.nil?
+                maybe_error = true
                 redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.capital_proposal_group"), id: row[:capital_proposal_group])
                 raise ActiveRecord::Rollback
                 return
               end
 
               if site.nil?
+                maybe_error = true
                 redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.site"), id: row[:site])
                 raise ActiveRecord::Rollback
                 return
               end
 
               if department.nil?
+                maybe_error = true
                 redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.department"), id: row[:department])
                 raise ActiveRecord::Rollback
                 return
               end
 
               if currency.nil?
+                maybe_error = true
                 redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.currency"), id: row[:currency])
                 raise ActiveRecord::Rollback
                 return
@@ -194,10 +201,6 @@ module Admin
             CapitalProposal.insert_all!(data) unless data.empty?
           end
           
-          respond_to do |format|
-            logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
-            format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.capital_proposal")) }
-          end
         rescue Roo::HeaderRowNotFoundError => e
           return redirect_to import_admin_capital_proposals_path, alert: t("custom.errors.invalid_import_template", errors: e)
       
@@ -227,6 +230,12 @@ module Admin
 
         end
         
+        unless maybe_error
+          logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
+          redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.capital_proposal"))
+          return
+        end
+
       else
         redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.flash.alerts.select_file")
       end

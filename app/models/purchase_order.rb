@@ -4,12 +4,14 @@ class PurchaseOrder < ApplicationRecord
 
   belongs_to :vendor
   belongs_to :request_for_purchase
-  belongs_to :ship_to_site, class_name: "Site"
-  belongs_to :currency
+  belongs_to :ship_to_site, class_name: "PoDeliverySite"
+  belongs_to :currency, optional: true
   belongs_to :approved_by, class_name: "PersonalBoard"
 
   has_many :request_for_purchase_details, dependent: :nullify
-  accepts_nested_attributes_for :request_for_purchase_details, reject_if: :all_blank
+  has_many :delivery_orders, dependent: :nullify
+
+
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
   validates :date, presence: true
