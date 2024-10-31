@@ -36,7 +36,7 @@ module Admin
 
       @asset = Asset.new(asset_params)
       @asset.tagging_date = Date.today
-      @asset.user_asset = UserAsset.find_by_id_user_asset(SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default)
+      @asset.user_asset = UserAsset.find_by_id_user_asset(SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default) unless @asset.site_id.nil?
       @site_defaults = Site.joins(site_default: { site: { site_group: :project }} ).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [name, id]} || []
 
 
