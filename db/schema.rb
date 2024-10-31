@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_30_020835) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -407,7 +407,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_30_020835) do
     t.string "id_user_site_default"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["site_id"], name: "index_site_defaults_on_site_id"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.string "description", limit: 500
+    t.index ["id_user_site_default"], name: "index_site_defaults_on_id_user_site_default"
+    t.index ["site_id"], name: "index_site_defaults_on_site_id", unique: true
   end
 
   create_table "site_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
