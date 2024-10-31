@@ -1,0 +1,44 @@
+<%= tag.tr id: dom_id(asset), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+  <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+    <div class="flex items-center space-x-4">
+      <%= check_box_tag "asset_ids[]",
+        asset.id,
+        nil,
+        {
+          class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+          multiple: true,
+          form: :asset_table,
+          data: {
+            table_target: "childCheckbox",
+            action: "change->table#toggleParentCheckbox"
+          },
+          title: t("custom.label.select_to_delete")
+        }
+       %>
+
+      <%= link_to edit_admin_asset_path(asset),
+        data: {
+          turbo_frame: "main-content",
+          turbo_action: "advance"
+        } do %>
+          <%= inline_svg_tag "edit.svg", class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer", title: t("custom.label.edit") %>
+      <% end %>
+
+      <%= inline_svg_tag "location.svg",
+        class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+        title: t("custom.label.location")
+      %>
+
+      <%= inline_svg_tag "software.svg",
+        class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+        title: t("custom.label.software")
+      %>
+
+    </div>
+  </td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.tagging_id %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.cpu_sn %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.asset_model.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.user_asset.username %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.site.name %></td>
+<% end %>

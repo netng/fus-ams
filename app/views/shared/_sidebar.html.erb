@@ -31,7 +31,13 @@
             class: "px-2 text-white hover:underline",
             data: { turbo_frame: "main-content", turbo_action: "advance"} %>
         </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Register asset</a></li>
+
+        <li>
+          <%= link_to "Register #{t('activerecord.models.asset').downcase}",
+            admin_assets_path,
+            class: "px-2 text-white hover:underline",
+            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Update asset</a></li>
         <li>
           <%= link_to "#{t('custom.label.register')} #{t('activerecord.models.user_asset')}",

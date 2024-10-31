@@ -6,6 +6,8 @@ class AssetModel < ApplicationRecord
   belongs_to :asset_type
   belongs_to :asset_item_type
 
+  has_many :assets, dependent: :restrict_with_error
+
 
   # downcase_fields :name
 

@@ -9,6 +9,7 @@ export default class extends Controller {
       select: this.element,
       settings: {
         showSearch: false,
+        openPosition: 'down'
       }
     });
   }

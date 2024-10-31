@@ -25,11 +25,13 @@ module Admin
       @site_default = SiteDefault.new(site_default_params)
 
       respond_to do |format|
-        if @site_default.save
-          format.html { redirect_to admin_site_defaults_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.site_default"))}
-        else
-          format.html { render :new, status: :unprocessable_entity }
+        ActiveRecord::Base.transaction do
+          if @site_default.save
+            UserAsset.new(id_user_asset: @site_default.id_user_site_default, site: @site_default.site).save
+            format.html { redirect_to admin_site_defaults_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.site_default"))}
+          end
         end
+          format.html { render :new, status: :unprocessable_entity }
       end
     end
 

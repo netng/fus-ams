@@ -28,9 +28,26 @@ en:
       personal_board: Personal board
       po_delivery_site: Delivery site
       site_default: Site default
+      asset: Asset
+      asset_class: Asset class
       
 
     attributes:
+      asset:
+        tagging_id: Tagging id
+        project_id: For project
+        site_id: Site
+        asset_model_id: Model
+        asset_class_id: Asset class
+        computer_name: Computer name
+        computer_ip: IP computer
+        cpu_sn: CPU SN
+        monitor_sn: Monitor SN
+        keyboard_sn: Keyboard SN
+        delivery_order_id: DO ref
+        shipping_date: Shipping date
+        description: Description
+
       site_default:
         site_id: Site
         id_user_site_default: User asset ID
@@ -399,6 +416,8 @@ en:
   
   custom:
     label:
+      location: Location
+      software: Software
       delivery_to: Delivery to
       approved_by: Approved by
       request_for_purchase_details: Requst for purchase details

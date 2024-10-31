@@ -5,9 +5,12 @@ class Site < ApplicationRecord
   belongs_to :site_stat
   belongs_to :site_group
 
+  has_one :site_default
+
   has_many :user_assets, dependent: :restrict_with_error
   has_many :capital_proposals, dependent: :restrict_with_error
   has_many :purchase_orders, dependent: :restrict_with_error
+  has_many :assets, dependent: :restrict_with_error
 
   # downcase_fields :name
   validates :id_site, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }

@@ -175,5 +175,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :assets do
+      collection do
+        delete "destroy_many"
+        get "import"
+        post "process_import"
+        get "site_default"
+      end
+    end
+
   end
 end

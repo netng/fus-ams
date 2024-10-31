@@ -2,6 +2,7 @@ class DeliveryOrder < ApplicationRecord
   include Trackable
   
   belongs_to :purchase_order, optional: true
+  has_many :assets, dependent: :restrict_with_error
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
   validates :date, presence: true

@@ -3,6 +3,8 @@ class Project < ApplicationRecord
   include Downcaseable
 
   has_many :site_groups, dependent: :restrict_with_error
+  has_many :assets, dependent: :restrict_with_error
+  has_many :asset_classes, dependent: :restrict_with_error
   
   # downcase_fields :name
 

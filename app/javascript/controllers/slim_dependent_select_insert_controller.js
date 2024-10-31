@@ -10,14 +10,16 @@ export default class extends Controller {
     this.parentSelect = new SlimSelect({
       select: this.parentTarget,
       settings: {
-        allowDeselect: true
+        allowDeselect: true,
+        openPosition: 'down'
       }
     })
 
     this.childSelect = new SlimSelect({
       select: this.childTarget,
       settings: {
-        allowDeselect: true
+        allowDeselect: true,
+        openPosition: 'down'
       }
     })
     // if (this.parentTarget.value) this.loadDependentItems(this.parentTarget, this.childSelect)
