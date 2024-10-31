@@ -27,9 +27,15 @@ en:
       delivery_order: Delivery order
       personal_board: Personal board
       po_delivery_site: Delivery site
+      site_default: Site default
       
 
     attributes:
+      site_default:
+        site_id: Site
+        id_user_site_default: User asset ID
+        description: Description
+
       role:
         name: Name
 
@@ -438,6 +444,8 @@ en:
       total_po: Total PO
       total_do: Total DO
       cost_log_number: Cost log number
+      site_id: Site ID
+      site_name: Site name
 
     format: "%{attribute} %{message}"
     errors:
@@ -463,7 +471,7 @@ en:
           to_destroy_with_restriction: Gagal menghapus data
       notices:
         successfully:
-          logged_in: Berhasil login
+          logged_in: Logged in successfully
           updated: "%{model} successfully updated"
           created: "%{model} successfully created"
           imported: "%{model}'s successfully imported"

@@ -1,0 +1,35 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4 hidden" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: admin_site_defaults_path, data: { 
+      controller: "filters",
+      turbo_frame: :table,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-site_default",
+    } do |f| %>
+  
+      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim-dependent-select-search"> 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.site_default.id_user_site_default')}", class: "fus-label" %>
+          <%= f.search_field :id_user_site_default_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('custom.label.site_id')}", class: "fus-label" %>
+          <%= f.search_field :site_id_site_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.site')}", class: "fus-label" %>
+          <%= f.select :site_id_eq,
+            @site_site_defaults.pluck("sites.name", "sites.id").map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.site")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        
+
+      </div>
+    <% end %>
+  </div>
