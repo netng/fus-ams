@@ -19,9 +19,9 @@
   <div class="mb-2">
     <%= form.label :project, "#{t("activerecord.models.project")} *", class: "fus-label mb-2" %>
     <%= form.select :project_id, 
-      Project.pluck(:name, :id).map { |name, id| [name.capitalize, id] },
+      @projects,
       {include_blank: t("custom.label.select", model: t("activerecord.models.project")).capitalize},
-      {data: { controller: 'slim' }, class: "fus-select"}
+      {data: { controller: 'slim' }, class: "fus-select slim-ctrl"}
     %>
     <% @site_group.errors.full_messages_for(:project).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -36,9 +36,9 @@
     <% end %>
   </div>
 
-
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
+      data: { turbo_frame: "main-content" },
       class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>
 

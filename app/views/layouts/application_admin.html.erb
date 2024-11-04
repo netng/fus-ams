@@ -114,25 +114,7 @@
       <% end %>
       <%= render "shared/mobile_sidebar" %>
     </main>
+    <%= turbo_frame_tag :modal %>
 
-    <script>
-    // Toggle mobile sidebar visibility
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-
-    menuButton.addEventListener('click', () => {
-      mobileSidebar.classList.toggle('sidebar-mobile-active');
-    });
-
-    // Close mobile sidebar when clicking outside
-    document.addEventListener('click', (event) => {
-      const isClickInsideSidebar = mobileSidebar.contains(event.target);
-      const isClickOnButton = menuButton.contains(event.target);
-
-      if (!isClickInsideSidebar && !isClickOnButton) {
-        mobileSidebar.classList.remove('sidebar-mobile-active');
-      }
-    });
-  </script>
   </body>
 </html>

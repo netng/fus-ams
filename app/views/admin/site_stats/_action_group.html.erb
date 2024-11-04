@@ -16,7 +16,9 @@
         model: t("activerecord.models.site_stat"))}",
         new_admin_site_stat_path,
         data: {
-          turbo_action: "advance"
+          turbo_action: "advance",
+          turbo_frame: :modal,
+          action: "dialog#open"
         },
         class: "bg-blue-400 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
       %>

@@ -7,7 +7,8 @@
       <%= link_to "#{t("custom.label.new_form", model: t("activerecord.models.brand"))}",
         new_admin_brand_path,
         data: {
-          turbo_action: "advance"
+          turbo_action: "advance",
+          turbo_frame: :modal,
         },
         class: "bg-blue-400 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
       %>

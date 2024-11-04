@@ -1,4 +1,8 @@
-<h2 class="fus-form-header mb-8"><%= t("custom.label.edit_form", model: t("activerecord.models.site_stat")).capitalize %></h2>
-<%= render "form", site_stat: @site_stat %>
+<%= render "layouts/turbo_dialog" do %>
+  <h2 class="fus-form-header mb-8"><%= t("custom.label.edit_form", model: t("activerecord.models.site_stat")).capitalize %></h2>
+	<div data-action="turbo:submit-end->dialog#submitEnd">
+		<%= render "form", site_stat: @site_stat %>
+	</div>
+<% end %>
 
 <% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.site_stat")).capitalize) %>

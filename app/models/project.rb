@@ -2,6 +2,8 @@ class Project < ApplicationRecord
   include Trackable
   include Downcaseable
 
+  before_validation :strip_and_upcase_id_project
+
   has_many :site_groups, dependent: :restrict_with_error
   has_many :assets, dependent: :restrict_with_error
   has_many :asset_classes, dependent: :restrict_with_error
@@ -19,5 +21,12 @@ class Project < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "created_by", "description", "id_project", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
   end
+
+  private
+    def strip_and_upcase_id_project
+      if id_project.present?
+        self.id_project = id_project.strip.upcase
+      end
+    end
 
 end

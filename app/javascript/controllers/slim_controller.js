@@ -17,4 +17,10 @@ export default class extends Controller {
   disconnect() {
     this.select.destroy();
   }
+
+  hello() {
+    console.log("Hello")
+    console.log(this.element)
+    this.connect()
+  }
 }

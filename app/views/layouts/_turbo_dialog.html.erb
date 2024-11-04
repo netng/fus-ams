@@ -1,0 +1,8 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= tag.div data: { controller: "turbo-modal",
+                      turbo_modal_target: "modal",
+                      action: "turbo:submit-end->turbo-modal#submitEnd keyup@window->turbo-modal#closeWithKeyboard click@window->turbo-modal#closeBackground" },
+                      class: "backdrop:bg-gray-400 backdrop:bg-opacity-90 z-[9999] rounded-md border bg-white w-full md:w-1/2 max-h-[90vh] overflow-y-auto" do %>
+    <%= yield %>
+  <% end %>
+<% end %>

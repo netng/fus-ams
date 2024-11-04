@@ -1,6 +1,6 @@
 <h2 class="text-2xl font-bold text-gray-600 mb-8"><%= t("custom.label.import_form", model: t("activerecord.models.site_stat")).capitalize %></h2>
 
-<%= form_with(url: process_import_admin_site_stats_path, method: :post, local: true, multipart: true, data: { turbo_action: "advance" }) do |form| %>
+<%= form_with(url: process_import_admin_site_stats_path, method: :post, local: true, multipart: true, data: { turbo_action: "advance", turbo_frame: "main-content" }) do |form| %>
   <div class="flex justify-center items-center mt-8 border border-2 border-dashed  rounded-md p-8">
     <%= form.file_field :file %>
   </div>
