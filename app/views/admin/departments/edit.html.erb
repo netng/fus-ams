@@ -1,4 +1,10 @@
-<h2 class="fus-form-header mb-8"><%= t("custom.label.edit_form", model: t("activerecord.models.department")).capitalize %></h2>
-<%= render "form", department: @department %>
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-8">
+    <%= t("custom.label.edit_form", model: t("activerecord.models.department")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd">
+        <%= render "form", department: @department %>
+	</div>
+<% end %>
 
 <% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.department")).capitalize) %>

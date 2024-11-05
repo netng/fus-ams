@@ -2,7 +2,7 @@ module Admin
   class BrandsController < ApplicationAdminController
     before_action :set_brand, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :edit, :new ]
+    before_action :ensure_frame_response, only: [ :edit, :new, :create, :update ]
 
 
     def index

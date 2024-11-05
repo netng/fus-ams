@@ -17,16 +17,16 @@ export default class extends Controller {
 
   }
 
-  initializeSlim() {
-    if (this.slimOutlets.length > 0) {
-      setTimeout(() => {
-        this.slimOutlets.forEach(slim => {
-          slim.hello()
-          slim.connect()
-        })
-      }, 500)
-    }
-  }
+  // initializeSlim() {
+  //   if (this.slimOutlets.length > 0) {
+  //     setTimeout(() => {
+  //       this.slimOutlets.forEach(slim => {
+  //         slim.hello()
+  //         slim.connect()
+  //       })
+  //     }, 500)
+  //   }
+  // }
   
   disconnect() {
     this.element.removeEventListener("close", () => {

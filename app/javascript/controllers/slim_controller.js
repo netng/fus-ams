@@ -9,7 +9,8 @@ export default class extends Controller {
       select: this.element,
       settings: {
         allowDeselect: true,
-        openPosition: 'down'
+        openPosition: 'down',
+        appendTo: 'body',
       }
     });
   }

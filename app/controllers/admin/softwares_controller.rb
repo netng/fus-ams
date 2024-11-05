@@ -1,31 +1,35 @@
 module Admin
   class SoftwaresController < ApplicationAdminController
-    before_action :set_software, only: [:edit, :update, :destroy]
+    before_action :set_software, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+
 
     def index
       authorize :authorization, :index?
 
       @q = Software.ransack(params[:q])
-      @q.sorts = ["name asc"] if @q.sorts.empty?
-			scope = @q.result
-			@pagy, @softwares = pagy(scope)
+      @q.sorts = [ "name asc" ] if @q.sorts.empty?
+      scope = @q.result
+      @pagy, @softwares = pagy(scope)
     end
 
     def new
       authorize :authorization, :create?
 
       @software = Software.new
+      @previous_url = admin_softwares_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @software = Software.new(software_params)
+      @previous_url = admin_softwares_path || root_path
 
       respond_to do |format|
         if @software.save
-          format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.software"))}
+          format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.software")) }
         else
           format.html { render :new, status: :unprocessable_entity }
         end
@@ -34,24 +38,24 @@ module Admin
 
     def edit
       authorize :authorization, :update?
-
+      @previous_url = admin_softwares_path || root_path
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_softwares_path || root_path
 
       respond_to do |format|
-				if @software.update(software_params)
-					format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.software")) }
-				else
-					format.html { render :edit, status: :unprocessable_entity }
-				end
-			end
+        if @software.update(software_params)
+          format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.software")) }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+        end
+      end
     end
 
     def destroy
       authorize :authorization, :destroy?
-
     end
 
     def destroy_many
@@ -59,21 +63,21 @@ module Admin
 
       software_ids = params[:software_ids]
 
-			ActiveRecord::Base.transaction do
-				softwares = Software.where(id: software_ids)
+      ActiveRecord::Base.transaction do
+        softwares = Software.where(id: software_ids)
 
-				softwares.each do |software|
-					unless software.destroy
+        softwares.each do |software|
+          unless software.destroy
             error_message = software.errors.full_messages.join("")
             redirect_to admin_softwares_path, alert: "#{error_message} - #{t('activerecord.models.software')} id: #{software.id_software}"
             raise ActiveRecord::Rollback
-					end
-				end
-				
-				respond_to do |format|
-					format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.software")) }
-				end
-			end
+          end
+        end
+
+        respond_to do |format|
+          format.html { redirect_to admin_softwares_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.software")) }
+        end
+      end
     end
 
     def import
@@ -82,7 +86,7 @@ module Admin
 
     def process_import
       authorize :authorization, :create?
-      allowed_extension = [".xlsx", ".csv"]
+      allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
 
       if file.present?
@@ -103,13 +107,12 @@ module Admin
         ActiveRecord::Base.transaction do
           begin
             sheet.parse(software_attributes_headers).each do |row|
-  
               software = Software.new(
                 id_software: row[:id_software],
                 name: row[:name],
                 description: row[:description]
               )
-  
+
               unless software.save
                 error_message = software.errors.details.map do |field, error_details|
                   error_details.map do |error|
@@ -146,7 +149,11 @@ module Admin
       end
 
       def set_function_access_code
-				@function_access_code = FunctionAccessConstant::FA_ASS_COM_SOFTWARE
+        @function_access_code = FunctionAccessConstant::FA_ASS_COM_SOFTWARE
+      end
+
+      def ensure_frame_response
+        redirect_to admin_softwares_path unless turbo_frame_request?
       end
   end
 end

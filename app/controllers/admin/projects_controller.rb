@@ -2,7 +2,7 @@ module Admin
   class ProjectsController < ApplicationAdminController
     before_action :set_project, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :edit ]
+    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
 
     def index
       authorize :authorization, :index?

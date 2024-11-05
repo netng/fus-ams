@@ -1,0 +1,16 @@
+<%= turbo_frame_tag "modal" do %>
+    <div 
+        data-controller="modal"
+        data-modal-target="modal"
+        data-modal-previous-url-value=<%= @previous_url %>
+        class="fixed inset-0 flex items-center justify-center bg-gray-400 bg-opacity-90 z-[1000] p-8">
+
+        <!-- Modal Content -->
+        <%= tag.div data: {
+                modal_target: "modalContent",
+                action: "turbo:submit-end->modal#submitEnd keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
+                class: "p-8 bg-white rounded-md shadow-lg w-full md:w-1/2 max-h-[90vh] overflow-auto" do %>
+            <%= yield %>
+        <% end %>
+    </div>
+<% end %>

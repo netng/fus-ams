@@ -19,7 +19,7 @@
   <div class="mb-2">
     <%= form.label :project, "#{t("activerecord.models.project")} *", class: "fus-label mb-2" %>
     <%= form.select :project_id, 
-      @projects,
+      Project.pluck(:name, :id).map { |name, id| [name, id] },
       {include_blank: t("custom.label.select", model: t("activerecord.models.project")).capitalize},
       {data: { controller: 'slim' }, class: "fus-select slim-ctrl"}
     %>
@@ -45,7 +45,7 @@
     <%= link_to "#{t('custom.label.cancel')}",
       admin_site_groups_path,
       data: {
-        turbo_action: "advance"
+        turbo_action: "advance",
       },
       class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
     %>

@@ -2,7 +2,7 @@ module Admin
   class SiteStatsController < ApplicationAdminController
     before_action :set_site_stat, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [:edit, :new]
+    before_action :ensure_frame_response, only: [:edit, :update, :new, :create]
     def index
       authorize :authorization, :index?
 

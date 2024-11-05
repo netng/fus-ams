@@ -2,6 +2,7 @@ module Admin
   class DepartmentsController < ApplicationAdminController
     before_action :set_department, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -14,14 +15,16 @@ module Admin
 
     def new
       authorize :authorization, :create?
-
+      
       @department = Department.new
+      @previous_url = admin_departments_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @department = Department.new(department_params)
+      @previous_url = admin_departments_path || root_path
 
       respond_to do |format|
         if @department.save
@@ -35,11 +38,13 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_departments_path || root_path
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_departments_path || root_path
 
       respond_to do |format|
 				if @department.update(department_params)
@@ -151,6 +156,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_LOC_DEPARTMENT
+      end
+
+      def ensure_frame_response
+        redirect_to admin_departments_path unless turbo_frame_request?
       end
 
   end

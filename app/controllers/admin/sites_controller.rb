@@ -2,6 +2,7 @@ module Admin
   class SitesController < ApplicationAdminController
     before_action :set_site, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -14,12 +15,14 @@ module Admin
 
     def new
       authorize :authorization, :create?
+      @previous_url = admin_sites_path || root_path
 
       @site = Site.new
     end
 
     def create
       authorize :authorization, :create?
+      @previous_url = admin_sites_path || root_path
 
       @site = Site.new(site_params)
 
@@ -33,12 +36,14 @@ module Admin
     end
 
     def edit
+      @previous_url = admin_sites_path || root_path
       authorize :authorization, :update?
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_sites_path || root_path
 
       respond_to do |format|
 				if @site.update(site_params)
@@ -164,6 +169,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_LOC_SITE
+      end
+
+      def ensure_frame_response
+        redirect_to admin_sites_path unless turbo_frame_request?
       end
   end
 end
