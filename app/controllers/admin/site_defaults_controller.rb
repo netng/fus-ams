@@ -30,7 +30,10 @@ module Admin
       respond_to do |format|
         ActiveRecord::Base.transaction do
           if @site_default.save
-            UserAsset.new(id_user_asset: @site_default.id_user_site_default, site: @site_default.site).save
+            user_asset = UserAsset.find_by_id_user_asset(@site_default.id_user_site_default)
+            unless user_asset
+              UserAsset.new(id_user_asset: @site_default.id_user_site_default, site: @site_default.site).save
+            end
             format.html { redirect_to admin_site_defaults_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.site_default"))}
           end
         end

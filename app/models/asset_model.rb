@@ -8,6 +8,8 @@ class AssetModel < ApplicationRecord
 
   has_many :assets, dependent: :restrict_with_error
 
+  before_validation :strip_and_upcase_id_asset_model
+
 
   # downcase_fields :name
 
@@ -16,10 +18,17 @@ class AssetModel < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   def self.ransackable_associations(auth_object = nil)
-    ["asset_item_type", "asset_type", "brand"]
+    [ "asset_item_type", "asset_type", "brand" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["asset_item_type_id", "asset_type_id", "brand_id", "created_at", "created_by", "description", "id_asset_model", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
+    [ "asset_item_type_id", "asset_type_id", "brand_id", "created_at", "created_by", "description", "id_asset_model", "id", "ip_address", "name", "request_id", "updated_at", "user_agent" ]
   end
+
+  private
+    def strip_and_upcase_id_asset_model
+      if id_asset_model.present?
+        self.id_asset_model = id_asset_model.strip.upcase
+      end
+    end
 end

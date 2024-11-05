@@ -11,7 +11,6 @@ export default class extends Controller {
       select: this.parentTarget,
       settings: {
         allowDeselect: true,
-        openPosition: 'down'
       }
     })
 
@@ -19,7 +18,6 @@ export default class extends Controller {
       select: this.childTarget,
       settings: {
         allowDeselect: true,
-        openPosition: 'down'
       }
     })
     // if (this.parentTarget.value) this.loadDependentItems(this.parentTarget, this.childSelect)

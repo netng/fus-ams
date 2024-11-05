@@ -4,6 +4,8 @@ class ComponentType < ApplicationRecord
 
   has_many :components, dependent: :restrict_with_error
 
+  before_validation :strip_and_upcase_id_component_type
+
   # downcase_fields :name
 
   validates :id_component_type, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
@@ -17,4 +19,11 @@ class ComponentType < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "created_by", "description", "id_component_type", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
   end
+
+  private
+    def strip_and_upcase_id_component_type
+      if id_component_type.present?
+        self.id_component_type = id_component_type.strip.upcase
+      end
+    end
 end

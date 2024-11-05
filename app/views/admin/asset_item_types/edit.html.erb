@@ -1,7 +1,10 @@
-<h2 class="fus-form-header mb-8">
-  <%= t("custom.label.edit_form", model: t("activerecord.models.asset_item_type")).capitalize %>
-</h2>
-
-<%= render "form", asset_item_type: @asset_item_type %>
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-8">
+    <%= t("custom.label.edit_form", model: t("activerecord.models.asset_item_type")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd">
+        <%= render "form", asset_item_type: @asset_item_type %>
+	</div>
+<% end %>
 
 <% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.asset_item_type")).capitalize) %>

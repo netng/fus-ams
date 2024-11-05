@@ -2,6 +2,7 @@ module Admin
   class ComponentTypesController < ApplicationAdminController
     before_action :set_component_type, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -15,12 +16,14 @@ module Admin
       authorize :authorization, :create?
 
       @component_type = ComponentType.new
+      @previous_url = admin_component_types_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @component_type = ComponentType.new(component_type_params)
+      @previous_url = admin_component_types_path || root_path
 
       respond_to do |format|
         if @component_type.save
@@ -33,11 +36,13 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_component_types_path || root_path
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_component_types_path || root_path
 
       respond_to do |format|
 				if @component_type.update(component_type_params)
@@ -147,6 +152,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_ASS_COM_COMPONENT_TYPE
+      end
+
+      def ensure_frame_response
+        redirect_to admin_component_types_path unless turbo_frame_request?
       end
   end
 end

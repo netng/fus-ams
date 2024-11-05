@@ -4,7 +4,8 @@ class SiteDefault < ApplicationRecord
   belongs_to :site
 
   
-  validates :id_user_site_default, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
+  # validates :id_user_site_default, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
+  validates :id_user_site_default, presence: true, length: { maximum: 100 }
   validates :site, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   
   before_validation :remove_trailing_whitespace

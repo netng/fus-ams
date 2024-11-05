@@ -1,15 +1,15 @@
 module Admin
   class CapitalProposalsController < ApplicationAdminController
-    before_action :set_capital_proposal, only: [:edit, :update, :destroy]
+    before_action :set_capital_proposal, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
 
     def index
       authorize :authorization, :index?
 
       @q = CapitalProposal.ransack(params[:q])
-      @q.sorts = ["date desc"] if @q.sorts.empty?
-			scope = @q.result.includes(:capital_proposal_type, :capital_proposal_group, :site, :department)
-			@pagy, @capital_proposals = pagy(scope)
+      @q.sorts = [ "date desc" ] if @q.sorts.empty?
+      scope = @q.result.includes(:capital_proposal_type, :capital_proposal_group, :site, :department)
+      @pagy, @capital_proposals = pagy(scope)
     end
 
     def new
@@ -28,7 +28,7 @@ module Admin
 
       respond_to do |format|
         if @capital_proposal.save
-          format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.capital_proposal"))}
+          format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.capital_proposal")) }
         else
           format.html { render :new, status: :unprocessable_entity }
         end
@@ -43,17 +43,16 @@ module Admin
       authorize :authorization, :update?
 
       respond_to do |format|
-				if @capital_proposal.update(capital_proposal_params)
-					format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.capital_proposal")) }
-				else
-					format.html { render :edit, status: :unprocessable_entity }
-				end
-			end
+        if @capital_proposal.update(capital_proposal_params)
+          format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.capital_proposal")) }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+        end
+      end
     end
 
     def destroy
       authorize :authorization, :destroy?
-
     end
 
     def destroy_many
@@ -61,21 +60,21 @@ module Admin
 
       capital_proposal_ids = params[:capital_proposal_ids]
 
-			ActiveRecord::Base.transaction do
-				capital_proposals = CapitalProposal.where(id: capital_proposal_ids)
+      ActiveRecord::Base.transaction do
+        capital_proposals = CapitalProposal.where(id: capital_proposal_ids)
 
-				capital_proposals.each do |capital_proposal|
-					unless capital_proposal.destroy
+        capital_proposals.each do |capital_proposal|
+          unless capital_proposal.destroy
             error_message = capital_proposal.errors.full_messages.join("")
             redirect_to admin_capital_proposals_path, alert: "#{error_message} - #{t('activerecord.models.capital_proposal')} id: #{capital_proposal.number}"
             raise ActiveRecord::Rollback
-					end
-				end
-				
-				respond_to do |format|
-					format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.capital_proposal")) }
-				end
-			end
+          end
+        end
+
+        respond_to do |format|
+          format.html { redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.capital_proposal")) }
+        end
+      end
     end
 
     def import
@@ -84,14 +83,14 @@ module Admin
 
     def process_import
       authorize :authorization, :create?
-      allowed_extension = [".xlsx", ".csv"]
+      allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
       data = []
       batch_size = 1000
       maybe_error = false
 
       start_time = Time.now
-      
+
       created_by = Current.account.username
       request_id = Current.request_id
       user_agent = Current.user_agent
@@ -126,10 +125,9 @@ module Admin
         begin
           ActiveRecord::Base.transaction do
             sheet.parse(capital_proposal_attributes_headers).each do |row|
-
               capital_proposal_type = CapitalProposalType.find_by_id_capital_proposal_type(row[:capital_proposal_type])
               capital_proposal_group = CapitalProposalGroup.find_by_id_capital_proposal_group(row[:capital_proposal_group].upcase)
-              site = Site.find_by_id_site(row[:site])
+              site = Site.find_by_id_site(row[:site].strip.upcase)
               department = Department.find_by_id_department(row[:department])
               puts "DEPARTMENT ===>>  #{department}"
               currency = Currency.find_by_id_currency(row[:currency])
@@ -149,17 +147,35 @@ module Admin
               end
 
               if site.nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.site"), id: row[:site])
-                raise ActiveRecord::Rollback
-                return
+                # maybe_error = true
+                logger.debug "request_id: #{request.request_id} - CP number: #{row[:number]} - reason: Site id `#{row[:site]}` is not found"
+                  #
+                  # redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.site"), id: row[:site])
+                  # raise ActiveRecord::Rollback
+                  # return
+
+                  # safety net jika po tidak ada namun pada file import dari fus-online po number tertulis ynag sebenernya po tidak ada di db fusonline, mungkin terhapus
+                  site = Site.create(
+                    id_site: row[:site].strip.upcase,
+                    name: "#{row[:site]} (safety net)",
+                    site_stat: SiteStat.find_by_id_site_stat("safety-net"),
+                    site_group: SiteGroup.find_by_id_site_group("safety-net"),
+
+                  )
               end
 
               if department.nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.department"), id: row[:department])
-                raise ActiveRecord::Rollback
-                return
+                # maybe_error = true
+                logger.debug "request_id: #{request.request_id} - CP number: #{row[:number]} - reason: Department id `#{row[:department]}` is not found"
+                # redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.department"), id: row[:department])
+                # raise ActiveRecord::Rollback
+                # return
+                # # safety net jika po tidak ada namun pada file import dari fus-online po number tertulis ynag sebenernya po tidak ada di db fusonline, mungkin terhapus
+                department = Department.create(
+                  name: "#{row[:department].strip.upcase} (safety net)",
+                  id_department: row[:department].strip.upcase
+
+                )
               end
 
               if currency.nil?
@@ -195,16 +211,15 @@ module Admin
                 CapitalProposal.insert_all!(data)
                 data.clear
               end
-  
             end
 
             CapitalProposal.insert_all!(data) unless data.empty?
           end
-          
+
         rescue Roo::HeaderRowNotFoundError => e
           return redirect_to import_admin_capital_proposals_path, alert: t("custom.errors.invalid_import_template", errors: e)
-      
-        
+
+
         # Penanganan untuk duplikat data
         rescue ActiveRecord::RecordNotUnique => e
           logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
@@ -212,7 +227,7 @@ module Admin
           duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
           humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
           return redirect_back_or_to import_admin_capital_proposals_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
-    
+
         # penangan error null violation
         rescue ActiveRecord::NotNullViolation => e
           logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
@@ -222,18 +237,18 @@ module Admin
           error_message = "#{t('activerecord.attributes.capital_proposal.' + error_column)} " \
             "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
           return redirect_back_or_to import_admin_capital_proposals_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
-        
+
         # Penanganan umum untuk semua jenis error lainnya
         rescue => e
           logger.error "#{Current.request_id} - General error during import: #{e.message}"
-          return redirect_back_or_to import_admin_capital_proposals_path, alert: t('custom.errors.general_error')
+          return redirect_back_or_to import_admin_capital_proposals_path, alert: t("custom.errors.general_error")
 
         end
-        
+
         unless maybe_error
           logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
           redirect_to admin_capital_proposals_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.capital_proposal"))
-          return
+          nil
         end
 
       else
@@ -245,7 +260,7 @@ module Admin
     private
 
       def capital_proposal_params
-        params.expect(capital_proposal: [ 
+        params.expect(capital_proposal: [
           :number,
           :real_number,
           :capital_proposal_type_id,
@@ -272,7 +287,7 @@ module Admin
       end
 
       def set_function_access_code
-				@function_access_code = FunctionAccessConstant::FA_ASS_CP
+        @function_access_code = FunctionAccessConstant::FA_ASS_CP
       end
   end
 end
