@@ -1,21 +1,24 @@
 module Admin
   class AssetsController < ApplicationAdminController
-    before_action :set_asset, only: [:edit, :update, :destroy]
+    before_action :set_asset, only: [ :edit, :update, :destroy ]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
 
       @q = Asset.ransack(params[:q])
-      @q.sorts = ["tagging_id asc"] if @q.sorts.empty?
-			scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
-			@pagy, @assets = pagy(scope)
+      @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
+      scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
+      @pagy, @assets = pagy(scope)
     end
 
     def new
       authorize :authorization, :create?
 
       @asset = Asset.new
+      8.times { @asset.asset_components.build }
       @site_defaults = []
     end
 
@@ -24,26 +27,31 @@ module Admin
 
       if params[:query].present?
         query = params[:query].downcase
-        site_defaults = Site.joins(site_default: { site: { site_group: :project }} ).where(projects: { id: query })
+        site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: query })
         render json: site_defaults.pluck(:id, :name).map { |id, name| { id: id, name: name } }
       else
-        render json: [] 
+        render json: []
       end
     end
-    
+
     def create
       authorize :authorization, :create?
 
       @asset = Asset.new(asset_params)
       @asset.tagging_date = Date.today
       @asset.user_asset = UserAsset.find_by_id_user_asset(SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default) unless @asset.site_id.nil?
-      @site_defaults = Site.joins(site_default: { site: { site_group: :project }} ).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [name, id]} || []
+      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
+      @selected_components = params[:selected_components]&.map(&:to_s) || []
 
+      (8 - @asset.asset_components.size).times { @asset.asset_components.build }
+
+      valid_components = @asset.asset_components.select { |component| component.component_id.present? }
+      @asset.asset_components = valid_components
+      puts @asset.asset_components.inspect
 
       respond_to do |format|
-        
         if @asset.save
-          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.asset"))}
+          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.asset")) }
         else
           puts @asset.errors.messages
           # format.html { render ("_form" if turbo_frame_request?), locals: { asset: @asset } }
@@ -54,30 +62,46 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
+      @asset.asset_components = @asset.asset_components.joins(component: :component_type).order("component_types.id_component_type ASC")
+
+      puts @asset.asset_components.inspect
+
+      # Pastikan jumlah asset_components adalah 8, jika kurang, tambahkan yang kosong
+      while @asset.asset_components.size < 8
+        # Dapatkan component_type berdasarkan urutan yang sudah ada
+        next_available_type = ComponentType.where.not(id_component_type: @asset.asset_components.map { |ac| ac.component.component_type.id }).first
+        if next_available_type
+          @asset.asset_components.build(component: next_available_type.components.first) # Buat asset_component baru dengan component yang sesuai
+        end
+      end
+
+      # (8 - @asset.asset_components.size).times { @asset.asset_components.build }
     end
 
     def update
       authorize :authorization, :update?
+      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
+      (8 - @asset.asset_components.size).times { @asset.asset_components.build }
 
       respond_to do |format|
         begin
           @asset.update(asset_params)
-					format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
+          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
         rescue ActiveRecord::RecordNotDestroyed => e
           logger.debug "ERROR => #{e.inspect}"
-					format.html { render :edit, status: :unprocessable_entity }
+          format.html { render :edit, status: :unprocessable_entity }
         end
-				# if @asset.update(asset_params)
-				# 	format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
-				# else
-				# 	format.html { render :edit, status: :unprocessable_entity }
-				# end
-			end
+        # if @asset.update(asset_params)
+        # 	format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
+        # else
+        # 	format.html { render :edit, status: :unprocessable_entity }
+        # end
+      end
     end
 
     def destroy
       authorize :authorization, :destroy?
-
     end
 
     def destroy_many
@@ -85,22 +109,22 @@ module Admin
 
       asset_ids = params[:asset_ids]
 
-			ActiveRecord::Base.transaction do
-				assets = Asset.where(id: asset_ids)
+      ActiveRecord::Base.transaction do
+        assets = Asset.where(id: asset_ids)
 
-				assets.each do |asset|
-					unless asset.destroy
+        assets.each do |asset|
+          unless asset.destroy
             logger.debug "RFP Destroy error - #{asset.errors.inspect}"
             error_message = asset.errors.full_messages.join("")
             redirect_to admin_assets_path, alert: "#{error_message} - #{t('activerecord.models.asset')} id: #{asset.number}"
             raise ActiveRecord::Rollback
-					end
-				end
-				
-				respond_to do |format|
-					format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset")) }
-				end
-			end
+          end
+        end
+
+        respond_to do |format|
+          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset")) }
+        end
+      end
     end
 
     def import
@@ -109,14 +133,14 @@ module Admin
 
     def process_import
       authorize :authorization, :create?
-      allowed_extension = [".xlsx", ".csv"]
+      allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
       data = []
       batch_size = 1000
       maybe_error = false
 
       start_time = Time.now
-      
+
       created_by = Current.account.username
       request_id = Current.request_id
       user_agent = Current.user_agent
@@ -148,7 +172,6 @@ module Admin
         begin
           ActiveRecord::Base.transaction do
             sheet.parse(asset_attributes_headers).each do |row|
-
               from_department = Department.find_by_id_department(row[:from_department]&.strip)
               to_department = Department.find_by_id_department(row[:to_department]&.strip)
               capital_proposal = CapitalProposal.find_by_number(row[:capital_proposal]&.strip)
@@ -197,16 +220,15 @@ module Admin
                 Asset.insert_all!(data)
                 data.clear
               end
-  
             end
 
             Asset.insert_all!(data) unless data.empty?
           end
-          
+
         rescue Roo::HeaderRowNotFoundError => e
           return redirect_to import_admin_assets_path, alert: t("custom.errors.invalid_import_template", errors: e)
-      
-        
+
+
         # Penanganan untuk duplikat data
         rescue ActiveRecord::RecordNotUnique => e
           logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
@@ -214,7 +236,7 @@ module Admin
           duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
           humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
           return redirect_back_or_to import_admin_assets_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
-    
+
         # penangan error null violation
         rescue ActiveRecord::NotNullViolation => e
           logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
@@ -224,20 +246,20 @@ module Admin
           error_message = "#{t('activerecord.attributes.asset.' + error_column)} " \
             "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
           return redirect_back_or_to import_admin_assets_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
-        
+
         # Penanganan umum untuk semua jenis error lainnya
         rescue => e
           logger.error "#{Current.request_id} - General error during import: #{e.message}"
-          return redirect_back_or_to import_admin_assets_path, alert: t('custom.errors.general_error')
+          return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.general_error")
 
         end
 
         unless maybe_error
           logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
           redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset"))
-          return
+          nil
         end
-        
+
       else
         redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
       end
@@ -245,14 +267,14 @@ module Admin
 
     def process_import_details
       authorize :authorization, :create?
-      allowed_extension = [".xlsx", ".csv"]
+      allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
       data = []
       batch_size = 1000
       maybe_error = false
 
       start_time = Time.now
-      
+
       created_by = Current.account.username
       request_id = Current.request_id
       user_agent = Current.user_agent
@@ -284,7 +306,6 @@ module Admin
         begin
           ActiveRecord::Base.transaction do
             sheet.parse(asset_details_attributes_headers).each do |row|
-
               currency = Currency.find_by_id_currency(row[:currency]&.strip)
               rfp = Asset.find_by_number(row[:asset]&.strip)
               po = PurchaseOrder.find_by_number(row[:purchase_order]&.strip)
@@ -361,16 +382,15 @@ module Admin
                 AssetDetail.insert_all!(data)
                 data.clear
               end
-  
             end
 
             AssetDetail.insert_all!(data) unless data.empty?
           end
-          
+
         rescue Roo::HeaderRowNotFoundError => e
           return redirect_to import_admin_assets_path, alert: t("custom.errors.invalid_import_template", errors: e)
-      
-        
+
+
         # Penanganan untuk duplikat data
         rescue ActiveRecord::RecordNotUnique => e
           logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
@@ -378,7 +398,7 @@ module Admin
           duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
           humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
           return redirect_back_or_to import_admin_assets_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
-    
+
         # penangan error null violation
         rescue ActiveRecord::NotNullViolation => e
           logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
@@ -388,20 +408,20 @@ module Admin
           error_message = "#{t('activerecord.attributes.asset.' + error_column)} " \
             "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
           return redirect_back_or_to import_admin_assets_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
-        
+
         # Penanganan umum untuk semua jenis error lainnya
         rescue => e
           logger.error "#{Current.request_id} - General error during import: #{e.message}"
-          return redirect_back_or_to import_admin_assets_path, alert: t('custom.errors.general_error')
+          return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.general_error")
 
         end
 
         unless maybe_error
           logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
           redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset"))
-          return
+          nil
         end
-        
+
       else
         redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
       end
@@ -411,7 +431,7 @@ module Admin
     private
 
       def asset_params
-        params.expect(asset: [ 
+        params.expect(asset: [
           :tagging_id,
           :project_id,
           :site_id,
@@ -424,17 +444,31 @@ module Admin
           :keyboard_sn,
           :delivery_order_id,
           :shipping_date,
-          :description
+          :description,
+          asset_components_attributes: [ [
+            :id,
+            :component_id,
+            :serial_number,
+            :_destroy
+          ] ]
         ])
       end
 
       def set_asset
         @asset = Asset.find(params[:id])
-        @asset.date = @asset.date.strftime("%Y-%m-%d")
+        @asset.tagging_date = @asset.tagging_date.strftime("%Y-%m-%d")
       end
 
       def set_function_access_code
-				@function_access_code = FunctionAccessConstant::FA_ASSET
+        @function_access_code = FunctionAccessConstant::FA_ASSET
+      end
+
+      def ensure_frame_response
+        redirect_to admin_assets_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_assets_path || root_path
       end
   end
 end

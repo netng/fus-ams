@@ -1,6 +1,9 @@
 class Asset < ApplicationRecord
   include Trackable
 
+  has_many :asset_components, inverse_of: :asset, dependent: :destroy
+  accepts_nested_attributes_for :asset_components, allow_destroy: true, reject_if: :component_id_blank?
+
   belongs_to :project
   belongs_to :site
   belongs_to :asset_model
@@ -18,13 +21,13 @@ class Asset < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   before_validation :strip_and_upcase_tagging_id
-  
+
   def self.ransackable_attributes(auth_object = nil)
-    ["asset_class_id", "asset_model_id", "computer_ip", "computer_name", "cpu_sn", "created_at", "created_by", "delivery_order_id", "description", "id", "ip_address", "keyboard_sn", "monitor_sn", "project_id", "request_id", "shipping_date", "site_id", "tagging_date", "tagging_id", "updated_at", "user_agent", "user_asset_id"]
+    [ "asset_class_id", "asset_model_id", "computer_ip", "computer_name", "cpu_sn", "created_at", "created_by", "delivery_order_id", "description", "id", "ip_address", "keyboard_sn", "monitor_sn", "project_id", "request_id", "shipping_date", "site_id", "tagging_date", "tagging_id", "updated_at", "user_agent", "user_asset_id" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["asset_class", "asset_model", "delivery_order", "project", "site", "user_asset"]
+    [ "asset_class", "asset_model", "delivery_order", "project", "site", "user_asset" ]
   end
 
   private
@@ -33,5 +36,13 @@ class Asset < ApplicationRecord
         self.tagging_id = tagging_id.strip.upcase
       end
     end
-  
+
+    def component_id_blank?(attributes)
+      if attributes["component_id"].blank?
+        attributes["_destroy"] = "1"
+        true
+      else
+        false
+      end
+    end
 end

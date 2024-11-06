@@ -9,8 +9,10 @@
         <%= tag.div data: {
                 modal_target: "modalContent",
                 action: "turbo:submit-end->modal#submitEnd keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
-                class: "p-8 bg-white rounded-md shadow-lg w-full md:w-1/2 max-h-[90vh] overflow-auto" do %>
+                class: "bg-white rounded-md shadow-lg w-full md:w-2/3 max-h-[90vh] overflow-auto" do %>
+
             <%= yield %>
+
         <% end %>
     </div>
 <% end %>

@@ -30,6 +30,7 @@ en:
       site_default: Site default
       asset: Asset
       asset_class: Asset class
+      asset_component: Component detail
       
 
     attributes:
@@ -416,6 +417,10 @@ en:
   
   custom:
     label:
+      component_detail: Component details
+      component_type: Component type
+      component: Component
+      serial_number: Serial Number
       location: Location
       software: Software
       delivery_to: Delivery to

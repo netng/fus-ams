@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_31_044229) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_06_085045) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,6 +42,17 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_044229) do
     t.datetime "updated_at", null: false
     t.index ["id_asset_class"], name: "index_asset_classes_on_id_asset_class", unique: true
     t.index ["project_id"], name: "index_asset_classes_on_project_id"
+  end
+
+  create_table "asset_components", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "asset_id"
+    t.uuid "component_id"
+    t.string "serial_number", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_asset_components_on_asset_id"
+    t.index ["component_id"], name: "index_asset_components_on_component_id"
+    t.index ["serial_number"], name: "index_asset_components_on_serial_number"
   end
 
   create_table "asset_item_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -566,6 +577,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_044229) do
 
   add_foreign_key "accounts", "roles"
   add_foreign_key "asset_classes", "projects"
+  add_foreign_key "asset_components", "assets"
+  add_foreign_key "asset_components", "components"
   add_foreign_key "asset_item_types", "asset_types"
   add_foreign_key "asset_models", "asset_item_types"
   add_foreign_key "asset_models", "asset_types"

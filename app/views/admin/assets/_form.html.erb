@@ -1,164 +1,213 @@
 <%= form_with model: [:admin, asset], data: { turbo_action: "advance" } do |form| %>
+  <div class="mb-2">
+    <%= form.label :tagging_id, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :tagging_id, class: "fus-input", required: true %>
+    <% @asset.errors.full_messages_for(:tagging_id).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
 
+  <div data-controller="slim-dependent-select-insert" class="md:grid grid-cols-2 gap-2 my-4">
     <div class="mb-2">
-      <%= form.label :tagging_id, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
-      <%= form.text_field :tagging_id, class: "fus-input", required: true %>
-      <% @asset.errors.full_messages_for(:tagging_id).each do |message| %>
+      <%= form.label :project, "#{t("activerecord.models.project")} *", class: "fus-label mb-2" %>
+      <%= form.select :project_id,
+        Project.pluck(:name, :id).map { |name, id| [name, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.project")).capitalize},
+        { 
+          data: {
+            action: "filters#submit change->slim-dependent-select-insert#changeChild", 
+            slim_dependent_select_insert_target: "parent",
+            endpoint: "#{site_default_admin_assets_path}"
+          },
+          class: "fus-select"
+        }
+      %>
+
+      <% @asset.errors.full_messages_for(:project).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
 
-    <div data-controller="slim-dependent-select-insert" class="md:grid grid-cols-2 gap-2 my-4">
-      <div class="mb-2">
-        <%= form.label :project, "#{t("activerecord.models.project")} *", class: "fus-label mb-2" %>
-        <%= form.select :project_id,
-          Project.pluck(:name, :id).map { |name, id| [name, id]},
-          {include_blank: t("custom.label.select", model: t("activerecord.models.project")).capitalize},
-          { 
-            data: {
-              action: "filters#submit change->slim-dependent-select-insert#changeChild", 
-              slim_dependent_select_insert_target: "parent",
-              endpoint: "#{site_default_admin_assets_path}"
-            },
-            class: "fus-select"
-          }
-        %>
-
-        <% @asset.errors.full_messages_for(:project).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-
-      <div class="mb-2">
-        <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
-        <%= form.select :site_id,
-          @site_defaults,
-          {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
-          { 
-            data: {
-              action: "filters#submit",
-              default_option: t("custom.label.select", model: t("activerecord.models.site")).capitalize,
-              slim_dependent_select_insert_target: "child"
-            },
-            class: "fus-select"
-          }
-        %>
-    
-        <% @asset.errors.full_messages_for(:site).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-    </div>
-
-    <div class="md:grid grid-cols-2 gap-2">
-      <div class="mb-2">
-        <%= form.label :asset_model, "#{t("activerecord.models.asset_model")} *", class: "fus-label mb-2" %>
-        <%= form.select :asset_model_id,
-          AssetModel.pluck(:name, :id).map { |name, id| [name, id]},
-          {include_blank: t("custom.label.select", model: t("activerecord.models.asset_model")).capitalize},
-          { data: { controller: "slim" }, class: "fus-select" }
-        %>
-        <% @asset.errors.full_messages_for(:asset_model).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :asset_class, "#{t("activerecord.models.asset_class")}", class: "fus-label mb-2" %>
-        <%= form.select :asset_class_id,
-          AssetClass.pluck(:name, :id).map { |name, id| [name, id]},
-          {include_blank: t("custom.label.select", model: t("activerecord.models.asset_class")).capitalize},
-          { data: { controller: "slim" }, class: "fus-select" }
-        %>
-        <% @asset.errors.full_messages_for(:asset_class).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :computer_name, "#{t("activerecord.attributes.asset.computer_name")}", class: "fus-label mb-2" %>
-        <%= form.text_field :computer_name, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:computer_name).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :computer_ip, "#{t("activerecord.attributes.asset.computer_ip")}", class: "fus-label mb-2" %>
-        <%= form.text_field :computer_ip, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:computer_ip).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="md:grid grid-cols-3 gap-2 my-4">
-      <div class="mb-2">
-        <%= form.label :cpu_sn, "#{t("activerecord.attributes.asset.cpu_sn")}", class: "fus-label mb-2" %>
-        <%= form.text_field :cpu_sn, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:cpu_sn).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :monitor_sn, "#{t("activerecord.attributes.asset.monitor_sn")}", class: "fus-label mb-2" %>
-        <%= form.text_field :monitor_sn, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:monitor_sn).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :keyboard_sn, "#{t("activerecord.attributes.asset.keyboard_sn")}", class: "fus-label mb-2" %>
-        <%= form.text_field :keyboard_sn, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:keyboard_sn).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="md:grid grid-cols-2 gap-2 my-4">
-      <div class="mb-2">
-        <%= form.label :delivery_order, "#{t("activerecord.models.delivery_order")}", class: "fus-label mb-2" %>
-        <%= form.select :delivery_order_id,
-          DeliveryOrder.pluck(:number, :id).map { |number, id| [number, id]},
-          {include_blank: t("custom.label.select", model: t("activerecord.models.delivery_order")).capitalize},
-          { data: { controller: "slim" }, class: "fus-select" }
-        %>
-        <% @asset.errors.full_messages_for(:delivery_order).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-
-      <div class="mb-2">
-        <%= form.label :shipping_date, "#{t("activerecord.attributes.asset.shipping_date")}", class: "fus-label mb-2" %>
-        <%= form.date_field :shipping_date, class: "fus-input" %>
-        <% @asset.errors.full_messages_for(:shipping_date).each do |message| %>
-          <p class="text-red-500 text-sm mt-1"><%= message %></p>
-        <% end %>
-      </div>
-    </div>
-
 
     <div class="mb-2">
-      <%= form.label :description, "#{t("activerecord.attributes.asset.description")}", class: "fus-label mb-2" %>
-      <%= form.textarea :description, class: "fus-input" %>
-      <% @asset.errors.full_messages_for(:description).each do |message| %>
+      <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
+      <%= form.select :site_id,
+        @site_defaults,
+        {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
+        { 
+          data: {
+            action: "filters#submit",
+            default_option: t("custom.label.select", model: t("activerecord.models.site")).capitalize,
+            slim_dependent_select_insert_target: "child"
+          },
+          class: "fus-select"
+        }
+      %>
+  
+      <% @asset.errors.full_messages_for(:site).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>
-    
+
+  </div>
+
+  <div class="md:grid grid-cols-2 gap-2">
+    <div class="mb-2">
+      <%= form.label :asset_model, "#{t("activerecord.models.asset_model")} *", class: "fus-label mb-2" %>
+      <%= form.select :asset_model_id,
+        AssetModel.pluck(:name, :id).map { |name, id| [name, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.asset_model")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @asset.errors.full_messages_for(:asset_model).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :asset_class, "#{t("activerecord.models.asset_class")}", class: "fus-label mb-2" %>
+      <%= form.select :asset_class_id,
+        AssetClass.pluck(:name, :id).map { |name, id| [name, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.asset_class")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @asset.errors.full_messages_for(:asset_class).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :computer_name, "#{t("activerecord.attributes.asset.computer_name")}", class: "fus-label mb-2" %>
+      <%= form.text_field :computer_name, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:computer_name).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :computer_ip, "#{t("activerecord.attributes.asset.computer_ip")}", class: "fus-label mb-2" %>
+      <%= form.text_field :computer_ip, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:computer_ip).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="md:grid grid-cols-3 gap-2 my-4">
+    <div class="mb-2">
+      <%= form.label :cpu_sn, "#{t("activerecord.attributes.asset.cpu_sn")}", class: "fus-label mb-2" %>
+      <%= form.text_field :cpu_sn, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:cpu_sn).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :monitor_sn, "#{t("activerecord.attributes.asset.monitor_sn")}", class: "fus-label mb-2" %>
+      <%= form.text_field :monitor_sn, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:monitor_sn).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :keyboard_sn, "#{t("activerecord.attributes.asset.keyboard_sn")}", class: "fus-label mb-2" %>
+      <%= form.text_field :keyboard_sn, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:keyboard_sn).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="md:grid grid-cols-2 gap-2 my-4">
+    <div class="mb-2">
+      <%= form.label :delivery_order, "#{t("activerecord.models.delivery_order")}", class: "fus-label mb-2" %>
+      <%= form.select :delivery_order_id,
+        DeliveryOrder.pluck(:number, :id).map { |number, id| [number, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.delivery_order")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @asset.errors.full_messages_for(:delivery_order).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :shipping_date, "#{t("activerecord.attributes.asset.shipping_date")}", class: "fus-label mb-2" %>
+      <%= form.date_field :shipping_date, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:shipping_date).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  </div>
 
 
+  <div class="mb-2">
+    <%= form.label :description, "#{t("activerecord.attributes.asset.description")}", class: "fus-label mb-2" %>
+    <%= form.textarea :description, class: "fus-input" %>
+    <% @asset.errors.full_messages_for(:description).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+  
+  <h3 class="fus-form-header mt-6 mb-2">
+    <%= t("custom.label.component_details") %>
+  </h3>
 
-  <hr class="my-4 mx-6" />
+  <div class="overflow-x-auto rounded-lg" data-controller="table">
+    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+        <table class="min-w-full bg-white">
+          <thead class="rounded-lg">
+            <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-5 whitespace-nowrap z-10">
+                <%= t("custom.label.component_type") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-5 whitespace-nowrap z-10">
+                <%= t("custom.label.component") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-5 whitespace-nowrap z-10">
+                <%= t("custom.label.serial_number") %>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light">
+            <%= form.fields_for :asset_components do |asset_components_form| %>
+              <% component_type = ComponentType.find_by_id_component_type(asset_components_form.index) %>
+              <%#= asset_components_form.object.inspect %>
+              <%= asset_components_form.index %>
+
+              <%= tag.tr class: "border-b border-gray-200 hover:bg-gray-100" do %>
+                <td class="sticky left-0 py-3 px-6 text-left whitespace-nowrap border-r border-gray-300 bg-gray-100">
+                  <%= component_type.name %>
+                </td>
+
+                <td class="py-3 px-6 text-left whitespace-nowrap">
+                  <%= asset_components_form.hidden_field :_destroy %>
+                  <%= asset_components_form.select :component_id,
+                    component_type.components.pluck(:name, :id).map { |name, id| [name, id]},
+                    {include_blank: t("custom.label.select", model: t("activerecord.models.component")).capitalize},
+                    { data: { controller: "slim" }, class: "fus-select" }
+                  %>
+                </td>
+                
+                <td class="py-3 px-6 text-left whitespace-nowrap ">
+                  <%= asset_components_form.text_field :serial_number, class: "fus-input" %>
+                </td>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+    </div>
+
+  </div>
   
 
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
+      data: { turbo_frame: "main-content" },
       class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>
 
