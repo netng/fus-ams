@@ -31,22 +31,28 @@
 
     <div class="mb-2">
       <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
-      <%= form.select :site_id,
-        @site_defaults,
-        {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
-        { 
-          data: {
-            action: "filters#submit",
-            default_option: t("custom.label.select", model: t("activerecord.models.site")).capitalize,
-            slim_dependent_select_insert_target: "child"
-          },
-          class: "fus-select"
-        }
-      %>
-  
-      <% @asset.errors.full_messages_for(:site).each do |message| %>
-        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% if form.object.persisted? %>
+        <span class="fus-input bg-slate-300">
+          <%= @asset.site.name %>
+        </span>
+      <% else %>
+        <%= form.select :site_id,
+          @site_defaults,
+          {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
+          { 
+            data: {
+              action: "filters#submit",
+              default_option: t("custom.label.select", model: t("activerecord.models.site")).capitalize,
+              slim_dependent_select_insert_target: "child"
+            },
+            class: "fus-select"
+          }
+        %>
+        <% @asset.errors.full_messages_for(:site).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
       <% end %>
+  
     </div>
 
   </div>
@@ -155,7 +161,7 @@
   </h3>
 
   <div class="overflow-x-auto rounded-lg" data-controller="table">
-    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[550px]">
         <table class="min-w-full bg-white">
           <thead class="rounded-lg">
             <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
@@ -174,34 +180,10 @@
             </tr>
           </thead>
           <tbody class="text-gray-600 text-sm font-light">
-            <%= form.fields_for :asset_components do |asset_components_form| %>
-              <% component_type = ComponentType.find_by_id_component_type(asset_components_form.index) %>
-              <%#= asset_components_form.object.inspect %>
-              <%= asset_components_form.index %>
-
-              <%= tag.tr class: "border-b border-gray-200 hover:bg-gray-100" do %>
-                <td class="sticky left-0 py-3 px-6 text-left whitespace-nowrap border-r border-gray-300 bg-gray-100">
-                  <%= component_type.name %>
-                </td>
-
-                <td class="py-3 px-6 text-left whitespace-nowrap">
-                  <%= asset_components_form.hidden_field :_destroy %>
-                  <%= asset_components_form.select :component_id,
-                    component_type.components.pluck(:name, :id).map { |name, id| [name, id]},
-                    {include_blank: t("custom.label.select", model: t("activerecord.models.component")).capitalize},
-                    { data: { controller: "slim" }, class: "fus-select" }
-                  %>
-                </td>
-                
-                <td class="py-3 px-6 text-left whitespace-nowrap ">
-                  <%= asset_components_form.text_field :serial_number, class: "fus-input" %>
-                </td>
-              <% end %>
-            <% end %>
+            <%= render "component_details", asset_components: form.object.asset_components %>
           </tbody>
         </table>
     </div>
-
   </div>
   
 

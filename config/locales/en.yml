@@ -470,6 +470,7 @@ en:
       cost_log_number: Cost log number
       site_id: Site ID
       site_name: Site name
+      edit_location_form: Update asset location
 
     format: "%{attribute} %{message}"
     errors:

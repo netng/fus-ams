@@ -1,0 +1,5 @@
+<div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-lg shadow">
+  <%= turbo_frame_tag "table_user_assets" do %>
+    <%= render "admin/assets/user_assets/turbo_table", user_assets: user_assets %>
+  <% end %>
+</div>

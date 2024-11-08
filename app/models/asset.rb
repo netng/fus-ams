@@ -2,7 +2,7 @@ class Asset < ApplicationRecord
   include Trackable
 
   has_many :asset_components, inverse_of: :asset, dependent: :destroy
-  accepts_nested_attributes_for :asset_components, allow_destroy: true, reject_if: :component_id_blank?
+  accepts_nested_attributes_for :asset_components, allow_destroy: true, reject_if: proc { |attributes| attributes["component_id"].blank? }
 
   belongs_to :project
   belongs_to :site
@@ -34,15 +34,6 @@ class Asset < ApplicationRecord
     def strip_and_upcase_tagging_id
       if tagging_id.present?
         self.tagging_id = tagging_id.strip.upcase
-      end
-    end
-
-    def component_id_blank?(attributes)
-      if attributes["component_id"].blank?
-        attributes["_destroy"] = "1"
-        true
-      else
-        false
       end
     end
 end

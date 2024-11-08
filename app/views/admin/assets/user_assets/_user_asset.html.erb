@@ -1,0 +1,25 @@
+<% user_assets.each do |user_asset| %>
+  <%= tag.tr id: dom_id(user_asset), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+    <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+      <div class="flex items-center space-x-4">
+
+        <%= radio_button_tag "user_asset_id",
+          user_asset.id,
+          nil,
+          {
+            class: "h-5 w-5 text-blue-600 focus:ring-blue-500 rounded-full border-none bg-slate-300 hover:bg-slate-400",
+            form: :user_asset_table,
+            title: t("custom.label.choose_user_asset")
+          }
+        %>
+
+      </div>
+    </td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.id_user_asset %></td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.username %></td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
+    <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
+  <% end %>
+<% end %>

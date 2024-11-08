@@ -1,8 +1,8 @@
 module Admin
   class AssetsController < ApplicationAdminController
-    before_action :set_asset, only: [ :edit, :update, :destroy ]
+    before_action :set_asset, only: [ :edit, :update, :destroy, :edit_location ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update, :edit_location ]
     before_action :set_previous_url
 
     def index
@@ -18,43 +18,32 @@ module Admin
       authorize :authorization, :create?
 
       @asset = Asset.new
-      8.times { @asset.asset_components.build }
+
       @site_defaults = []
-    end
-
-    def site_default
-      authorize :authorization, :read?
-
-      if params[:query].present?
-        query = params[:query].downcase
-        site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: query })
-        render json: site_defaults.pluck(:id, :name).map { |id, name| { id: id, name: name } }
-      else
-        render json: []
-      end
     end
 
     def create
       authorize :authorization, :create?
 
       @asset = Asset.new(asset_params)
+
       @asset.tagging_date = Date.today
-      @asset.user_asset = UserAsset.find_by_id_user_asset(SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default) unless @asset.site_id.nil?
-      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
-      @selected_components = params[:selected_components]&.map(&:to_s) || []
 
-      (8 - @asset.asset_components.size).times { @asset.asset_components.build }
+      @asset.user_asset = UserAsset
+        .find_by_id_user_asset(
+          SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default
+          ) unless @asset.site_id.nil?
 
-      valid_components = @asset.asset_components.select { |component| component.component_id.present? }
-      @asset.asset_components = valid_components
-      puts @asset.asset_components.inspect
+      set_site_default(@asset)
 
       respond_to do |format|
         if @asset.save
-          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.asset")) }
+          format.html {
+            redirect_to admin_assets_path,
+            notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.asset"))
+          }
         else
           puts @asset.errors.messages
-          # format.html { render ("_form" if turbo_frame_request?), locals: { asset: @asset } }
           format.html { render :new, status: :unprocessable_entity }
         end
       end
@@ -62,41 +51,65 @@ module Admin
 
     def edit
       authorize :authorization, :update?
-      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
-      @asset.asset_components = @asset.asset_components.joins(component: :component_type).order("component_types.id_component_type ASC")
 
-      puts @asset.asset_components.inspect
-
-      # Pastikan jumlah asset_components adalah 8, jika kurang, tambahkan yang kosong
-      while @asset.asset_components.size < 8
-        # Dapatkan component_type berdasarkan urutan yang sudah ada
-        next_available_type = ComponentType.where.not(id_component_type: @asset.asset_components.map { |ac| ac.component.component_type.id }).first
-        if next_available_type
-          @asset.asset_components.build(component: next_available_type.components.first) # Buat asset_component baru dengan component yang sesuai
-        end
-      end
-
-      # (8 - @asset.asset_components.size).times { @asset.asset_components.build }
+      set_site_default(@asset)
     end
 
     def update
       authorize :authorization, :update?
-      @site_defaults = Site.joins(site_default: { site: { site_group: :project } }).where(projects: { id: @asset.project_id }).pluck(:id, :name).map { |id, name| [ name, id ] } || []
-      (8 - @asset.asset_components.size).times { @asset.asset_components.build }
+
+      set_site_default(@asset)
+
+      # Filter asset_components yang valid berdasarkan component_id yang ada
+      # Jika component_id blank, tandai untuk dihapus dari asset_components
+      params[:asset][:asset_components_attributes]&.each do |key, component_params|
+        if component_params[:component_id].blank?
+          component_params[:_destroy] = "1"
+        end
+      end
 
       respond_to do |format|
-        begin
-          @asset.update(asset_params)
-          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
-        rescue ActiveRecord::RecordNotDestroyed => e
-          logger.debug "ERROR => #{e.inspect}"
+        if @asset.update(asset_params)
+          format.html {
+            redirect_to admin_assets_path,
+            notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
+          }
+        else
           format.html { render :edit, status: :unprocessable_entity }
         end
-        # if @asset.update(asset_params)
-        # 	format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset")) }
-        # else
-        # 	format.html { render :edit, status: :unprocessable_entity }
-        # end
+      end
+    end
+
+    def edit_location
+      authorize :authorization, :update?
+
+      @q = UserAsset.ransack(params[:q])
+      @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
+      scope = @q.result.includes(:site, :department)
+      @pagy, @user_assets = pagy(scope, limit: 5)
+    end
+
+    def search_user_assets
+      authorize :authorization, :update?
+
+      @q = UserAsset.ransack(params[:q])
+      @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
+      @user_assets = @q.result.includes(:site, :department)
+      @pagy, @user_assets = pagy(@user_assets, limit: 5)
+
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "table_user_assets",
+            partial: "admin/assets/user_assets/turbo_table",
+            locals: { user_assets: @user_assets, pagy: @pagy }
+          )
+        end
+
+        format.html do
+          render partial: "admin/assets/user_assets/turbo_table",
+                 locals: { user_assets: @user_assets, pagy: @pagy }
+       end
       end
     end
 
@@ -114,7 +127,6 @@ module Admin
 
         assets.each do |asset|
           unless asset.destroy
-            logger.debug "RFP Destroy error - #{asset.errors.inspect}"
             error_message = asset.errors.full_messages.join("")
             redirect_to admin_assets_path, alert: "#{error_message} - #{t('activerecord.models.asset')} id: #{asset.number}"
             raise ActiveRecord::Rollback
@@ -122,8 +134,27 @@ module Admin
         end
 
         respond_to do |format|
-          format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset")) }
+          format.html {
+            redirect_to admin_assets_path,
+            notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.asset"))
+          }
         end
+      end
+    end
+
+    def site_default
+      authorize :authorization, :read?
+
+      if params[:query].present?
+        query = params[:query].downcase
+
+        site_defaults = Site
+          .joins(site_default: { site: { site_group: :project } })
+          .where(projects: { id: query })
+
+        render json: site_defaults.pluck(:id, :name).map { |id, name| { id: id, name: name } }
+      else
+        render json: []
       end
     end
 
@@ -469,6 +500,14 @@ module Admin
 
       def set_previous_url
         @previous_url = admin_assets_path || root_path
+      end
+
+      def set_site_default(asset)
+        @site_defaults = Site
+          .joins(site_default: { site: { site_group: :project } })
+          .where(projects: { id: @asset.project_id })
+          .pluck(:id, :name)
+          .map { |id, name| [ name, id ] } || []
       end
   end
 end

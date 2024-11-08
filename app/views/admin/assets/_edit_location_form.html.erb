@@ -1,0 +1,33 @@
+
+<div class="bg-slate-50 rounded-md grid grid-cols-2 gap-2 p-2 mb-6">
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.tagging_id") %>
+		</label>
+		<span class="fus-input"><%= @asset.tagging_id %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.models.asset_item_type") %>
+		</label>
+		<span class="fus-input"><%= @asset.asset_model.asset_item_type.name %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.models.site") %>
+		</label>
+		<span class="fus-input"><%= @asset.site.name %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.cpu_sn") %>
+		</label>
+		<span class="fus-input"><%= @asset.cpu_sn.present? ? @asset.cpu_sn : "-" %></span>
+	</div>
+
+</div>
+<%= render "admin/assets/user_assets/search_filter", asset: @asset %>
+<%= render "admin/assets/user_assets/table", user_assets: @user_assets %>
