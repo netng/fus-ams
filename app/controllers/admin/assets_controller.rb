@@ -1,6 +1,10 @@
 module Admin
   class AssetsController < ApplicationAdminController
-    before_action :set_asset, only: [ :edit, :update, :destroy, :edit_location ]
+    before_action :set_asset, only: [
+      :edit, :update, :destroy,
+      :edit_location, :update_location
+    ]
+
     before_action :set_function_access_code
     before_action :ensure_frame_response, only: [ :new, :create, :edit, :update, :edit_location ]
     before_action :set_previous_url
@@ -87,31 +91,83 @@ module Admin
       @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
       scope = @q.result.includes(:site, :department)
       @pagy, @user_assets = pagy(scope, limit: 5)
+
+      if params[:q].present?
+        respond_to do |format|
+          format.turbo_stream do
+            logger.debug "TURBO STREAM RENDER"
+            render turbo_stream: turbo_stream.replace(
+              "table_user_assets",
+              partial: "admin/assets/user_assets/turbo_table",
+              locals: { user_assets: @user_assets, pagy: @pagy }
+            )
+          end
+          format.html do
+            logger.debug "fallback render"
+            render partial: "admin/assets/user_assets/turbo_table",
+                   locals: { user_assets: @user_assets, pagy: @pagy }
+          end
+        end
+      else
+        # Permintaan awal: render view edit_location.html.erb
+        logger.debug "first render"
+        render :edit_location
+      end
     end
 
-    def search_user_assets
+    def update_location
       authorize :authorization, :update?
 
       @q = UserAsset.ransack(params[:q])
       @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
-      @user_assets = @q.result.includes(:site, :department)
-      @pagy, @user_assets = pagy(@user_assets, limit: 5)
+      scope = @q.result.includes(:site, :department)
+      @pagy, @user_assets = pagy(scope, limit: 5)
+
+      user_asset_id = params[:user_asset_id]
+      user_asset = UserAsset.find_by_id(user_asset_id)
 
       respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "table_user_assets",
-            partial: "admin/assets/user_assets/turbo_table",
-            locals: { user_assets: @user_assets, pagy: @pagy }
-          )
+        if user_asset && @asset.update(user_asset: user_asset, site: user_asset.site)
+          format.html {
+            redirect_to admin_assets_path,
+            notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
+          }
+        else
+          format.html {
+            redirect_to admin_assets_path,
+            alert: t("custom.flash.alerts.user_asset_is_not_found")
+          }
         end
-
-        format.html do
-          render partial: "admin/assets/user_assets/turbo_table",
-                 locals: { user_assets: @user_assets, pagy: @pagy }
-       end
       end
     end
+
+    # kode ini tidak dipakai
+    # sudah dipindah ke edit_location
+    # supaya tidak beda action
+    # kita biarkan kode ini untuk archive
+    # def search_user_assets
+    #   authorize :authorization, :update?
+
+    #   @q = UserAsset.ransack(params[:q])
+    #   @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
+    #   @user_assets = @q.result.includes(:site, :department)
+    #   @pagy, @user_assets = pagy(@user_assets, limit: 5)
+
+    #   respond_to do |format|
+    #     format.turbo_stream do
+    #       render turbo_stream: turbo_stream.replace(
+    #         "table_user_assets",
+    #         partial: "admin/assets/user_assets/turbo_table",
+    #         locals: { user_assets: @user_assets, pagy: @pagy }
+    #       )
+    #     end
+
+    #     format.html do
+    #       render partial: "admin/assets/user_assets/turbo_table",
+    #              locals: { user_assets: @user_assets, pagy: @pagy }
+    #     end
+    #   end
+    # end
 
     def destroy
       authorize :authorization, :destroy?

@@ -417,6 +417,7 @@ en:
   
   custom:
     label:
+      choose_user_asset: Choose user asset
       component_detail: Component details
       component_type: Component type
       component: Component
@@ -446,7 +447,7 @@ en:
       number_of_rt: Jumlah RT
       destroy: Delete
       edit: Edit
-      update: Perbaharui
+      update: Update
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
       import_form: Import data %{model}
@@ -491,6 +492,7 @@ en:
         require_authentication: The page you want to access was not found
         select_on_or_more: Silakan pilih setidaknya satu data
         select_file: Please select file
+        user_asset_is_not_found: User asset is not found
         failed:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data

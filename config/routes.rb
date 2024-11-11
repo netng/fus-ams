@@ -181,11 +181,12 @@ Rails.application.routes.draw do
         get "import"
         post "process_import"
         get "site_default"
-        get "search_user_assets"
       end
-
+      
       member do
+        # get "search_user_assets"
         get "edit_location"
+        patch "update_location"
       end
     end
 

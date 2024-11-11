@@ -35,16 +35,22 @@ export default class extends Controller {
   }
 
   search() {
-    const url = this.formTarget.action;
-    const params = new URLSearchParams(new FormData(this.formTarget));
+    const url = this.formTarget.action
+    const params = new URLSearchParams(new FormData(this.formTarget))
+    const frame = this.formTarget.dataset.turboFrame
 
-    console.log("url", url)
-    console.log("params", params)
-    console.log("complete url", `${url}?${params}`)
+    // console.log(this.formTarget.dataset.turboFrame)
+    // console.log("url", url)
+    // console.log("params", params)
+    // console.log("complete url", `${url}?${params}`)
 
     get(`${url}?${params}`, {
+      headers: { "Turbo-Frame": frame },
       responseKind: "turbo-stream",
     });
+
+    history.replaceState({}, "", `${url}?${params}`);
+
   }
 
   resetDeleteButton() {
