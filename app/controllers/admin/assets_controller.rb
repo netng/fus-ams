@@ -141,6 +141,14 @@ module Admin
       end
     end
 
+    def edit_software
+      authorize :authorization, :update?
+    end
+
+    def update_software
+      
+    end
+
     # kode ini tidak dipakai
     # sudah dipindah ke edit_location
     # supaya tidak beda action

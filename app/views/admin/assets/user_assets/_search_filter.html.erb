@@ -1,5 +1,5 @@
 <div class="bg-slate-50 p-2" data-toggle-target="toggle">
-  <%= search_form_for [:admin, @q], url: edit_location_admin_asset_path(asset), data: { 
+  <%= search_form_for [:admin, @q], url: location_admin_asset_path(asset), data: { 
     controller: "filters",
     turbo_frame: :table_user_assets,
     turbo_action: "advance",

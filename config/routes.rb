@@ -185,8 +185,8 @@ Rails.application.routes.draw do
       
       member do
         # get "search_user_assets"
-        get "edit_location"
-        patch "update_location"
+        get "location", to: "edit_location"
+        patch "location", to: "update_location"
       end
     end
 
