@@ -2,7 +2,8 @@ module Admin
   class AssetsController < ApplicationAdminController
     before_action :set_asset, only: [
       :edit, :update, :destroy,
-      :edit_location, :update_location
+      :edit_location, :update_location,
+      :edit_software, :update_software
     ]
 
     before_action :set_function_access_code
@@ -143,9 +144,29 @@ module Admin
 
     def edit_software
       authorize :authorization, :update?
+      @asset_softwares = @asset.asset_softwares
     end
 
     def update_software
+      authorize :authorization, :update?
+
+      params[:asset][:asset_softwares_attributes]&.each do |key, software_params|
+        if software_params[:software_id].blank?
+          software_params[:_destroy] = "1"
+        end
+      end
+
+      respond_to do |format|
+        if @asset.update(asset_params)
+          format.html {
+            redirect_to admin_assets_path,
+            notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
+          }
+        else
+          puts @asset.errors.messages
+          format.html { render :edit_software, status: :unprocessable_entity }
+        end
+      end
       
     end
 
@@ -544,6 +565,13 @@ module Admin
             :id,
             :component_id,
             :serial_number,
+            :_destroy
+          ] ],
+          asset_softwares_attributes: [ [
+            :id,
+            :sequence_number,
+            :software_id,
+            :license,
             :_destroy
           ] ]
         ])

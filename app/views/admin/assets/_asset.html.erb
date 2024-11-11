@@ -38,10 +38,16 @@
           %>
       <% end %>
 
-      <%= inline_svg_tag "software.svg",
-        class: "fus-icons",
-        title: t("custom.label.software")
-      %>
+      <%= link_to software_admin_asset_path(asset),
+        data: {
+          turbo_action: "advance",
+          turbo_frame: :modal
+        } do %>
+        <%= inline_svg_tag "software.svg",
+          class: "fus-icons",
+          title: t("custom.label.software")
+        %>
+      <% end %>
 
     </div>
   </td>

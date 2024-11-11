@@ -187,6 +187,9 @@ Rails.application.routes.draw do
         # get "search_user_assets"
         get "location", to: "edit_location"
         patch "location", to: "update_location"
+
+        get "software", to: "edit_software"
+        put "software", to: "update_software"
       end
     end
 

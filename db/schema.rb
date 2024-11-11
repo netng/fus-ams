@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_06_085045) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -89,6 +89,21 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_085045) do
     t.index ["brand_id"], name: "index_asset_models_on_brand_id"
     t.index ["id_asset_model"], name: "index_asset_models_on_id_asset_model", unique: true
     t.index ["name"], name: "index_asset_models_on_name"
+  end
+
+  create_table "asset_softwares", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "asset_id", null: false
+    t.uuid "software_id", null: false
+    t.string "license"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sequence_number", null: false
+    t.index ["asset_id"], name: "index_asset_softwares_on_asset_id"
+    t.index ["software_id"], name: "index_asset_softwares_on_software_id"
   end
 
   create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -583,6 +598,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_085045) do
   add_foreign_key "asset_models", "asset_item_types"
   add_foreign_key "asset_models", "asset_types"
   add_foreign_key "asset_models", "brands"
+  add_foreign_key "asset_softwares", "assets"
+  add_foreign_key "asset_softwares", "softwares"
   add_foreign_key "assets", "asset_classes"
   add_foreign_key "assets", "asset_models"
   add_foreign_key "assets", "delivery_orders"

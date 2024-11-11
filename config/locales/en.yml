@@ -31,9 +31,15 @@ en:
       asset: Asset
       asset_class: Asset class
       asset_component: Component detail
+      asset_software: Asset software
       
 
     attributes:
+      asset_software:
+        asset_id: Asset
+        software_id: Software
+        license: License number
+
       asset:
         tagging_id: Tagging id
         project_id: For project
@@ -472,6 +478,9 @@ en:
       site_id: Site ID
       site_name: Site name
       edit_location_form: Update asset location
+      edit_software_form: Asset software registration
+      software_details: Software details
+      
 
     format: "%{attribute} %{message}"
     errors:

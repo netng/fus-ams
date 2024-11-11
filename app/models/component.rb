@@ -1,6 +1,7 @@
 class Component < ApplicationRecord
   belongs_to :component_type
-  has_many :asset_components, inverse_of: :component, dependent: :restrict_with_error
+  has_many :asset_components, inverse_of: :component
+  has_many :assets, through: :asset_components, dependent: :restrict_with_error
 
   include Trackable
   include Downcaseable

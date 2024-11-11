@@ -3,6 +3,11 @@ class Asset < ApplicationRecord
 
   has_many :asset_components, inverse_of: :asset, dependent: :destroy
   accepts_nested_attributes_for :asset_components, allow_destroy: true, reject_if: proc { |attributes| attributes["component_id"].blank? }
+  has_many :components, through: :asset_components
+
+  has_many :asset_softwares, inverse_of: :asset, dependent: :destroy
+  accepts_nested_attributes_for :asset_softwares, allow_destroy: true, reject_if: proc { |attributes| attributes["software_id"].blank? }
+  has_many :softwares, through: :asset_softwares
 
   belongs_to :project
   belongs_to :site

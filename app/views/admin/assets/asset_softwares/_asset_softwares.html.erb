@@ -1,0 +1,27 @@
+<% 10.times.with_index do |_, index|%>
+  <%= tag.tr class: "border-b border-gray-200 hover:bg-gray-100" do %>
+		<% id = asset_softwares.find { |as| as.asset_id == @asset.id && as.sequence_number == sequence_number}&.id %>
+		<% sequence_number = index + 1 %>
+		<% selected_software = asset_softwares.find { |as| 
+				as.asset_id = @asset.id && 
+				as.sequence_number == sequence_number}&.software_id %>
+		<% license = asset_softwares.find { |as| as.asset_id == @asset.id && as.sequence_number == sequence_number}&.license %>
+
+		<%= hidden_field_tag "asset[asset_softwares_attributes][#{index}][id]", id || nil %>
+		<%= hidden_field_tag "asset[asset_softwares_attributes][#{index}][sequence_number]", sequence_number %>
+
+		<td class="py-3 px-6 text-left whitespace-nowrap">
+				<%= select_tag "asset[asset_softwares_attributes][#{index}][software_id]",
+						options_for_select(Software.pluck(:name, :id), selected_software ),
+						include_blank: t("custom.label.select", model: t("activerecord.models.software")).capitalize,
+						data: { controller: "slim" },
+						class: "fus-select" 
+				%>
+		</td>
+		
+		<td class="py-3 px-6 text-left whitespace-nowrap">
+				<%= text_field_tag "asset[asset_softwares_attributes][#{index}][license]", license || nil, class: "fus-input" %>
+		</td>
+	<% end %>
+	
+<% end %>

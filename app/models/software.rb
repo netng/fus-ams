@@ -2,6 +2,9 @@ class Software < ApplicationRecord
   include Trackable
   include Downcaseable
 
+  has_many :asset_softwares, inverse_of: :software
+  has_many :assets, through: :asset_softwares, dependent: :restrict_with_error
+
   # downcase_fields :name
   before_validation :strip_and_upcase_id_software
 
