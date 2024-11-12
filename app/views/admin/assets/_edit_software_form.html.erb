@@ -1,5 +1,5 @@
-<%= form_with url: software_admin_asset_path, method: :put, data: { turbo_action: "advance" } do |form| %>
-  <h2 class="p-3 z-20 bg-blue-400 text-white shadow-md font-semibold rounded-t">
+<%= form_with url: software_admin_asset_path, method: :patch, data: { turbo_action: "advance" } do |form| %>
+  <h2 class="p-3 z-20 bg-fus-blue text-white shadow-md font-semibold rounded-t">
 		Asset description
 	</h2>
 
@@ -78,6 +78,9 @@
         <table class="min-w-full bg-white">
           <thead class="rounded-lg">
             <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
+
+							<th class="sticky top-0 py-3 px-2 bg-gray-200 z-5 whitespace-nowrap z-10">
+              </th>
   
               <th class="sticky top-0 py-3 px-2 bg-gray-200 z-5 whitespace-nowrap z-10">
                 <%= t("activerecord.attributes.asset_software.software_id") %>
@@ -99,7 +102,7 @@
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
       data: { turbo_frame: "main-content" },
-      class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>
 
     <%= link_to "#{t('custom.label.cancel')}",

@@ -12,6 +12,11 @@ module.exports = {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        transparent: 'transparent',
+        current: 'currentColor',
+        'fus-blue': 'rgb(134 181 239)',
+      },
     },
   },
   plugins: [

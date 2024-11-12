@@ -189,7 +189,7 @@ Rails.application.routes.draw do
         patch "location", to: "update_location"
 
         get "software", to: "edit_software"
-        put "software", to: "update_software"
+        patch "software", to: "update_software"
       end
     end
 
