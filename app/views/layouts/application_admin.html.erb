@@ -106,18 +106,19 @@
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen">
+    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative">
       <%= render "shared/sidebar" %>
       <%= turbo_frame_tag "main-content", class: "main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
-        <%= render "shared/flash" %>
+        <div id="flash-message">
+          <%= render "shared/flash" %>
+        </div>
         <%= yield %>
       <% end %>
       <%= render "shared/mobile_sidebar" %>
     </main>
     <%= turbo_frame_tag :modal %>
-    <div class="pointer-events-none absolute inset-0 z-[1000] flex items-center justify-center bg-gray-50 bg-opacity-25 opacity-0 [[busy]~&]:opacity-100 backdrop-blur-sm transition-opacity">
-      <%= inline_svg_tag "loading.svg", class: "w-10 h-10 text-blue-500" %>
-    </div>
+    <%= render "shared/loader" %>
+
 
   </body>
 </html>

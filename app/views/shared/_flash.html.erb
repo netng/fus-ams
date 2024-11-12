@@ -1,11 +1,13 @@
-<% if flash[:notice] %>
-  <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-blue-500 text-center mb-8 w-full p-4 bg-blue-200 rounded">
-    <%= flash[:notice] %>
-  </div>
-<% end %>
+<div id="flash-message">
+  <% if flash[:notice] %>
+    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-blue-500 text-center mb-8 w-full p-4 bg-blue-200 rounded">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
 
-<% if flash[:alert] %>
-  <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
-    <%= flash[:alert] %>
-  </div>
-<% end %>
+  <% if flash[:alert] %>
+    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+</div>

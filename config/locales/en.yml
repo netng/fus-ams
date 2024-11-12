@@ -423,6 +423,7 @@ en:
   
   custom:
     label:
+      entry_menu: Entry
       choose_user_asset: Choose user asset
       component_detail: Component details
       component_type: Component type

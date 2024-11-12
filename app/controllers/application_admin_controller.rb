@@ -6,6 +6,7 @@ class ApplicationAdminController < ActionController::Base
   include Authorization
   include SetCurrentRequestDetails
   include Pagy::Backend
+  include Menuable
 
   layout "application_admin"
 end

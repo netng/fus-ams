@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_12_042943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -308,8 +308,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
 
   create_table "function_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "code", null: false
-    t.string "label", null: false
-    t.string "path", null: false
     t.string "description"
     t.boolean "admin", default: false
     t.boolean "active", default: false
@@ -466,6 +464,25 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_roles_on_name", unique: true
+  end
+
+  create_table "route_paths", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "function_access_id", null: false
+    t.string "path", limit: 100, null: false
+    t.string "label", limit: 100, null: false
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "group", limit: 100
+    t.integer "sort", default: 0
+    t.boolean "index", default: false
+    t.string "parent", limit: 100
+    t.index ["function_access_id"], name: "index_route_paths_on_function_access_id"
+    t.index ["path"], name: "index_route_paths_on_path", unique: true
   end
 
   create_table "site_defaults", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -627,6 +644,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
   add_foreign_key "request_for_purchases", "departments", column: "to_department_id"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
+  add_foreign_key "route_paths", "function_accesses"
   add_foreign_key "site_defaults", "sites"
   add_foreign_key "site_groups", "projects"
   add_foreign_key "sites", "site_groups"
