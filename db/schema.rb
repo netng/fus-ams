@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_11_093637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -32,6 +32,27 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
     t.boolean "default"
     t.index ["role_id"], name: "index_accounts_on_role_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true
+  end
+
+  create_table "asset_classes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_asset_class", limit: 100, null: false
+    t.string "name", limit: 100, null: false
+    t.uuid "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id_asset_class"], name: "index_asset_classes_on_id_asset_class", unique: true
+    t.index ["project_id"], name: "index_asset_classes_on_project_id"
+  end
+
+  create_table "asset_components", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "asset_id"
+    t.uuid "component_id"
+    t.string "serial_number", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_asset_components_on_asset_id"
+    t.index ["component_id"], name: "index_asset_components_on_component_id"
+    t.index ["serial_number"], name: "index_asset_components_on_serial_number"
   end
 
   create_table "asset_item_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -70,6 +91,21 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
     t.index ["name"], name: "index_asset_models_on_name"
   end
 
+  create_table "asset_softwares", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "asset_id", null: false
+    t.uuid "software_id", null: false
+    t.string "license"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sequence_number", null: false
+    t.index ["asset_id"], name: "index_asset_softwares_on_asset_id"
+    t.index ["software_id"], name: "index_asset_softwares_on_software_id"
+  end
+
   create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -82,6 +118,37 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
     t.string "id_asset_type", null: false
     t.index ["id_asset_type"], name: "index_asset_types_on_id_asset_type", unique: true
     t.index ["name"], name: "index_asset_types_on_name"
+  end
+
+  create_table "assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "tagging_date", null: false
+    t.string "tagging_id", limit: 100, null: false
+    t.uuid "project_id", null: false
+    t.uuid "site_id", null: false
+    t.uuid "asset_model_id", null: false
+    t.uuid "user_asset_id", null: false
+    t.uuid "delivery_order_id"
+    t.string "computer_name", limit: 100
+    t.string "computer_ip", limit: 100
+    t.string "cpu_sn", limit: 100
+    t.string "monitor_sn", limit: 100
+    t.string "keyboard_sn", limit: 100
+    t.datetime "shipping_date"
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "asset_class_id"
+    t.index ["asset_class_id"], name: "index_assets_on_asset_class_id"
+    t.index ["asset_model_id"], name: "index_assets_on_asset_model_id"
+    t.index ["delivery_order_id"], name: "index_assets_on_delivery_order_id"
+    t.index ["project_id"], name: "index_assets_on_project_id"
+    t.index ["site_id"], name: "index_assets_on_site_id"
+    t.index ["tagging_id"], name: "index_assets_on_tagging_id", unique: true
+    t.index ["user_asset_id"], name: "index_assets_on_user_asset_id"
   end
 
   create_table "brands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -524,10 +591,21 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_31_022445) do
   end
 
   add_foreign_key "accounts", "roles"
+  add_foreign_key "asset_classes", "projects"
+  add_foreign_key "asset_components", "assets"
+  add_foreign_key "asset_components", "components"
   add_foreign_key "asset_item_types", "asset_types"
   add_foreign_key "asset_models", "asset_item_types"
   add_foreign_key "asset_models", "asset_types"
   add_foreign_key "asset_models", "brands"
+  add_foreign_key "asset_softwares", "assets"
+  add_foreign_key "asset_softwares", "softwares"
+  add_foreign_key "assets", "asset_classes"
+  add_foreign_key "assets", "asset_models"
+  add_foreign_key "assets", "delivery_orders"
+  add_foreign_key "assets", "projects"
+  add_foreign_key "assets", "sites"
+  add_foreign_key "assets", "user_assets"
   add_foreign_key "capital_proposal_groups", "capital_proposal_group_headers"
   add_foreign_key "capital_proposals", "capital_proposal_groups"
   add_foreign_key "capital_proposals", "capital_proposal_types"

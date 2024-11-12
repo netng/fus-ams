@@ -3,6 +3,7 @@ class Brand < ApplicationRecord
   include Downcaseable
 
   has_many :asset_models, dependent: :restrict_with_error
+  before_validation :strip_and_upcase_id_brand
 
   # validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :id_brand, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
@@ -16,5 +17,12 @@ class Brand < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
+
+  private
+    def strip_and_upcase_id_brand
+      if id_brand.present?
+        self.id_brand = id_brand.strip.upcase
+      end
+    end
 
 end

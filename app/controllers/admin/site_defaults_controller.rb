@@ -2,6 +2,7 @@ module Admin
   class SiteDefaultsController < ApplicationAdminController
     before_action :set_site_default, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :update, :edit, :create]
 
     def index
       authorize :authorization, :index?
@@ -17,29 +18,38 @@ module Admin
       authorize :authorization, :create?
 
       @site_default = SiteDefault.new
+      @previous_url = admin_site_defaults_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @site_default = SiteDefault.new(site_default_params)
+      @previous_url = admin_site_defaults_path || root_path
 
       respond_to do |format|
-        if @site_default.save
-          format.html { redirect_to admin_site_defaults_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.site_default"))}
-        else
-          format.html { render :new, status: :unprocessable_entity }
+        ActiveRecord::Base.transaction do
+          if @site_default.save
+            user_asset = UserAsset.find_by_id_user_asset(@site_default.id_user_site_default)
+            unless user_asset
+              UserAsset.new(id_user_asset: @site_default.id_user_site_default, site: @site_default.site).save
+            end
+            format.html { redirect_to admin_site_defaults_path, notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.site_default"))}
+          end
         end
+          format.html { render :new, status: :unprocessable_entity }
       end
     end
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_site_defaults_path || root_path
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_site_defaults_path || root_path
 
       respond_to do |format|
 				if @site_default.update(site_default_params)
@@ -159,6 +169,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_LOC_SITE_DEFAULT
+      end
+
+      def ensure_frame_response
+        redirect_to admin_site_defaults_path unless turbo_frame_request?
       end
   end
 end

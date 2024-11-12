@@ -28,9 +28,33 @@ en:
       personal_board: Personal board
       po_delivery_site: Delivery site
       site_default: Site default
+      asset: Asset
+      asset_class: Asset class
+      asset_component: Component detail
+      asset_software: Asset software
       
 
     attributes:
+      asset_software:
+        asset_id: Asset
+        software_id: Software
+        license: License number
+
+      asset:
+        tagging_id: Tagging id
+        project_id: For project
+        site_id: Site
+        asset_model_id: Model
+        asset_class_id: Asset class
+        computer_name: Computer name
+        computer_ip: IP computer
+        cpu_sn: CPU SN
+        monitor_sn: Monitor SN
+        keyboard_sn: Keyboard SN
+        delivery_order_id: DO ref
+        shipping_date: Shipping date
+        description: Description
+
       site_default:
         site_id: Site
         id_user_site_default: User asset ID
@@ -399,6 +423,13 @@ en:
   
   custom:
     label:
+      choose_user_asset: Choose user asset
+      component_detail: Component details
+      component_type: Component type
+      component: Component
+      serial_number: Serial Number
+      location: Location
+      software: Software
       delivery_to: Delivery to
       approved_by: Approved by
       request_for_purchase_details: Requst for purchase details
@@ -422,7 +453,7 @@ en:
       number_of_rt: Jumlah RT
       destroy: Delete
       edit: Edit
-      update: Perbaharui
+      update: Update
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
       import_form: Import data %{model}
@@ -446,6 +477,10 @@ en:
       cost_log_number: Cost log number
       site_id: Site ID
       site_name: Site name
+      edit_location_form: Update asset location
+      edit_software_form: Asset software registration
+      software_details: Software details
+      
 
     format: "%{attribute} %{message}"
     errors:
@@ -466,6 +501,7 @@ en:
         require_authentication: The page you want to access was not found
         select_on_or_more: Silakan pilih setidaknya satu data
         select_file: Please select file
+        user_asset_is_not_found: User asset is not found
         failed:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data

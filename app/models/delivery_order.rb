@@ -2,6 +2,9 @@ class DeliveryOrder < ApplicationRecord
   include Trackable
   
   belongs_to :purchase_order, optional: true
+  has_many :assets, dependent: :restrict_with_error
+
+  before_validation :strip_do_number
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
   validates :date, presence: true
@@ -15,4 +18,11 @@ class DeliveryOrder < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     ["purchase_order"]
   end
+
+  private
+    def strip_do_number
+      if number.present?
+        self.number = number.strip
+      end
+    end
 end

@@ -175,5 +175,23 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :assets do
+      collection do
+        delete "destroy_many"
+        get "import"
+        post "process_import"
+        get "site_default"
+      end
+      
+      member do
+        # get "search_user_assets"
+        get "location", to: "edit_location"
+        patch "location", to: "update_location"
+
+        get "software", to: "edit_software"
+        patch "software", to: "update_software"
+      end
+    end
+
   end
 end

@@ -1,6 +1,6 @@
-<div id="desktop-sidebar" class="hidden bg-blue-400 shadow-lg md:block sidebar-fixed">
+<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller">
   <div class="p-0"> <!-- Menghapus padding dari sidebar -->
-    <h2 class="font-bold text-lg text-white px-8 py-4 bg-blue-400 sticky-header">Entry</h2>
+    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
     <div class="mt-4 px-4">
       <h3 class="font-semibold text-white">Asset</h3>
       <ul>
@@ -31,7 +31,13 @@
             class: "px-2 text-white hover:underline",
             data: { turbo_frame: "main-content", turbo_action: "advance"} %>
         </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Register asset</a></li>
+
+        <li>
+          <%= link_to "Register #{t('activerecord.models.asset').downcase}",
+            admin_assets_path,
+            class: "px-2 text-white hover:underline",
+            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
+        </li>
         <li><a href="#" class="px-2 text-white hover:underline">Update asset</a></li>
         <li>
           <%= link_to "#{t('custom.label.register')} #{t('activerecord.models.user_asset')}",

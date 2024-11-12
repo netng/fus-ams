@@ -108,7 +108,7 @@
       <%= link_to "Add details",
         new_admin_request_for_purchase_path(add_rfp_details: :add_rfp_details),
         data: { turbo_frame: "add_rfp_details" },
-        class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+        class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
       %>
     </div>
   </div>
@@ -188,7 +188,7 @@
 
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= form.submit "#{t('custom.label.save')}",
-      class: "bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
     %>
 
     <%= link_to "#{t('custom.label.cancel')}",

@@ -2,6 +2,7 @@ module Admin
   class VendorsController < ApplicationAdminController
     before_action :set_vendor, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -14,12 +15,15 @@ module Admin
 
     def new
       authorize :authorization, :create?
+      @previous_url = admin_vendors_path || root_path
 
       @vendor = Vendor.new
     end
 
     def create
       authorize :authorization, :create?
+      @previous_url = admin_vendors_path || root_path
+
 
       @vendor = Vendor.new(vendor_params)
 
@@ -34,11 +38,15 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_vendors_path || root_path
+
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_vendors_path || root_path
+
 
       respond_to do |format|
 				if @vendor.update(vendor_params)
@@ -165,6 +173,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_MST_VENDOR
+      end
+
+      def ensure_frame_response
+        redirect_to admin_vendors_path unless turbo_frame_request?
       end
   end
 end

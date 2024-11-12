@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tagging_date: 2024-10-31 11:28:15
+  tagging_id: MyString
+  project: one
+  site: one
+  asset_model: one
+  user_asset: one
+  delivery_order: one
+  computer_name: MyString
+  computer_ip: MyString
+  cpu_sn: MyString
+  monitor_sn: MyString
+  keyboard_sn: MyString
+  shipping_date: 2024-10-31 11:28:15
+  description: MyString
+
+two:
+  tagging_date: 2024-10-31 11:28:15
+  tagging_id: MyString
+  project: two
+  site: two
+  asset_model: two
+  user_asset: two
+  delivery_order: two
+  computer_name: MyString
+  computer_ip: MyString
+  cpu_sn: MyString
+  monitor_sn: MyString
+  keyboard_sn: MyString
+  shipping_date: 2024-10-31 11:28:15
+  description: MyString

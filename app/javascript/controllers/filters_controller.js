@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { get } from "@rails/request.js"
 
 // Connects to data-controller="filters"
 export default class extends Controller {
@@ -14,7 +15,8 @@ export default class extends Controller {
 
   connect() {
     if (this.delayValue) {
-      this.submit = this.debounce(this.submit.bind(this), this.delayValue) 
+      this.submit = this.debounce(this.submit.bind(this), this.delayValue)
+      this.search = this.debounce(this.search.bind(this), this.delayValue)
     }
   }
 
@@ -30,6 +32,25 @@ export default class extends Controller {
   submit(event) {
     this.element.requestSubmit()
     this.resetDeleteButton()
+  }
+
+  search() {
+    const url = this.formTarget.action
+    const params = new URLSearchParams(new FormData(this.formTarget))
+    const frame = this.formTarget.dataset.turboFrame
+
+    // console.log(this.formTarget.dataset.turboFrame)
+    // console.log("url", url)
+    // console.log("params", params)
+    // console.log("complete url", `${url}?${params}`)
+
+    get(`${url}?${params}`, {
+      headers: { "Turbo-Frame": frame },
+      responseKind: "turbo-stream",
+    });
+
+    history.replaceState({}, "", `${url}?${params}`);
+
   }
 
   resetDeleteButton() {

@@ -22,7 +22,7 @@
   }
 
   .fus-primary-btn {
-    @apply bg-blue-400 w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ;
+    @apply bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ;
   }
 
   .fus-secondary-btn {
@@ -32,12 +32,20 @@
   .fus-form-header {
     @apply text-2xl font-bold text-gray-500;
   }
+
+  .fus-icons {
+    @apply w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer;
+  }
+
+  .fus-readonly {
+    @apply border-b p-2 block w-full border-gray-300 text-slate-600 font-light;
+  }
 }
 
 
 /* flash css */
 .fade-in-out {
-  animation: appear-then-fade 10s both;
+  animation: appear-then-fade 5s both;
 }
 
 @keyframes appear-then-fade {

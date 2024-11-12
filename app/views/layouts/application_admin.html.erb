@@ -37,32 +37,32 @@
 
 
     /* Chrome, Safari and Opera */
-    .sidebar-fixed::-webkit-scrollbar {
+    .fus-scroller::-webkit-scrollbar {
       width: 8px; /* Width of the scrollbar */
     }
 
-    .sidebar-fixed::-webkit-scrollbar-track {
+    .fus-scroller::-webkit-scrollbar-track {
       background: #f1f1f1; /* Background of the scrollbar track */
     }
 
-    .sidebar-fixed::-webkit-scrollbar-thumb {
+    .fus-scroller::-webkit-scrollbar-thumb {
       background: blue; /* Color of the scrollbar thumb */
       border-radius: 10px; /* Round edges */
     }
 
-    .sidebar-fixed::-webkit-scrollbar-thumb:hover {
+    .fus-scroller::-webkit-scrollbar-thumb:hover {
       background: darkblue; /* Color when hovered */
     }
 
     /* IE and Edge */
-    .sidebar-fixed {
+    .fus-scroller {
       -ms-overflow-style: scrollbar; /* Show scrollbar in IE and Edge */
     }
 
     /* Firefox */
-    .sidebar-fixed {
+    .fus-scroller {
       scrollbar-width: thin; /* Make scrollbar thinner */
-      scrollbar-color: #88bafb #60a5fa; /* thumb color and track color */
+      scrollbar-color: #5e93d9 rgb(134 181 239); /* thumb color and track color */
     }
 
     .sidebar-mobile {
@@ -114,25 +114,10 @@
       <% end %>
       <%= render "shared/mobile_sidebar" %>
     </main>
+    <%= turbo_frame_tag :modal %>
+    <div class="pointer-events-none absolute inset-0 z-[1000] flex items-center justify-center bg-gray-50 bg-opacity-25 opacity-0 [[busy]~&]:opacity-100 backdrop-blur-sm transition-opacity">
+      <%= inline_svg_tag "loading.svg", class: "w-10 h-10 text-blue-500" %>
+    </div>
 
-    <script>
-    // Toggle mobile sidebar visibility
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-
-    menuButton.addEventListener('click', () => {
-      mobileSidebar.classList.toggle('sidebar-mobile-active');
-    });
-
-    // Close mobile sidebar when clicking outside
-    document.addEventListener('click', (event) => {
-      const isClickInsideSidebar = mobileSidebar.contains(event.target);
-      const isClickOnButton = menuButton.contains(event.target);
-
-      if (!isClickInsideSidebar && !isClickOnButton) {
-        mobileSidebar.classList.remove('sidebar-mobile-active');
-      }
-    });
-  </script>
   </body>
 </html>

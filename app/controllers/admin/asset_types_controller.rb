@@ -2,6 +2,7 @@ module Admin
   class AssetTypesController < ApplicationAdminController
     before_action :set_asset_type, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -14,14 +15,16 @@ module Admin
 
     def new
       authorize :authorization, :create?
-
+      
       @asset_type = AssetType.new
+      @previous_url = admin_asset_types_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @asset_type = AssetType.new(asset_type_params)
+      @previous_url = admin_asset_types_path || root_path
 
       respond_to do |format|
         if @asset_type.save
@@ -34,11 +37,13 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_asset_types_path || root_path
 
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_asset_types_path || root_path
 
       respond_to do |format|
 				if @asset_type.update(asset_type_params)
@@ -148,6 +153,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_ASS_COM_ASSET_TYPE
+      end
+
+      def ensure_frame_response
+        redirect_to admin_asset_types_path unless turbo_frame_request?
       end
   end
 end

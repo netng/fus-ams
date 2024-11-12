@@ -25,6 +25,7 @@ module FunctionAccessConstant
   FA_ASS_PO = "FA_ASS_PO"
   FA_ASS_DO = "FA_ASS_DO`"
   FA_LOC_SITE_DEFAULT = "FA_LOC_SITE_DEFAULT"
+  FA_ASSET = "FA_ASSET"
 
   freeze
 end

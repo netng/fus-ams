@@ -8,6 +8,8 @@ class Department < ApplicationRecord
   # downcase_fields :name
   # downcase_fields :floor
   
+  before_validation :strip_and_upcase_id_department
+
   validates :id_department, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :name, presence: true, length: { maximum: 100 }
   validates :floor, length: { maximum: 100 }
@@ -19,7 +21,13 @@ class Department < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "created_by", "description", "floor", "id_department", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
+    [ "created_at", "created_by", "description", "floor", "id_department", "id", "ip_address", "name", "request_id", "updated_at", "user_agent" ]
   end
 
+  private
+    def strip_and_upcase_id_department
+      if id_department.present?
+        self.id_department = id_department.strip.upcase
+      end
+    end
 end

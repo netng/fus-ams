@@ -1,0 +1,74 @@
+<h2 class="p-3 z-20 bg-fus-blue text-white shadow-md font-semibold rounded-t">
+	Current asset location
+</h2>
+<div class="bg-slate-50 rounded-b grid grid-cols-2 gap-2 p-2 mb-6">
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.tagging_id") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.tagging_id %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.models.asset_item_type") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.asset_model.asset_item_type.name %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.models.site") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.site.name %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.user_asset.username") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.user_asset.username %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.cpu_sn") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.cpu_sn.present? ? @asset.cpu_sn : "-" %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.monitor_sn") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.monitor_sn.present? ? @asset.monitor_sn : "-" %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.keyboard_sn") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.keyboard_sn.present? ? @asset.keyboard_sn : "-" %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.delivery_order_id") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.delivery_order.present? ? @asset.delivery_order.number : "-" %></span>
+	</div>
+
+	<div class="mb-2">
+		<label class="fus-label">
+			<%= t("activerecord.attributes.asset.description") %>
+		</label>
+		<span class="fus-readonly"><%= @asset.description.present? ? @asset.description : "-" %></span>
+	</div>
+
+</div>
+
+<h2 class="p-3 z-20 bg-fus-blue text-white shadow-md font-semibold rounded-t">
+	Change asset location
+</h2>
+<%= render "admin/assets/user_assets/search_filter", asset: @asset %>
+<%= render "admin/assets/user_assets/table", user_assets: @user_assets %>

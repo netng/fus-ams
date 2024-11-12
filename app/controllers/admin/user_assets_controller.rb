@@ -2,6 +2,7 @@ module Admin
   class UserAssetsController < ApplicationAdminController
     before_action :set_user_asset, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -16,12 +17,14 @@ module Admin
       authorize :authorization, :create?
 
       @user_asset = UserAsset.new
+      @previous_url = admin_user_assets_path || root_path
     end
     
     def create
       authorize :authorization, :create?
       
       @user_asset = UserAsset.new(user_assets_params)
+      @previous_url = admin_user_assets_path || root_path
 
 
       # Note:
@@ -52,10 +55,12 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_user_assets_path || root_path
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_user_assets_path || root_path
 
       respond_to do |format|
 				if @user_asset.update(user_assets_params)
@@ -233,5 +238,10 @@ module Admin
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_ASS_REGISTER_USER_ASSET
       end
+
+      def ensure_frame_response
+        redirect_to admin_user_assets_path unless turbo_frame_request?
+      end
+
   end
 end

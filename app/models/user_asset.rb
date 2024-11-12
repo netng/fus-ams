@@ -6,6 +6,7 @@ class UserAsset < ApplicationRecord
   belongs_to :department, optional: true
 
   downcase_fields :email
+  before_validation :strip_email
 
   validates :id_user_asset, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :aztec_code, length: { maximum: 100 }
@@ -16,11 +17,17 @@ class UserAsset < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["aztec_code", "created_at", "department_id", "description", "email", "floor", "id", "id_user_asset", "location", "site_id", "updated_at", "username"]
+    [ "aztec_code", "created_at", "department_id", "description", "email", "floor", "id", "id_user_asset", "location", "site_id", "updated_at", "username" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["department", "site"]
+    [ "department", "site" ]
   end
 
+  private
+    def strip_email
+      if email.present?
+        self.email = email.strip
+      end
+    end
 end

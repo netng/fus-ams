@@ -10,14 +10,14 @@ export default class extends Controller {
     this.parentSelect = new SlimSelect({
       select: this.parentTarget,
       settings: {
-        allowDeselect: true
+        allowDeselect: true,
       }
     })
 
     this.childSelect = new SlimSelect({
       select: this.childTarget,
       settings: {
-        allowDeselect: true
+        allowDeselect: true,
       }
     })
   }

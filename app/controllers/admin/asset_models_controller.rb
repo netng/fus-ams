@@ -2,6 +2,7 @@ module Admin
   class AssetModelsController < ApplicationAdminController
     before_action :set_asset_model, only: [:edit, :update, :destroy]
     before_action :set_function_access_code
+    before_action :ensure_frame_response, only: [:new, :create, :edit, :update]
 
     def index
       authorize :authorization, :index?
@@ -14,6 +15,7 @@ module Admin
 
     def new
       authorize :authorization, :create?
+      @previous_url = admin_asset_models_path || root_path
 
       @asset_model = AssetModel.new
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
@@ -21,6 +23,7 @@ module Admin
 
     def create
       authorize :authorization, :create?
+      @previous_url = admin_asset_models_path || root_path
 
       @asset_model = AssetModel.new(asset_model_params)
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
@@ -37,11 +40,13 @@ module Admin
 
     def edit
       authorize :authorization, :update?
+      @previous_url = admin_asset_models_path || root_path
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
     end
 
     def update
       authorize :authorization, :update?
+      @previous_url = admin_asset_models_path || root_path
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [name.capitalize, id] } || []
 
       respond_to do |format|
@@ -180,7 +185,7 @@ module Admin
     private
 
       def asset_model_params
-        params.expect(asset_model: [ :id_asset_model, :name, :description, :brand_id, :asset_type_id, :asset_model_id ])
+        params.expect(asset_model: [ :id_asset_model, :name, :description, :brand_id, :asset_type_id, :asset_item_type_id ])
       end
 
       def set_asset_model
@@ -189,6 +194,10 @@ module Admin
 
       def set_function_access_code
 				@function_access_code = FunctionAccessConstant::FA_ASS_COM_ASSET_MODEL
+      end
+
+      def ensure_frame_response
+        redirect_to admin_asset_models_path unless turbo_frame_request?
       end
   end
 end
