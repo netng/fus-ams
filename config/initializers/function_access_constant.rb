@@ -27,5 +27,8 @@ module FunctionAccessConstant
   FA_LOC_SITE_DEFAULT = "FA_LOC_SITE_DEFAULT"
   FA_ASSET = "FA_ASSET"
 
+  FA_ACCOUNT = "FA_ACCOUNT"
+  FA_ROLE = "FA_ROLE"
+
   freeze
 end

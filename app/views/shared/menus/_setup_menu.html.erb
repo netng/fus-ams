@@ -1,0 +1,67 @@
+<% if has_setup_menu? && controller_path.include?("setups") %>
+	<h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Setup</h2>
+
+	<!-- accounts -->
+	<% menu_accounts_path = [] %>
+	<% if menu_accounts.present? %>
+		<% menu_accounts.each do |menu_account| %>
+			<% menu_accounts_path << menu_account.route_paths %>        
+		<% end %>
+
+		<% flat_menus = menu_accounts_path.flatten.sort %>
+
+		<% if flat_menus.present? %>
+			<div class="mt-4 px-4">
+				<h3 class="font-semibold text-white"><%= t("custom.label.account") %></h3>
+
+					<!-- accounts -->
+				<ul>
+				<% flat_menus.each do |menu| %>
+					<li><%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { 
+							turbo_frame: "main-content",
+							turbo_action: "advance",
+						}
+						%>
+					</li>
+				<% end %>
+				</ul>
+					
+			</div>
+		<% end %>
+	<% end %>
+
+
+	<!-- roles -->
+	<% menu_roles_path = [] %>
+	<% if menu_roles.present? %>
+		<% menu_roles.each do |menu_role| %>
+			<% menu_roles_path << menu_role.route_paths %>        
+		<% end %>
+
+		<% flat_menus = menu_roles_path.flatten.sort %>
+
+		<% if flat_menus.present? %>
+			<div class="mt-4 px-4">
+				<h3 class="font-semibold text-white"><%= t("custom.label.role") %></h3>
+
+				<ul>
+				<% flat_menus.each do |menu| %>
+					<li><%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { 
+							turbo_frame: "main-content",
+							turbo_action: "advance",
+						}
+						%>
+					</li>
+				<% end %>
+				</ul>
+					
+			</div>
+		<% end %>
+	<% end %>
+<% end %>

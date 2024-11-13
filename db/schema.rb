@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_12_042943) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_13_022743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -30,7 +30,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_12_042943) do
     t.string "email", null: false
     t.uuid "role_id", null: false
     t.boolean "default"
+    t.uuid "site_id", null: false
     t.index ["role_id"], name: "index_accounts_on_role_id"
+    t.index ["site_id"], name: "index_accounts_on_site_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true
   end
 
@@ -608,6 +610,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_12_042943) do
   end
 
   add_foreign_key "accounts", "roles"
+  add_foreign_key "accounts", "sites"
   add_foreign_key "asset_classes", "projects"
   add_foreign_key "asset_components", "assets"
   add_foreign_key "asset_components", "components"

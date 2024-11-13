@@ -33,12 +33,20 @@
     @apply text-2xl font-bold text-gray-500;
   }
 
+  .fus-form-sub-header {
+    @apply text-xl font-bold text-gray-500;
+  }
+
   .fus-icons {
     @apply w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer;
   }
 
   .fus-readonly {
     @apply border-b p-2 block w-full border-gray-300 text-slate-600 font-light;
+  }
+
+  .fus-checkbox {
+    @apply form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400;
   }
 }
 

@@ -19,9 +19,9 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "home#index"
 
-    scope module: :entry, path: "entry" do
+    scope module: :entries, path: "entries" do
 
-      get "/", to: "entry#index", as: :entry
+      get "/", to: "entries#index", as: :entries
 
       resources :brands do
         collection do
@@ -194,6 +194,26 @@ Rails.application.routes.draw do
   
           get "software", to: "edit_software"
           patch "software", to: "update_software"
+        end
+      end
+    end
+
+    scope module: :setups, path: "setups" do
+      get "/", to: "setups#index", as: :setups
+
+      resources :accounts do
+        collection do
+          delete "destroy_many"
+          get "import"
+          post "process_import"
+        end
+      end
+
+      resources :roles do
+        collection do
+          delete "destroy_many"
+          get "import"
+          post "process_import"
         end
       end
     end

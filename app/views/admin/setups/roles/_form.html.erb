@@ -1,0 +1,95 @@
+<%= form_with model: [:admin, role], data: { turbo_action: "advance" } do |form| %>
+  <div class="mb-2">
+    <%= form.label :name, "#{t('activerecord.attributes.role.name')} *", class: "fus-label mb-2" %>
+    <%= form.text_field :name, class: "fus-input", required: true %>
+    <% @role.errors.full_messages_for(:name).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :description, "#{t('activerecord.attributes.role.description')}", class: "fus-label mb-2" %>
+    <%= form.text_area :description, class: "fus-input" %>
+    <% @role.errors.full_messages_for(:description).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :active, "#{t('activerecord.attributes.role.active')}", class: "fus-label mb-2" %>
+    <%= form.check_box :active, class: "fus-checkbox" %>
+    <% @role.errors.full_messages_for(:active).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="border border-slate-300 border-dashed my-4 bg-slate-50 p-2 rounded-lg shadow relative">
+    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+      <table class="min-w-full bg-white table-auto">
+        <thead>
+          <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <th class="sticky top-0 left-0 py-3 px-6 bg-gray-200 text-left z-[5]">
+              <%= t("custom.label.menu_group") %>
+            </th>
+            <% ["Read", "Update", "Delete", "Confirm"].each do |perm| %>
+              <th class="sticky top-0 py-3 px-6 bg-gray-200 text-center z-[4]">
+                <%= perm %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        
+        <tbody class="text-gray-600 text-sm font-light">
+          <% RoutePath.pluck(:parent).uniq.each do |parent_name| %>
+            <tr>
+              <td class="py-3 ps-6 bg-gray-100 font-semibold text-base left-0 sticky">
+                <div class="sticky left-0">
+                  <%= parent_name.humanize %>
+                </div>
+              </td>
+            </tr>
+
+            <% RoutePath.where(parent: parent_name).pluck(:group).uniq.each do |group| %>
+              <tr class="border-b border-gray-200 hover:bg-gray-50">
+                <td class="py-3 ps-8 text-left left-0 sticky bg-gray-50 font-semibold">
+                  <%= group.humanize %>
+                </td>
+
+                <% RoutePath.where(group: group).each do |route| %>
+                  <tr class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="py-3 ps-10 text-left left-0 sticky bg-gray-50">
+                      <%= t(route.label) %>
+                    </td>
+
+                    <%= form.fields_for :role_function_accesses, role.role_function_accesses.find_or_initialize_by(function_access_id: route.function_access_id) do |access_form| %>
+                      <% ["allow_read", "allow_update", "allow_delete", "allow_confirm"].each do |perm| %>
+                        <td class="py-3 px-6 text-center">
+                          <%= access_form.check_box perm, 
+                            class: "fus-checkbox",
+                            title: t("custom.label.#{perm}") %>
+                          <%= access_form.hidden_field :function_access_id, value: route.function_access_id %>
+                        </td>
+                      <% end %>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit form.object.persisted? ? t("custom.label.update") : t("custom.label.save"),
+      data: { turbo_frame: "main-content" },
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+    <%= link_to t("custom.label.cancel"),
+      admin_roles_path,
+      data: { turbo_action: "advance" },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

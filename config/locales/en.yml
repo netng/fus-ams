@@ -62,6 +62,8 @@ en:
 
       role:
         name: Name
+        description: Description
+        active: Active
 
       brand:
         id_brand: ID
@@ -202,6 +204,7 @@ en:
         username: Username
 
       account:
+        username: Username
         email: Email
         password: Password
         password_confirmation: Password confirmation
@@ -423,7 +426,11 @@ en:
   
   custom:
     label:
+      menu_group: Menu group
+      account: Account
+      role: Role
       entry_menu: Entry
+      setup_menu: Setup
       choose_user_asset: Choose user asset
       component_detail: Component details
       component_type: Component type
@@ -481,7 +488,7 @@ en:
       edit_location_form: Update asset location
       edit_software_form: Asset software registration
       software_details: Software details
-      
+      leave_blank: Leave blank if you don't want to change it
 
     format: "%{attribute} %{message}"
     errors:

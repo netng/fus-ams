@@ -1,0 +1,13 @@
+<h2 class="fus-form-header mb-4">
+  <%= t("custom.label.default_index_header", model: t("activerecord.models.role")).capitalize %>
+</h2>
+
+<%= render "action_group" %>
+<div class="table-role" data-controller="table">
+  <%= render "table" %>
+  <% if policy([:admin, :authorization]).destroy? %>
+    <%= render "destroy_button" %>
+  <% end %>
+</div>
+
+<% content_for(:title, t("custom.label.default_index_header", model: t("activerecord.models.role")).capitalize) %>

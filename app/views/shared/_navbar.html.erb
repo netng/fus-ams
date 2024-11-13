@@ -16,14 +16,23 @@
       <% if has_entry_menu? %>
         <li>
           <%= link_to "#{t('custom.label.entry_menu')}",
-            admin_entry_path,
+            admin_entries_path,
             class: "hover:text-gray-200"
           %>
         </li>
       <% end %>
 
       <li><a href="#" class="hover:text-gray-200">Search</a></li>
-      <li><a href="#" class="hover:text-gray-200">Setup</a></li>
+
+      <% if has_entry_menu? %>
+        <li>
+          <%= link_to "#{t('custom.label.setup_menu')}",
+            admin_setups_path,
+            class: "hover:text-gray-200"
+          %>
+        </li>
+      <% end %>
+
       <li><a href="#" class="hover:text-gray-200">Non</a></li>
       <li>
         <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
