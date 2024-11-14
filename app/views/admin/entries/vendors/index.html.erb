@@ -3,7 +3,9 @@
 <%= render "action_group" %>
 <div class="table-vendor" data-controller="table">
   <%= render "table" %>
-  <%= render "destroy_button" %>
+  <% if policy([:admin, :authorization]).destroy? %>
+    <%= render "destroy_button" %>
+  <% end %>
 </div>
 
 <% content_for(:title, t("custom.label.asset_index_header", model: t("activerecord.models.vendor")).capitalize) %>

@@ -1,8 +1,11 @@
 <%= tag.tr id: dom_id(site_stat), class: "border-b border-gray-200 hover:bg-gray-100" do %>
   <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update?  %>
+
     <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
       <div class="flex items-center space-x-4">
+
         <% if policy([:admin, :authorization]).destroy? %>
+
           <%= check_box_tag "site_stat_ids[]",
             site_stat.id,
             nil,
@@ -17,6 +20,7 @@
               title: t("custom.label.select_to_delete")
             }
           %>
+
         <% end %>
         
         <% if policy([:admin, :authorization]).create? %>
@@ -29,10 +33,12 @@
             } do %>
               <%= inline_svg_tag "edit.svg", class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer", title: t("custom.label.edit") %>
           <% end %>
+
         <% end %>
 
       </div>
     </td>
+    
   <% end %>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site_stat.id_site_stat %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site_stat.name.capitalize %></td>

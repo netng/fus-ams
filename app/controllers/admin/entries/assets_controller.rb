@@ -99,13 +99,13 @@ module Admin::Entries
             logger.debug "TURBO STREAM RENDER"
             render turbo_stream: turbo_stream.replace(
               "table_user_assets",
-              partial: "admin/assets/user_assets/turbo_table",
+              partial: "admin/entries/assets/user_assets/turbo_table",
               locals: { user_assets: @user_assets, pagy: @pagy }
             )
           end
           format.html do
             logger.debug "fallback render"
-            render partial: "admin/assets/user_assets/turbo_table",
+            render partial: "admin/entries/assets/user_assets/turbo_table",
                    locals: { user_assets: @user_assets, pagy: @pagy }
           end
         end
@@ -185,13 +185,13 @@ module Admin::Entries
     #     format.turbo_stream do
     #       render turbo_stream: turbo_stream.replace(
     #         "table_user_assets",
-    #         partial: "admin/assets/user_assets/turbo_table",
+    #         partial: "admin/entries/assets/user_assets/turbo_table",
     #         locals: { user_assets: @user_assets, pagy: @pagy }
     #       )
     #     end
 
     #     format.html do
-    #       render partial: "admin/assets/user_assets/turbo_table",
+    #       render partial: "admin/entries/assets/user_assets/turbo_table",
     #              locals: { user_assets: @user_assets, pagy: @pagy }
     #     end
     #   end

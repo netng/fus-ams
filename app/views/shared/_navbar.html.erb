@@ -1,6 +1,8 @@
 <!-- Navbar -->
 <nav class="bg-fus-blue text-white fixed top-0 w-full z-50 p-2 shadow-lg flex justify-between items-center">
-    <div class="text-xl font-bold">Asset Management System</div>
+    <div class="text-xl font-bold">
+      <%= link_to "Asset Management System", admin_path %>
+    </div>
     <div class="md:hidden">
       <button id="menu-button" class="text-white focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -9,7 +11,13 @@
       </button>
     </div>
     <ul class="hidden md:flex space-x-8 md:items-center">
-      <li><a href="#" class="hover:text-gray-200">Home</a></li>
+      <li>
+        <%= link_to "#{t('custom.label.home')}",
+          admin_path,
+          class: "hover:text-gray-200"
+        %>
+      </li>
+
       <li><a href="#" class="hover:text-gray-200">View</a></li>
       <li><a href="#" class="hover:text-gray-200">Report</a></li>
 
@@ -24,7 +32,7 @@
 
       <li><a href="#" class="hover:text-gray-200">Search</a></li>
 
-      <% if has_entry_menu? %>
+      <% if has_setup_menu? %>
         <li>
           <%= link_to "#{t('custom.label.setup_menu')}",
             admin_setups_path,

@@ -5,7 +5,11 @@
 <%= render "action_group" %>
 <div class="table-component_type" data-controller="table">
   <%= render "table" %>
-  <%= render "destroy_button" %>
+
+  <% if policy([:admin, :authorization]).destroy? %>
+    <%= render "destroy_button" %>
+  <% end %>
+  
 </div>
 
 <% content_for(:title, t("custom.label.default_index_header", model: t("activerecord.models.component_type")).capitalize) %>

@@ -1,14 +1,19 @@
-<div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-lg shadow">
+<div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-lg shadow relative">
   <%= turbo_frame_tag "table" do %>
     <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
         <table class="min-w-full bg-white table-auto" data-table-target="table">
           <thead class="rounded-lg">
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-              <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
-                <div class="flex items-center space-x-2">
-                  <input type="checkbox" data-table-target="parentCheckbox" data-action="change->table#toggleChildCheckbox" class="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-400">
-                </div>
-              </th>
+
+              <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update?  %>
+                <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
+                  <div class="flex items-center space-x-2">
+                    <% if policy([:admin, :authorization]).destroy? %>
+                      <input type="checkbox" data-table-target="parentCheckbox" data-action="change->table#toggleChildCheckbox" class="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-400">
+                    <% end %>
+                  </div>
+                </th>
+              <% end %>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :number, "#{t('activerecord.attributes.capital_proposal.number')}",
@@ -62,4 +67,6 @@
       <%== pagy_nav(@pagy, anchor_string: 'data-turbo-action="advance" data-action="click->table#resetDeleteButton"') %>
     </div>
   <% end %>
+  <%= render "shared/data_loader" %>
+
 </div>

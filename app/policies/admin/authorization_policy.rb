@@ -55,6 +55,10 @@ class Admin::AuthorizationPolicy
     true
   end
 
+  def allow_import?
+    false
+  end
+
   private
     
 
@@ -71,22 +75,22 @@ class Admin::AuthorizationPolicy
     def account_role
       if account.blank?
         Rails.logger.warn("Accoun is not found")
-        false
+        return false
       end
 
       if account.active == false
         Rails.logger.warn("Accoun is not active")
-        false
+        return false
       end
 
       if account.role.blank?
         Rails.logger.warn("Account has no role")
-        false
+        return false
       end
 
       if account.role.active == false
         Rails.logger.warn("Role is not active")
-        false
+        return false
       end
       
       true

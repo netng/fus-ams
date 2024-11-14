@@ -23,7 +23,11 @@
     <% end %>
   </div>
 
-  <div class="border border-slate-300 border-dashed my-4 bg-slate-50 p-2 rounded-lg shadow relative">
+  <h3 class="fus-form-header mt-6 mb-2">
+    <%= t("custom.label.authorizations") %>
+  </h3>
+  
+  <div class="border border-slate-100  my-4 bg-slate-50 p-2 rounded-lg shadow relative">
     <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
       <table class="min-w-full bg-white table-auto">
         <thead>
@@ -31,7 +35,7 @@
             <th class="sticky top-0 left-0 py-3 px-6 bg-gray-200 text-left z-[5]">
               <%= t("custom.label.menu_group") %>
             </th>
-            <% ["Read", "Update", "Delete", "Confirm"].each do |perm| %>
+            <% ["Read", "Create", "Update", "Delete", "Confirm"].each do |perm| %>
               <th class="sticky top-0 py-3 px-6 bg-gray-200 text-center z-[4]">
                 <%= perm %>
               </th>
@@ -62,7 +66,7 @@
                     </td>
 
                     <%= form.fields_for :role_function_accesses, role.role_function_accesses.find_or_initialize_by(function_access_id: route.function_access_id) do |access_form| %>
-                      <% ["allow_read", "allow_update", "allow_delete", "allow_confirm"].each do |perm| %>
+                      <% ["allow_read", "allow_create", "allow_update", "allow_delete", "allow_confirm"].each do |perm| %>
                         <td class="py-3 px-6 text-center">
                           <%= access_form.check_box perm, 
                             class: "fus-checkbox",

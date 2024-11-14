@@ -25,7 +25,7 @@
         %>
       <% end %>
 
-      <% if policy([:admin, :authorization]).create? %>
+      <% if policy([:admin, :authorization]).allow_import? %>
         <%= link_to "#{t("custom.label.import_form",
           model: t("activerecord.models.account"))}",
           import_admin_accounts_path,

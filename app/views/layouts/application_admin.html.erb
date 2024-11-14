@@ -21,24 +21,19 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <style>
-    
-    
-
-    </style>
-
   </head>
 
   <body>
     <%= render "shared/navbar" %>
     <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative">
       <%= render "shared/sidebar" %>
-      <%= turbo_frame_tag "main-content", class: "main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
+      <%= turbo_frame_tag "main-content", class: "main-content px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
         <div id="flash-message">
           <%= render "shared/flash" %>
         </div>
         <%= yield %>
       <% end %>
+      <%= render "shared/data_loader" %>
       <%= render "shared/mobile_sidebar" %>
     </main>
     <%= turbo_frame_tag :modal %>

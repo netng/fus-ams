@@ -4,7 +4,9 @@
 <div class="table-account" data-controller="table">
   <%= render "table" %>
   <% if policy([:admin, :authorization]).destroy? %>
+    <% if policy([:admin, :authorization]).destroy? %>
     <%= render "destroy_button" %>
+  <% end %>
   <% end %>
 </div>
 

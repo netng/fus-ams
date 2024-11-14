@@ -208,6 +208,7 @@ en:
         email: Email
         password: Password
         password_confirmation: Password confirmation
+        active: Active
 
     errors:
       messages:
@@ -426,6 +427,16 @@ en:
   
   custom:
     label:
+      allow_read: Allow read
+      allow_create: Allow create
+      allow_update: Allow update
+      allow_delete: Allow delete
+      allow_confirm: Allow confirm
+      ip_address: IP
+      last_logged_in: Last login
+      home: Home
+      authorizations: Authorizations
+      logged_as: "You're logged as"
       menu_group: Menu group
       account: Account
       role: Role
@@ -448,7 +459,7 @@ en:
       username: Username
       email: Email
       importing: Importing data. Please wait...
-      name: Nama
+      name: Name
       description: Deskripsi
       password: Password
       forgot_password: Forgot password?

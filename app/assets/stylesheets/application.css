@@ -20,7 +20,7 @@
    position: fixed;
    top: 85px;
    left: 10px;
-   width: 14rem;
+   width: 16rem;
    max-height: 85vh;
 
    overflow-y: auto;
@@ -78,8 +78,8 @@
 
  @media (min-width: 768px) {
    .main-content {
-     width: calc(100% - 17rem);
-     margin-left: 16rem;
+     width: calc(100% - 19rem);
+     margin-left: 18rem;
    }
  }
 
@@ -90,5 +90,5 @@
    z-index: 10;
    margin-left: -1rem;
    width: calc(100% + 1rem);
-   border-bottom: 1px solid #88bafb;
+   border-bottom: 1px solid rgb(147,197, 253);
  }

@@ -1,6 +1,33 @@
-<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2">
+<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4">
   <div class="p-0"> <!-- Menghapus padding dari sidebar -->
-    <%= render "shared/menus/entry_menu" %>
-    <%= render "shared/menus/setup_menu" %>
+    <% if has_entry_menu? && controller_path.include?("entries") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
+      <%= render "shared/menus/entry_menu" %>
+
+    <% elsif has_setup_menu? && controller_path.include?("setups") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Setup</h2>
+      <%= render "shared/menus/setup_menu" %>
+    <% else %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Welcome</h2>
+      <div class="px-4 text-white text-sm">
+        <p class="my-2 text-base font-semibold">
+          <%= t("custom.label.logged_as") %> :
+        </p>
+
+        <p class="leading-relaxed">
+          <%= t("custom.label.name") %> : <%= current_account.username %>
+        </p>
+        
+        <p class="leading-relaxed">
+          <%= t("custom.label.ip_address") %> : <%= Current.ip_address %>
+        </p class="leading-relaxed">
+
+        <p class="leading-relaxed">
+          <%= t("custom.label.email") %> : <%= current_account.email %>
+        </p>
+
+
+      </div>
+    <% end %>
   </div>
 </div>

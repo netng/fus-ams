@@ -64,7 +64,7 @@ module Admin::Setups
 
     private
       def account_params
-        params.expect(account: [ :username, :email, :password, :role_id, :site_id ])
+        params.expect(account: [ :username, :email, :password, :role_id, :site_id, :active ])
       end
 
       def set_previous_url
