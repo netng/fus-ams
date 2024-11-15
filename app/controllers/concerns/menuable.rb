@@ -14,54 +14,41 @@ module Menuable
   end
 
   def has_entry_menu?
-    return true if has_active_role? && has_parent_menu?("entry")
-    false
+    @has_entry_menu ||= has_active_role? && has_parent_menu?("entry")
   end
 
   def has_setup_menu?
-    return true if has_active_role? && has_parent_menu?("setup")
-    false
+    @has_setup_menu ||= has_active_role? && has_parent_menu?("setup")
   end
 
   def menu_masters
-    if has_entry_menu?
-      menu_by_group("master")
-    end
+    @menu_masters ||= menu_by_group("master") if has_entry_menu?
   end
 
   def menu_locations
-    if has_entry_menu?
-      menu_by_group("location")
-    end
-  end
-
-  def menu_accounts
-    if has_setup_menu?
-      menu_by_group("account")
-    end
+    @menu_locations ||= menu_by_group("location") if has_entry_menu?
   end
 
   def menu_asset_components
-    if has_entry_menu?
-      menu_by_group("asset_and_component")
-    end
+    @menu_asset_components ||= menu_by_group("asset_and_component") if has_entry_menu?
   end
 
   def menu_assets
-    if has_entry_menu?
-      menu_by_group("asset")
-    end
+    @menu_assets ||= menu_by_group("asset") if has_entry_menu?
+  end
+
+  def menu_accounts
+    @menu_accounts ||= menu_by_group("account") if has_setup_menu?
   end
 
   def menu_roles
-    if has_setup_menu?
-      menu_by_group("role")
-    end
+    @menu_roles ||= menu_by_group("role") if has_setup_menu?
   end
 
   private
     def menu_by_group(group_name)
-      current_account.role.function_accesses
+      @menu_by_group ||= {}
+      @menu_by_group[group_name] = current_account.role.function_accesses
         .joins(:route_paths, :role_function_accesses)
         .where(route_paths: { group: group_name })
         .where(
@@ -77,7 +64,8 @@ module Menuable
     end
 
     def has_parent_menu?(parent_name)
-      current_account.role.function_accesses
+      @has_parent_menu ||= {}
+      @has_parent_menu[parent_name] ||= current_account.role.function_accesses
         .joins(:route_paths, :role_function_accesses)
         .where(route_paths: { parent: parent_name })
         .where(
@@ -93,6 +81,6 @@ module Menuable
     end
 
     def has_active_role?
-      current_account.role.active
+      @has_active_role ||= current_account.role.active
     end
 end

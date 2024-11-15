@@ -23,7 +23,7 @@
 
         <% end %>
         
-        <% if policy([:admin, :authorization]).create? %>
+        <% if policy([:admin, :authorization]).update? %>
         
           <%= link_to edit_admin_site_stat_path(site_stat),
             data: {

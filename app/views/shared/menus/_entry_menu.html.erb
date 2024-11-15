@@ -1,147 +1,76 @@
 <!-- assets -->
-<% menu_assets_path = [] %>
-<% if menu_assets.present? %>
-		<% menu_assets.each do |menu_asset| %>
-			<% menu_assets_path << menu_asset.route_paths %>        
-		<% end %>
-
-		<% flat_menus = menu_assets_path.flatten.sort %>
-
-		<% if flat_menus.present? %>
-		<div class="mt-4 px-4">
-				<h3 class="font-semibold text-white">Asset</h3>
-
-				<ul>
-				<% flat_menus.sort_by { |menu| menu.sort }.each do |menu| %>
-						<li class="flex items-center">
-							<%= inline_svg_tag "menu.svg",
-								class: "w-5 h-5 text-white hover:text-slate-100"
-							%>
-
-							<%= link_to t(menu.label), 
-								send(menu.path),
-								class: "px-2 text-white hover:underline",
-								data: { 
-										turbo_frame: "main-content",
-										turbo_action: "advance",
-										turbo_prefetch: false
-								}
-								%>
-						</li>
-				<% end %>
-				</ul>
-				
-		</div>
-		<% end %>
+<% menu_assets_path ||= menu_assets.flat_map(&:route_paths) %>
+<% if menu_assets_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Asset</h3>
+    <ul>
+      <% menu_assets_path.sort_by(&:sort).each do |menu| %>
+        <li class="flex items-center">
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
+
 <!-- asset and components -->
-<% menu_asset_components_path = [] %>
-<% if menu_asset_components.present? %>
-		<% menu_asset_components.each do |menu_asset_component| %>
-			<% menu_asset_components_path << menu_asset_component.route_paths %>        
-		<% end %>
-
-		<% flat_menus = menu_asset_components_path.flatten.sort %>
-
-		<% if flat_menus.present? %>
-		<div class="mt-4 px-4">
-				<h3 class="font-semibold text-white">Asset and Component</h3>
-
-				<ul>
-				<% flat_menus.sort_by { |menu| menu.sort }.each do |menu| %>
-						<li class="flex items-center">
-							<%= inline_svg_tag "menu.svg",
-								class: "w-5 h-5 text-white hover:text-slate-100"
-							%>
-
-							<%= link_to t(menu.label), 
-								send(menu.path),
-								class: "px-2 text-white hover:underline",
-								data: { 
-										turbo_frame: "main-content",
-										turbo_action: "advance",
-										turbo_prefetch: false
-								}
-								%>
-						</li>
-				<% end %>
-				</ul>
-				
-		</div>
-		<% end %>
+<% menu_asset_components_path ||= menu_asset_components.flat_map(&:route_paths) %>
+<% if menu_asset_components_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Asset and component</h3>
+    <ul>
+      <% menu_asset_components_path.sort_by(&:sort).each do |menu| %>
+        <li class="flex items-center">
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
 <!-- locations -->
-<% menu_locations_path = [] %>
-<% if menu_locations.present? %>
-		<% menu_locations.each do |menu_location| %>
-			<% menu_locations_path << menu_location.route_paths %>        
-		<% end %>
-
-		<% flat_menus = menu_locations_path.flatten.sort %>
-
-		<% if flat_menus.present? %>
-		<div class="mt-4 px-4">
-				<h3 class="font-semibold text-white">Location</h3>
-
-				<ul>
-				<% flat_menus.sort_by { |menu| menu.sort }.each do |menu| %>
-						<li class="flex items-center">
-							<%= inline_svg_tag "menu.svg",
-								class: "w-5 h-5 text-white hover:text-slate-100"
-							%>
-
-							<%= link_to t(menu.label), 
-								send(menu.path),
-								class: "px-2 text-white hover:underline",
-								data: { 
-										turbo_frame: "main-content",
-										turbo_action: "advance",
-										turbo_prefetch: false
-								}
-								%>
-						</li>
-				<% end %>
-				</ul>
-				
-		</div>
-		<% end %>
+<% menu_locations_path ||= menu_locations.flat_map(&:route_paths) %>
+<% if menu_locations_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Location</h3>
+    <ul>
+      <% menu_locations_path.sort_by(&:sort).each do |menu| %>
+        <li class="flex items-center">
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
 <!-- masters -->
-<% menu_masters_path = [] %>
-<% if menu_masters.present? %>
-		<% menu_masters.each do |menu_master| %>
-			<% menu_masters_path << menu_master.route_paths %>        
-		<% end %>
-
-		<% flat_menus = menu_masters_path.flatten.sort %>
-
-		<% if flat_menus.present? %>
-		<div class="mt-4 px-4">
-				<h3 class="font-semibold text-white">Master</h3>
-
-				<ul>
-				<% flat_menus.sort_by { |menu| menu.sort }.each do |menu| %>
-						<li class="flex items-center">
-							<%= inline_svg_tag "menu.svg",
-								class: "w-5 h-5 text-white hover:text-slate-100"
-							%>
-
-							<%= link_to t(menu.label), 
-								send(menu.path),
-								class: "px-2 text-white hover:underline",
-								data: { 
-										turbo_frame: "main-content",
-										turbo_action: "advance",
-										turbo_prefetch: false
-								}
-								%>
-						</li>
-				<% end %>
-				</ul>
-				
-		</div>
-		<% end %>
+<% menu_masters_path ||= menu_masters.flat_map(&:route_paths) %>
+<% if menu_masters_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Master</h3>
+    <ul>
+      <% menu_masters_path.sort_by(&:sort).each do |menu| %>
+        <li class="flex items-center">
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
