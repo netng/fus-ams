@@ -432,6 +432,8 @@ en:
       allow_update: Allow update
       allow_delete: Allow delete
       allow_confirm: Allow confirm
+      active: Active
+      inactive: Inactive
       ip_address: IP
       last_logged_in: Last login
       home: Home

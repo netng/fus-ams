@@ -39,5 +39,10 @@
 
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= role.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= role.description %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= role.active %></td>
+  <td class="py-3 px-6 text-center whitespace-nowrap flex justify-center items-center">
+    <%= role.active ? 
+      (inline_svg_tag "active.svg", class: "w-5 h-5 text-fus-blue", title: t("custom.label.active"))
+      :
+      (inline_svg_tag "inactive.svg", class: "w-5 h-5 text-slate-300", title: t("custom.label.inactive")) %>
+  </td>
 <% end %>

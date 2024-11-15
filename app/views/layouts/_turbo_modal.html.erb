@@ -6,14 +6,16 @@
         class="fixed inset-0 flex items-center justify-center bg-gray-400 bg-opacity-90 z-[1000] p-8">
 
         <!-- Modal Content -->
-        <%= tag.div data: {
-                modal_target: "modalContent",
-                action: "turbo:submit-end->modal#submitEnd keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
-                class: "bg-white rounded-md shadow-lg w-full md:w-2/3 max-h-[90vh] overflow-auto" do %>
+        <div class="bg-white rounded-md md:w-2/3 border border-solid">
+            <%= tag.div data: {
+                    modal_target: "modalContent",
+                    action: "turbo:submit-end->modal#submitEnd keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
+                    class: "bg-white rounded-md shadow-lg w-full max-h-[90vh] overflow-auto" do %>
 
-            <%= yield %>
+                <%= yield %>
 
-        <% end %>
+            <% end %>
+        </div>
     </div>
 <% end %>
 
