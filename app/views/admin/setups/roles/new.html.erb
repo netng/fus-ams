@@ -3,7 +3,7 @@
     <%= t("custom.label.default_new_form", model: t("activerecord.models.role")).capitalize %>
   </h2>
 	<div data-action="turbo:submit-end->modal#submitEnd" class="p-8">
-        <%= render "form", role: @role %>
+    <%= render "form", role: @role %>
 	</div>
 <% end %>
 

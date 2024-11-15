@@ -62,6 +62,27 @@ module Admin::Setups
       authorize :authorization, :delete?
     end
 
+    def destroy_many
+      authorize :authorization, :destroy?
+
+      role_ids = params[:role_ids]
+
+      ActiveRecord::Base.transaction do
+        roles = Role.where(id: role_ids)
+
+        roles.each do |role|
+          unless role.destroy
+            redirect_to admin_roles_path, alert: "#{role.errors.full_messages.join("")} - #{t('activerecord.models.role')} id: #{role.name}"
+            raise ActiveRecord::Rollback
+          end
+        end
+
+        respond_to do |format|
+          format.html { redirect_to admin_roles_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.role")) }
+        end
+      end
+    end
+
     private
       def role_params
         params.expect(role: [

@@ -62,6 +62,27 @@ module Admin::Setups
       authorize :authorization, :delete?
     end
 
+    def destroy_many
+      authorize :authorization, :destroy?
+
+      account_ids = params[:account_ids]
+
+      ActiveRecord::Base.transaction do
+        accounts = Account.where(id: account_ids)
+
+        accounts.each do |account|
+          unless account.destroy
+            redirect_to admin_accounts_path, alert: "#{account.errors.full_messages.join("")} - #{t('activerecord.models.account')} id: #{account.username}"
+            raise ActiveRecord::Rollback
+          end
+        end
+
+        respond_to do |format|
+          format.html { redirect_to admin_accounts_path, notice: t("custom.flash.notices.successfully.destroyed", model: t("activerecord.models.account")) }
+        end
+      end
+    end
+
     private
       def account_params
         params.expect(account: [ :username, :email, :password, :role_id, :site_id, :active ])

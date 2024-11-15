@@ -5,7 +5,7 @@ class Role < ApplicationRecord
   has_many :accounts, dependent: :restrict_with_error
 
   has_many :role_function_accesses, inverse_of: :role
-  has_many :function_accesses, through: :role_function_accesses, dependent: :restrict_with_error
+  has_many :function_accesses, through: :role_function_accesses, dependent: :destroy
 
   accepts_nested_attributes_for :role_function_accesses, allow_destroy: true, reject_if: :all_blank
 

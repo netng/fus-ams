@@ -4,6 +4,7 @@
         <table class="min-w-full bg-white table-auto" data-table-target="table">
           <thead class="rounded-lg">
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+
               <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update?  %>
                 <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
                   <div class="flex items-center space-x-2">
@@ -41,10 +42,10 @@
           </tbody>
         </table>
     </div>
-      <div class="flex justify-between items-center my-4 mx-4">
-        <%== pagy_info(@pagy) %>
-        <%== pagy_nav(@pagy, anchor_string: 'data-turbo-action="advance" data-action="click->table#resetDeleteButton"') %>
-      </div>
+    <div class="flex justify-between items-center my-4 mx-4">
+      <%== pagy_info(@pagy) %>
+      <%== pagy_nav(@pagy, anchor_string: 'data-turbo-action="advance" data-action="click->table#resetDeleteButton"') %>
+    </div>
   <% end %>
   <%= render "shared/data_loader" %>
 </div>
