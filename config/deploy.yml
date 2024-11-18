@@ -59,7 +59,8 @@ env:
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
     POSTGRES_USER: fus_ams
-    POSTGRES_HOST: fus_ams-postgres
+    # POSTGRES_HOST: fus_ams-postgres
+    POSTGRES_HOST: 192.168.200.93
     POSTGRES_DB: fus_ams_production
     POSTGRES_PORT: 5432
 
@@ -106,7 +107,8 @@ accessories:
   postgres:
     image: postgres:15
     host: 192.168.200.93
-    port: "127.0.0.1:5432:5432"
+    # port: "127.0.0.1:5432:5432"
+    port: 5432
     env:
       clear:
         POSTGRES_USER: fus_ams
