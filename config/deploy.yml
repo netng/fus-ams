@@ -8,7 +8,7 @@ image: superfus/fus_ams
 # Deploy to these servers.
 servers:
   web:
-    - 129.153.202.236
+    - 192.168.200.92
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -16,14 +16,14 @@ servers:
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
-proxy:
-  healthcheck:
-    path: /health
-    interval: 2
-    timeout: 2
-  app_port: 3000
-  ssl: false
-  host: ams.nandang.web.id
+# proxy:
+#   healthcheck:
+#     path: /up
+#     interval: 2
+#     timeout: 2
+#   app_port: 3000
+#   ssl: false
+#   host: ams.nandang.web.id
 #   ssl: true
 #   host: app.example.com
 
@@ -105,7 +105,7 @@ ssh:
 accessories:
   postgres:
     image: postgres:15
-    host: 129.153.202.236
+    host: 192.168.200.93
     port: "127.0.0.1:5432:5432"
     env:
       clear:
