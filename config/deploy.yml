@@ -22,7 +22,7 @@ proxy:
 #     interval: 2
 #     timeout: 2
 #   app_port: 3000
-ssl: false
+  ssl: false
 #   host: ams.nandang.web.id
 #   ssl: true
 #   host: app.example.com
