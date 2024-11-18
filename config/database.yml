@@ -84,9 +84,11 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: fus_ams_production
-    username: fus_ams
-    password: <%= ENV["FUS_AMS_DATABASE_PASSWORD"] %>
+    username: <%= ENV["PG_USER"] %>
+    database: <%= ENV["PG_DB"] %>
+    password: <%= ENV["PG_PASSWORD"] %>
+    host: <%= ENV["PG_HOST"] %>
+    port: <%= ENV["PG_PORT"] %>
   cache:
     <<: *primary_production
     database: fus_ams_production_cache
