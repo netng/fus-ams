@@ -179,7 +179,7 @@ module Admin::Entries
 
       render turbo_stream: turbo_stream.replace(
         "rfp_details_table",
-        partial: "admin/purchase_orders/rfp_details_table",
+        partial: "admin/entries/purchase_orders/rfp_details_table",
         locals: { rfp_details: @request_for_purchase_details, selected_details: @selected_details })
 
       puts @request_for_purchase_details.inspect

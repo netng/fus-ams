@@ -24,7 +24,7 @@ export default class extends Controller {
   async loadDetails() {
     const requestForPurchaseId = this.selectTarget.value
     const po_id = this.poIdValue;
-    let endpoint = `/admin/purchase_orders/load_rfp_details?id=${requestForPurchaseId}`;
+    let endpoint = `/admin/entries/purchase_orders/load_rfp_details?id=${requestForPurchaseId}`;
     if (po_id) {
       endpoint += `&po_id=${po_id}`;
     }
