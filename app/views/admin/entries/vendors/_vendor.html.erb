@@ -1,0 +1,46 @@
+<%= tag.tr id: dom_id(vendor), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+  <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update?  %>
+
+    <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+      <div class="flex items-center space-x-4">
+        
+        <% if policy([:admin, :authorization]).destroy? %>
+          <%= check_box_tag "vendor_ids[]",
+            vendor.id,
+            nil,
+            {
+              class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+              multiple: true,
+              form: :vendor_table,
+              data: {
+                table_target: "childCheckbox",
+                action: "change->table#toggleParentCheckbox"
+              },
+              title: t("custom.label.select_to_delete")
+            }
+          %>
+        <% end %>
+
+        <% if policy([:admin, :authorization]).update? %>
+          <%= link_to edit_admin_vendor_path(vendor),
+            data: {
+                turbo_frame: "modal",
+                turbo_action: "advance"
+              } do %>
+                <%= inline_svg_tag "edit.svg", class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer", title: t("custom.label.edit") %>
+          <% end %>
+        <% end %>
+
+      </div>
+    </td>
+
+  <% end %>
+
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.id_vendor %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.name.titleize %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.phone_number.blank? ? "-" : vendor.phone_number %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.fax_number.blank? ? "-" : vendor.fax_number %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.contact_person.blank? ? "-" : vendor.contact_person.titleize %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= vendor.email.blank? ? "-" : vendor.email %></td>
+<% end %>

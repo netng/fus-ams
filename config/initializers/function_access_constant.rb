@@ -1,5 +1,4 @@
 module FunctionAccessConstant
-
   # Function access master data
   FA_MST_BRAND = "FA_MST_BRAND"
   FA_MST_VENDOR = "FA_MST_VENDOR"
@@ -22,10 +21,14 @@ module FunctionAccessConstant
   FA_ASS_REGISTER_USER_ASSET = "FA_ASS_REGISTER_USER_ASSET"
 
   FA_ASS_CP = "FA_ASS_CP"
+  FA_ASS_RFP = "FA_ASS_RFP"
   FA_ASS_PO = "FA_ASS_PO"
-  FA_ASS_DO = "FA_ASS_DO`"
+  FA_ASS_DO = "FA_ASS_DO"
   FA_LOC_SITE_DEFAULT = "FA_LOC_SITE_DEFAULT"
   FA_ASSET = "FA_ASSET"
+
+  FA_ACCOUNT = "FA_ACCOUNT"
+  FA_ROLE = "FA_ROLE"
 
   freeze
 end

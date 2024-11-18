@@ -1,119 +1,33 @@
-<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller">
+<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4">
   <div class="p-0"> <!-- Menghapus padding dari sidebar -->
-    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Asset</h3>
-      <ul>
-        <li>
-          <%= link_to "#{t('activerecord.models.capital_proposal')}",
-            admin_capital_proposals_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
+    <% if has_entry_menu? && controller_path.include?("entries") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
+      <%= render "shared/menus/entry_menu" %>
 
-        <li>
-          <%= link_to "#{t('activerecord.models.request_for_purchase')}",
-            admin_request_for_purchases_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
+    <% elsif has_setup_menu? && controller_path.include?("setups") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Setup</h2>
+      <%= render "shared/menus/setup_menu" %>
+    <% else %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Welcome</h2>
+      <div class="px-4 text-white text-sm">
+        <p class="my-2 text-base font-semibold">
+          <%= t("custom.label.logged_as") %> :
+        </p>
 
-        <li>
-          <%= link_to "#{t('activerecord.models.purchase_order')}",
-            admin_purchase_orders_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
+        <p class="leading-relaxed">
+          <%= t("custom.label.name") %> : <%= current_account.username %>
+        </p>
+        
+        <p class="leading-relaxed">
+          <%= t("custom.label.ip_address") %> : <%= Current.ip_address %>
+        </p class="leading-relaxed">
 
-        <li>
-          <%= link_to "#{t('activerecord.models.delivery_order')}",
-            admin_delivery_orders_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
+        <p class="leading-relaxed">
+          <%= t("custom.label.email") %> : <%= current_account.email %>
+        </p>
 
-        <li>
-          <%= link_to "Register #{t('activerecord.models.asset').downcase}",
-            admin_assets_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Update asset</a></li>
-        <li>
-          <%= link_to "#{t('custom.label.register')} #{t('activerecord.models.user_asset')}",
-            admin_user_assets_path,
-            class: "px-2 text-white hover:underline",
-            data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Close berita acara</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Change tagging id</a></li>
-      </ul>
-    </div>
 
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Asset and Component</h3>
-      <ul>
-        <li>
-          <%= link_to t("activerecord.models.asset_type"), admin_asset_types_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-
-        <li>
-          <%= link_to t("activerecord.models.asset_item_type"), admin_asset_item_types_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-
-        <li>
-          <%= link_to t("activerecord.models.asset_model"), admin_asset_models_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-
-        <li>
-          <%= link_to t("activerecord.models.component_type"), admin_component_types_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.component"), admin_components_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.sofware"), admin_softwares_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-      </ul>
-    </div>
-
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Location</h3>
-      <ul>
-        <li>
-          <%= link_to t("activerecord.models.project"), admin_projects_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.site_group"), admin_site_groups_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.site"), admin_sites_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.department"), admin_departments_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-
-        <li>
-          <%= link_to t("activerecord.models.site_default"), admin_site_defaults_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-      </ul>
-    </div>
-
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Master</h3>
-      <ul>
-        <li>
-          <%= link_to t("activerecord.models.brand"), admin_brands_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.vendor"), admin_vendors_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-        <li>
-          <%= link_to t("activerecord.models.site_stat"), admin_site_stats_path, class: "px-2 text-white hover:underline", data: { turbo_frame: "main-content", turbo_action: "advance"} %>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Tambahkan lebih banyak grup jika perlu -->
+      </div>
+    <% end %>
   </div>
 </div>

@@ -1,0 +1,4 @@
+CREATE DATABASE fus_ams_production;
+CREATE DATABASE fus_ams_production_cache;
+CREATE DATABASE fus_ams_production_queue;
+CREATE DATABASE fus_ams_production_cable;

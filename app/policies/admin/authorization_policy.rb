@@ -7,7 +7,7 @@ class Admin::AuthorizationPolicy
   end
 
   def index?
-    return true if account && account.default
+    return true if account&.default
 
     return false unless account && function_access && account_role && role_function_access && role_function_access.allow_read
     true
@@ -55,51 +55,68 @@ class Admin::AuthorizationPolicy
     true
   end
 
+  def allow_import?
+    false
+  end
+
   private
     
 
     def function_access
-      fa = FunctionAccess.find_by(code: function_access_code, active: true)
-      if fa.blank?
-        Rails.logger.warn("Function Access Code #{function_access_code} is not active or not found")
-        false
-      end
+      # @function_access ||= nil
+      # @function_access ||= FunctionAccess.find_by(code: function_access_code, active: true)
+      # if @function_access.blank?
+      #   Rails.logger.warn("Function Access Code #{function_access_code} is not active or not found")
+      #   false
+      # end
+      
 
-      fa
+      # @function_access
+      @function_access ||= begin
+        access = FunctionAccess.find_by(code: function_access_code, active: true)
+        Rails.logger.warn("Function Access Code #{function_access_code} is not active or not found") if access.blank?
+        access
+      end
     end
 
     def account_role
       if account.blank?
         Rails.logger.warn("Accoun is not found")
-        false
+        return false
       end
 
       if account.active == false
         Rails.logger.warn("Accoun is not active")
-        false
+        return false
       end
 
       if account.role.blank?
         Rails.logger.warn("Account has no role")
-        false
+        return false
       end
 
       if account.role.active == false
         Rails.logger.warn("Role is not active")
-        false
+        return false
       end
       
       true
     end
 
     def role_function_access
-      role_function_access = account.role.role_function_accesses.find_by(function_access: function_access)
-      if role_function_access.blank?
-        Rails.logger.debug "role function access for account #{account.username} is not found"
-        false
-      end
+      # @role_function_access ||= nil
+      # @role_function_access ||= account.role.role_function_accesses.find_by(function_access: function_access)
+      # if role_function_access.blank?
+      #   Rails.logger.debug "role function access for account #{account.username} is not found"
+      #   false
+      # end
 
-      role_function_access
+      # role_function_access
+      @role_function_access ||= begin
+        access = account.role.role_function_accesses.find_by(function_access: function_access)
+        Rails.logger.debug "Role function access for account #{account.username} is not found" if access.blank?
+        access
+      end
     end
 
     # Kode ini tidak digunakan

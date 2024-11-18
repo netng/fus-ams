@@ -1,0 +1,42 @@
+<div data-controller="toggle">
+  <div class="mb-4 flex w-full justify-between gap-2">
+    <% if policy([:admin, :authorization]).read? %>
+
+      <button
+        data-action="click->toggle#toggle"
+        id="toggleSearchForm"
+        class="bg-slate-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200">
+
+        <%= t("custom.label.filter") %>
+
+      </button>
+
+    <% end %>
+
+    <div class="flex gap-2">
+      <% if policy([:admin, :authorization]).create? %>
+        <%= link_to "#{t("custom.label.new_form", model: t("activerecord.models.brand"))}",
+          new_admin_brand_path,
+          data: {
+            turbo_action: "advance",
+            turbo_frame: :modal,
+          },
+          class: "bg-fus-blue text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+        %>
+      <% end %>
+
+      <% if policy([:admin, :authorization]).allow_import? %>
+        <%= link_to "#{t("custom.label.import_form", model: t("activerecord.models.brand"))}",
+          import_admin_brands_path,
+          data: {
+            turbo_action: "advance"
+          },
+          class: "bg-green-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+        %>
+      <% end %>
+
+    </div>
+  </div>
+
+  <%= render "search_filter" %>
+</div>

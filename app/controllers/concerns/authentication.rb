@@ -29,7 +29,9 @@ module Authentication
   private
     def authenticate
       if (account = Account.find_by(id: session[:account_id]))
-        Current.account ||= account
+        Current.account = account
+      else
+        logout
       end
     end
     

@@ -15,3 +15,80 @@
     display: flex;
     align-items: center;
  }
+
+ .sidebar-fixed {
+   position: fixed;
+   top: 85px;
+   left: 10px;
+   width: 16rem;
+   max-height: 85vh;
+
+   overflow-y: auto;
+   border-radius: 0.5rem;
+   z-index: 100;
+ }
+
+
+ /* Chrome, Safari and Opera */
+ .fus-scroller::-webkit-scrollbar {
+   width: 8px; /* Width of the scrollbar */
+ }
+
+ .fus-scroller::-webkit-scrollbar-track {
+   background: #f1f1f1; /* Background of the scrollbar track */
+ }
+
+ .fus-scroller::-webkit-scrollbar-thumb {
+   background: blue; /* Color of the scrollbar thumb */
+   border-radius: 10px; /* Round edges */
+ }
+
+ .fus-scroller::-webkit-scrollbar-thumb:hover {
+   background: darkblue; /* Color when hovered */
+ }
+
+ /* IE and Edge */
+ .fus-scroller {
+   -ms-overflow-style: scrollbar; /* Show scrollbar in IE and Edge */
+ }
+
+ /* Firefox */
+ .fus-scroller {
+   scrollbar-width: thin; /* Make scrollbar thinner */
+   scrollbar-color: #5e93d9 rgb(134 181 239); /* thumb color and track color */
+ }
+
+ .sidebar-mobile {
+   display: none;
+   position: fixed;
+   left: 0;
+   top: 64px;
+   width: 16rem;
+   height: calc(100% - 64px);
+   background-color: #1E3A8A;
+   z-index: 50;
+   transition: transform 0.3s ease;
+   transform: translateY(-100%);
+ }
+
+ .sidebar-mobile-active {
+   display: block;
+   transform: translateY(0);
+ }
+
+ @media (min-width: 768px) {
+   .main-content {
+     width: calc(100% - 19rem);
+     margin-left: 18rem;
+   }
+ }
+
+
+ .sticky-header {
+   position: sticky;
+   top: 0;
+   z-index: 10;
+   margin-left: -1rem;
+   width: calc(100% + 1rem);
+   border-bottom: 1px solid rgb(147,197, 253);
+ }
