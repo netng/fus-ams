@@ -57,10 +57,10 @@ env:
 
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
-    PG_USER: fus_ams
-    PG_HOST: fus_ams-postgres
-    PG_DB: fus_ams_production
-    PG_PORT: 5432
+    POSTGRES_USER: fus_ams
+    POSTGRES_HOST: fus_ams-postgres
+    POSTGRES_DB: fus_ams_production
+    POSTGRES_PORT: 5432
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
@@ -108,10 +108,10 @@ accessories:
     port: "127.0.0.1:5432:5432"
     env:
       clear:
-        POSTGRES_USER: "${PG_USER}"
-        POSTGRES_DB: "${PG_DB}"
+        POSTGRES_USER: "${POSTGRES_USER}"
+        POSTGRES_DB: "${POSTGRES_DB}"
       secret:
-        - PG_PASSWORD
+        - POSTGRES_PASSWORD
     directories:
       - data:/var/lib/postgresql/data
     files:
