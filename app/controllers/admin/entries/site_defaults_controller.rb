@@ -1,8 +1,9 @@
 module Admin::Entries
   class SiteDefaultsController < ApplicationAdminController
-    before_action :set_site_default, only: [ :edit, :update, :destroy ]
+    before_action :set_site_default, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :update, :edit, :create ]
+    before_action :ensure_frame_response, only: [ :show, :new, :update, :edit, :create ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -14,18 +15,20 @@ module Admin::Entries
       @site_site_defaults = SiteDefault.joins(:site).select(sites: [ :name, :id ])
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @site_default = SiteDefault.new
-      @previous_url = admin_site_defaults_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @site_default = SiteDefault.new(site_default_params)
-      @previous_url = admin_site_defaults_path || root_path
 
       respond_to do |format|
         ActiveRecord::Base.transaction do
@@ -43,12 +46,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_site_defaults_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_site_defaults_path || root_path
 
       respond_to do |format|
         if @site_default.update(site_default_params)
@@ -171,6 +172,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_site_defaults_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_site_defaults_path || root_path
       end
   end
 end
