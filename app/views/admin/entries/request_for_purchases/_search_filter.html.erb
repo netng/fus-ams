@@ -7,7 +7,7 @@
       filters_table_outlet: ".table-request_for_purchase",
     } do |f| %>
   
-      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim-dependent-select-search"> 
+      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2"> 
         <div class="w-full mb-2">
           <%= f.label "#{t('custom.label.from_department')}", class: "fus-label" %>
           <%= f.select :from_department_id_eq,

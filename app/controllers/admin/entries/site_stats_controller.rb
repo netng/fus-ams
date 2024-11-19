@@ -93,61 +93,6 @@ module Admin::Entries
       authorize :authorization, :create?
     end
 
-    def process_import
-      authorize :authorization, :create?
-      allowed_extension = [ ".xlsx", ".csv" ]
-      file = params[:file]
-
-      if file.present?
-        if !allowed_extension.include?(File.extname(file.original_filename))
-          return redirect_back_or_to import_admin_site_stats_path, alert: t("custom.errors.invalid_allowed_extension")
-        end
-
-        # buka file menggunakan roo
-        xlsx = Roo::Spreadsheet.open(file.path)
-
-        # ambil sheet pertama
-        sheet = xlsx.sheet(0)
-
-        site_stat_attributes_headers = {
-          id_site_stat: "Site stat id",
-          name: "Name",
-          description: "Description"
-        }
-
-        ActiveRecord::Base.transaction do
-          begin
-            sheet.parse(site_stat_attributes_headers).each do |row|
-              site_stat = SiteStat.new(
-                id_site_stat: row[:id_site_stat],
-                name: row[:name],
-                description: row[:description]
-              )
-
-              unless site_stat.save
-                error_message = site_stat.errors.details.map do |field, error_details|
-                  error_details.map do |error|
-                    "[#{t("custom.errors.import_failed")}] - #{field.to_s.titleize} #{error[:value]} #{I18n.t('errors.messages.taken')}"
-                  end
-                end.flatten.join("")
-
-                redirect_to import_admin_site_stats_path, alert: error_message
-                raise ActiveRecord::Rollback
-              end
-            end
-          rescue Roo::HeaderRowNotFoundError => e
-            return redirect_to import_admin_site_stats_path, alert: t("custom.errors.invalid_import_template", errors: e)
-          end
-
-          respond_to do |format|
-            format.html { redirect_to admin_site_stats_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.site_stat")) }
-          end
-        end
-      else
-        redirect_back_or_to import_admin_site_stats_path, alert: t("custom.flash.alerts.select_file")
-      end
-    end
-
 
     private
       def site_stat_params

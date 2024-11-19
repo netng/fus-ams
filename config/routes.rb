@@ -218,6 +218,16 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :importers do
+      collection do
+        post "site_stats_import"
+        post "asset_classes_import"
+        post "assets_import"
+        post "asset_components_import"
+        post "asset_softwares_import"
+      end
+    end
+
 
   end
 end
