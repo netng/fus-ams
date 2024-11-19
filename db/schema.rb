@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_13_022743) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_19_024143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,6 +42,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_13_022743) do
     t.uuid "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
     t.index ["id_asset_class"], name: "index_asset_classes_on_id_asset_class", unique: true
     t.index ["project_id"], name: "index_asset_classes_on_project_id"
   end
@@ -52,6 +56,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_13_022743) do
     t.string "serial_number", limit: 100
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
     t.index ["asset_id"], name: "index_asset_components_on_asset_id"
     t.index ["component_id"], name: "index_asset_components_on_component_id"
     t.index ["serial_number"], name: "index_asset_components_on_serial_number"

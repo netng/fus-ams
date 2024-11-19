@@ -5,7 +5,12 @@
     <h3 class="font-semibold text-white">Asset</h3>
     <ul>
       <% menu_assets_path.sort_by(&:sort).each do |menu| %>
-        <li class="flex items-center">
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
           <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
           <%= link_to t(menu.label), 
 						send(menu.path),
@@ -25,7 +30,12 @@
     <h3 class="font-semibold text-white">Asset and component</h3>
     <ul>
       <% menu_asset_components_path.sort_by(&:sort).each do |menu| %>
-        <li class="flex items-center">
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
           <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
           <%= link_to t(menu.label), 
 						send(menu.path),
@@ -44,7 +54,12 @@
     <h3 class="font-semibold text-white">Location</h3>
     <ul>
       <% menu_locations_path.sort_by(&:sort).each do |menu| %>
-        <li class="flex items-center">
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+          
           <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
           <%= link_to t(menu.label), 
 						send(menu.path),
@@ -63,7 +78,12 @@
     <h3 class="font-semibold text-white">Master</h3>
     <ul>
       <% menu_masters_path.sort_by(&:sort).each do |menu| %>
-        <li class="flex items-center">
+        <li
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+          
           <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
           <%= link_to t(menu.label), 
 						send(menu.path),

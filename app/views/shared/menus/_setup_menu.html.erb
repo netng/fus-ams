@@ -13,7 +13,12 @@
 
 			<ul>
 			<% flat_menus.each do |menu| %>
-				<li class="flex items-center">
+				<li 
+					class="flex items-center"
+					data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+					
 					<%= inline_svg_tag "menu.svg",
 						class: "w-5 h-5 text-white hover:text-slate-100"
 					%>
@@ -50,7 +55,12 @@
 
 			<ul>
 			<% flat_menus.each do |menu| %>
-				<li class="flex items-center">
+				<li 
+					class="flex items-center"
+					data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
 					<%= inline_svg_tag "menu.svg",
 						class: "w-5 h-5 text-white hover:text-slate-100"
 					%>

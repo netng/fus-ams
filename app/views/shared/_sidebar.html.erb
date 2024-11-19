@@ -1,4 +1,8 @@
-<div id="desktop-sidebar" class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4">
+<div 
+  id="desktop-sidebar"
+  class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4"
+  data-controller="active-menu">
+  
   <div class="p-0"> <!-- Menghapus padding dari sidebar -->
     <% if has_entry_menu? && controller_path.include?("entries") %>
 	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
