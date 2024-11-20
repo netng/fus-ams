@@ -134,6 +134,10 @@ Rails.application.routes.draw do
           get "import"
           post "process_import"
         end
+
+        member do
+          get "assets", to: "assets"
+        end
       end
   
       resources :capital_proposals do

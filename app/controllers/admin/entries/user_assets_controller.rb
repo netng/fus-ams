@@ -1,8 +1,8 @@
 module Admin::Entries
   class UserAssetsController < ApplicationAdminController
-    before_action :set_user_asset, only: [ :show, :edit, :update, :destroy ]
+    before_action :set_user_asset, only: [ :show, :edit, :update, :destroy, :assets ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :assets ]
     before_action :set_previous_url
 
     def index
@@ -219,6 +219,39 @@ module Admin::Entries
 
       else
         redirect_back_or_to import_admin_user_assets_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
+
+    def assets
+      authorize :authorization, :read?
+      @pundit_user = { account: current_account, function_access_code: FunctionAccessConstant::FA_ASSET }
+
+      @q = @user_asset.assets.ransack(params[:q])
+      @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
+      scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
+      @pagy, @assets = pagy(scope)
+
+      if params[:q].present?
+        respond_to do |format|
+          format.turbo_stream do
+            logger.debug "TURBO STREAM RENDER"
+            render turbo_stream: turbo_stream.replace(
+              "table_assets",
+              partial: "admin/entries/user_assets/assets/turbo_table",
+              locals: { assets: @assets, pagy: @pagy }
+            )
+          end
+          format.html do
+            logger.debug "fallback render"
+            render partial: "admin/entries/user_assets/assets/turbo_table",
+                   locals: { user_assets: @user_assets, pagy: @pagy }
+          end
+        end
+      else
+        # Permintaan awal: render view edit_location.html.erb
+        logger.debug "first render"
+        render :assets
       end
     end
 

@@ -5,6 +5,8 @@ class UserAsset < ApplicationRecord
   belongs_to :site
   belongs_to :department, optional: true
 
+  has_many :assets, dependent: :restrict_with_error
+
   downcase_fields :email
   before_validation :strip_email_aztec_username
 

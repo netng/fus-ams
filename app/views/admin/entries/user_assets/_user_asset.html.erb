@@ -58,5 +58,13 @@
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
-  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left">
+    <%= link_to assets_admin_user_asset_path(user_asset),
+      data: {
+        turbo_frame: :modal,
+        turbo_action: "advance"
+      } do %>
+        <%= user_asset.assets.count %>
+    <% end %>
+  </td>
 <% end %>

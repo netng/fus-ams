@@ -427,6 +427,7 @@ en:
   
   custom:
     label:
+      total_asset: Total asset
       asset_description: Asset description
       allow_read: Allow read
       allow_create: Allow create

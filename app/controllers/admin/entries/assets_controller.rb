@@ -21,6 +21,12 @@ module Admin::Entries
 
     def show
       authorize :authorization, :read?
+
+      if turbo_frame_request? && turbo_frame_request_id == "second_modal"
+        render "admin/entries/assets/show", layout: false
+      else
+        render "admin/entries/assets/show"
+      end
     end
 
     def new

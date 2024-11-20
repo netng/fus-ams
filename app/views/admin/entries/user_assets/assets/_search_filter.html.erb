@@ -1,0 +1,59 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: assets_admin_user_asset_path(user_asset), data: { 
+      controller: "filters",
+      turbo_frame: :table_assets,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-asset",
+      filters_target: "form"
+    } do |f| %>
+  
+      <div class="md:grid grid-cols-3 gap-2"> 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.tagging_id')}", class: "fus-label" %>
+          <%= f.search_field :tagging_id_cont, data: { action: "filters#search" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.site_id')}", class: "fus-label" %>
+          <%= f.select :site_id_eq,
+            Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.attributes.asset.site_id")).capitalize},
+            data: { action: "filters#search", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.asset_model_id')}", class: "fus-label" %>
+          <%= f.select :asset_model_id_eq,
+            AssetModel.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.attributes.asset_model.asset_model_id")).capitalize},
+            data: { action: "filters#search", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.cpu_sn')}", class: "fus-label" %>
+          <%= f.search_field :cpu_sn_cont, data: { action: "filters#search" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.delivery_order_id')}", class: "fus-label" %>
+          <%= f.search_field :delivery_order_number_cont, data: { action: "filters#search" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.project_id')}", class: "fus-label" %>
+          <%= f.select :project_id_eq,
+            Project.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.attributes.asset_model.project_id")).capitalize},
+            data: { action: "filters#search", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
