@@ -11,6 +11,7 @@ class PurchaseOrder < ApplicationRecord
   has_many :request_for_purchase_details, dependent: :nullify
   has_many :delivery_orders, dependent: :nullify
 
+  before_validation :strip_po_number
 
 
   validates :number, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
@@ -26,6 +27,13 @@ class PurchaseOrder < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     ["approved_by", "currency", "request_for_purchase", "ship_to_site", "vendor"]
+  end
+
+  private
+  def strip_po_number
+    if number.present?
+      self.number = number.strip
+    end
   end
 
 end

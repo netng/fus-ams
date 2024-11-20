@@ -1,8 +1,9 @@
 module Admin::Entries
   class ComponentTypesController < ApplicationAdminController
-    before_action :set_component_type, only: [ :edit, :update, :destroy ]
+    before_action :set_component_type, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -12,18 +13,20 @@ module Admin::Entries
       @pagy, @component_types = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @component_type = ComponentType.new
-      @previous_url = admin_component_types_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @component_type = ComponentType.new(component_type_params)
-      @previous_url = admin_component_types_path || root_path
 
       respond_to do |format|
         if @component_type.save
@@ -36,12 +39,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_component_types_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_component_types_path || root_path
 
       respond_to do |format|
         if @component_type.update(component_type_params)
@@ -153,6 +154,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_component_types_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_component_types_path || root_path
       end
   end
 end

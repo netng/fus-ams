@@ -1,8 +1,9 @@
 module Admin::Entries
   class SiteGroupsController < ApplicationAdminController
-    before_action :set_site_group, only: [ :edit, :update, :destroy ]
+    before_action :set_site_group, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,9 +14,12 @@ module Admin::Entries
       @pagy, @site_groups = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
-      @previous_url = admin_site_groups_path || root_path
 
       @site_group = SiteGroup.new
       @projects = Project.pluck(:name, :id).map { |name, id| [ name, id ] }
@@ -24,7 +28,6 @@ module Admin::Entries
 
     def create
       authorize :authorization, :create?
-      @previous_url = admin_site_groups_path || root_path
 
       @site_group = SiteGroup.new(site_group_params)
 
@@ -39,12 +42,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_site_groups_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_site_groups_path || root_path
 
       respond_to do |format|
         if @site_group.update(site_group_params)
@@ -166,6 +167,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_site_groups_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_site_groups_path || root_path
       end
   end
 end

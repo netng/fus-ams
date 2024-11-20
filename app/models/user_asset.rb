@@ -6,7 +6,7 @@ class UserAsset < ApplicationRecord
   belongs_to :department, optional: true
 
   downcase_fields :email
-  before_validation :strip_email
+  before_validation :strip_email_aztec_username
 
   validates :id_user_asset, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :aztec_code, length: { maximum: 100 }
@@ -25,9 +25,17 @@ class UserAsset < ApplicationRecord
   end
 
   private
-    def strip_email
+    def strip_email_aztec_username
       if email.present?
         self.email = email.strip
+      end
+
+      if aztec_code.present?
+        self.aztec_code = aztec_code.strip
+      end
+
+      if username.present?
+        self.username = username.strip
       end
     end
 end

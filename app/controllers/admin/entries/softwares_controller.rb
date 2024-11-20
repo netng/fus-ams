@@ -1,8 +1,9 @@
 module Admin::Entries
   class SoftwaresController < ApplicationAdminController
-    before_action :set_software, only: [ :edit, :update, :destroy ]
+    before_action :set_software, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
 
     def index
@@ -14,18 +15,20 @@ module Admin::Entries
       @pagy, @softwares = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @software = Software.new
-      @previous_url = admin_softwares_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @software = Software.new(software_params)
-      @previous_url = admin_softwares_path || root_path
 
       respond_to do |format|
         if @software.save
@@ -38,12 +41,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_softwares_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_softwares_path || root_path
 
       respond_to do |format|
         if @software.update(software_params)
@@ -154,6 +155,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_softwares_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_softwares_path || root_path
       end
   end
 end

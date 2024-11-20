@@ -18,7 +18,7 @@ class AssetType < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "created_by", "description", "id_asset_type", "id", "ip_address", "name", "request_id", "updated_at", "user_agent"]
+    [ "created_at", "created_by", "description", "id_asset_type", "id", "ip_address", "name", "request_id", "updated_at", "user_agent" ]
   end
 
   private

@@ -22,6 +22,19 @@
           %>
         <% end %>
 
+        <% if policy([:admin, :authorization]).read? %>
+          <%= link_to admin_asset_path(asset),
+            data: {
+              turbo_action: "advance",
+              turbo_frame: :modal
+            } do %>
+            <%= inline_svg_tag "show.svg",
+              class: "fus-icons",
+              title: t("custom.label.show")
+            %>
+          <% end %>
+        <% end %>
+
         <% if policy([:admin, :authorization]).update? %>
           <%= link_to edit_admin_asset_path(asset),
             data: {
