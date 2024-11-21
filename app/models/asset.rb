@@ -12,7 +12,7 @@ class Asset < ApplicationRecord
   belongs_to :project
   belongs_to :site
   belongs_to :asset_model
-  belongs_to :user_asset
+  belongs_to :user_asset, counter_cache: true
   belongs_to :delivery_order, optional: true
   belongs_to :asset_class, optional: true
 
