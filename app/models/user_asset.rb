@@ -19,7 +19,7 @@ class UserAsset < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "aztec_code", "created_at", "department_id", "description", "email", "floor", "id", "id_user_asset", "location", "site_id", "updated_at", "username" ]
+    [ "aztec_code", "created_at", "department_id", "description", "email", "floor", "id", "id_user_asset", "location", "site_id", "updated_at", "username", "assets_count" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
