@@ -7,7 +7,16 @@
 	<div class="p-8">
     <%= render "admin/entries/user_assets/assets/search_filter", user_asset: @user_asset %>
     <%= render "admin/entries/user_assets/assets/table", assets: @assets %>
+    <%= button_tag t("custom.label.cancel"),
+      data: { 
+        action: "modal#hideModal"
+      },
+      type: :button,
+      class: "fus-secondary-btn md:w-[100px] my-2"
+    %>
 	</div>
 <% end %>
+
+
 
 <% content_for(:title, t("custom.label.edit_location_form", model: t("activerecord.models.asset")).capitalize) %>

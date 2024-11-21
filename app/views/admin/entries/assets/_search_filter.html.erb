@@ -10,7 +10,7 @@
       <div class="md:grid grid-cols-3 gap-2"> 
         <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.asset.tagging_id')}", class: "fus-label" %>
-          <%= f.search_field :tagging_id_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+          <%= f.search_field :tagging_id_cont, value: params[:q] && params[:q][:tagging_id_eq], data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
         <div class="w-full mb-2">

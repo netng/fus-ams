@@ -9,7 +9,6 @@
             <%= link_to admin_asset_path(asset),
               data: {
                 turbo_frame: :second_modal,
-                turbo_action: "replace"
               } do %>
               <%= inline_svg_tag "show.svg",
                 class: "fus-icons",
@@ -19,38 +18,15 @@
           <% end %>
 
           <% if Admin::AuthorizationPolicy.new(@pundit_user, asset).update? %>
-            <%= link_to edit_admin_asset_path(asset),
+            <%= link_to admin_assets_path(q: { name_cont: "keyword", tagging_id_eq: asset.tagging_id }),
               data: {
-                turbo_frame: :modal
-              } do %>
+                turbo_frame: "_top"
+              },
+              target: "_blank" do %>
                 <%= inline_svg_tag "edit.svg",
                   class: "fus-icons",
                   title: t("custom.label.edit")
                 %>
-            <% end %>
-          <% end %>
-
-          <% if Admin::AuthorizationPolicy.new(@pundit_user, asset).update? %>
-            <%= link_to location_admin_asset_path(asset),
-              data: {
-                turbo_frame: :modal
-              } do %>
-                <%= inline_svg_tag "location.svg",
-                  class: "fus-icons",
-                  title: t("custom.label.location")
-                %>
-            <% end %>
-          <% end %>
-
-          <% if Admin::AuthorizationPolicy.new(@pundit_user, asset).update? %>
-            <%= link_to software_admin_asset_path(asset),
-              data: {
-                turbo_frame: :modal
-              } do %>
-              <%= inline_svg_tag "software.svg",
-                class: "fus-icons",
-                title: t("custom.label.software")
-              %>
             <% end %>
           <% end %>
 
