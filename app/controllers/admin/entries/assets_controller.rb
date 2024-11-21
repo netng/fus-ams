@@ -15,7 +15,15 @@ module Admin::Entries
 
       @q = Asset.ransack(params[:q])
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
-      scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
+      scope = @q.result.includes(
+        :project,
+        :site,
+        :asset_model,
+        :asset_class,
+        :delivery_order,
+        components: :component_type
+      )
+
       @pagy, @assets = pagy(scope)
     end
 

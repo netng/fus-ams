@@ -53,6 +53,26 @@
           %>
         </div>
 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.asset_type')}", class: "fus-label" %>
+          <%= f.select :asset_model_asset_type_id_eq,
+            AssetType.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.component')}", class: "fus-label" %>
+          <%= f.select :components_id_eq,
+            Component.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.component")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
       </div>
     <% end %>
   </div>

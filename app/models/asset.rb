@@ -32,7 +32,16 @@ class Asset < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "asset_class", "asset_model", "delivery_order", "project", "site", "user_asset" ]
+    [
+      "asset_class",
+      "asset_model",
+      "delivery_order",
+      "project",
+      "site",
+      "user_asset",
+      "components",
+      "components.component_type"
+    ]
   end
 
   private
