@@ -34,8 +34,23 @@
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.asset.cpu_sn')}", class: "fus-label" %>
-          <%= f.search_field :cpu_sn_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+          <%= f.label "#{t('activerecord.models.asset_type')}", class: "fus-label" %>
+          <%= f.select :asset_model_asset_type_id_eq,
+            AssetType.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.brand')}", class: "fus-label" %>
+          <%= f.select :asset_model_brand_id_eq,
+            Brand.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.brand")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
         </div>
 
         <div class="w-full mb-2">
@@ -48,16 +63,6 @@
           <%= f.select :project_id_eq,
             Project.pluck(:name, :id).map { |name, id| [name, id]},
             {include_blank: t("custom.label.all", model: t("activerecord.attributes.asset_model.project_id")).capitalize},
-            data: { action: "filters#submit", controller: "slim" },
-            class: "fus-select"
-          %>
-        </div>
-
-        <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.asset_type')}", class: "fus-label" %>
-          <%= f.select :asset_model_asset_type_id_eq,
-            AssetType.pluck(:name, :id).map { |name, id| [name, id]},
-            {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
             data: { action: "filters#submit", controller: "slim" },
             class: "fus-select"
           %>
@@ -84,19 +89,36 @@
         </div>
 
         <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.cpu_sn')}", class: "fus-label" %>
+          <%= f.search_field :cpu_sn_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.monitor_sn')}", class: "fus-label" %>
+          <%= f.search_field :monitor_sn_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.keyboard_sn')}", class: "fus-label" %>
+          <%= f.search_field :keyboard_sn_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.computer_name')}", class: "fus-label" %>
+          <%= f.search_field :computer_name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+        
+
+        
+
+        
+
+        <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
           <%= f.search_field :user_asset_username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
-        <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.models.brand')}", class: "fus-label" %>
-          <%= f.select :asset_model_brand_id_eq,
-            Brand.pluck(:name, :id).map { |name, id| [name, id]},
-            {include_blank: t("custom.label.all", model: t("activerecord.models.brand")).capitalize},
-            data: { action: "filters#submit", controller: "slim" },
-            class: "fus-select"
-          %>
-        </div>
+        
 
       </div>
     <% end %>
