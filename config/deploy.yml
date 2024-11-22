@@ -22,10 +22,15 @@ proxy:
 #     interval: 2
 #     timeout: 2
 #   app_port: 3000
-  ssl: false
+#   ssl: false
 #   host: ams.nandang.web.id
 #   ssl: true
 #   host: app.example.com
+  volumes:
+    - "/etc/ssl/fus-ams:/etc/ssl/fus-ams"
+  ssl:
+    certificate: "/etc/ssl/fus-ams/dev.fus-online.co.id.bundle.crt"
+    key: "/etc/ssl/fus-ams/dev.fus-online.co.id.key"
 
 # Credentials for your image host.
 registry:
