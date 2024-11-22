@@ -7,7 +7,7 @@
       filters_table_outlet: ".table-user_asset",
     } do |f| %>
   
-      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2" data-controller="slim">
+      <div class="md:grid grid-cols-3 gap-2" data-controller="slim">
         <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.user_asset.id_user_asset')}", class: "fus-label" %>
           <%= f.search_field :id_user_asset_cont, data: { action: "filters#submit" }, class: "fus-input" %>
@@ -16,6 +16,11 @@
         <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
           <%= f.search_field :username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.email')}", class: "fus-label" %>
+          <%= f.search_field :email_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
   
         <div class="w-full mb-2">

@@ -15,16 +15,6 @@
         </div>
 
         <div class="w-full mb-2">
-          <%= f.label "#{t('activerecord.attributes.asset.site_id')}", class: "fus-label" %>
-          <%= f.select :site_id_eq,
-            Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
-            {include_blank: t("custom.label.all", model: t("activerecord.attributes.asset.site_id")).capitalize},
-            data: { action: "filters#search", controller: "slim" },
-            class: "fus-select"
-          %>
-        </div>
-
-        <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.asset.asset_model_id')}", class: "fus-label" %>
           <%= f.select :asset_model_id_eq,
             AssetModel.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
