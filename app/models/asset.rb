@@ -35,6 +35,7 @@ class Asset < ApplicationRecord
     [
       "asset_class",
       "asset_model",
+      "asset_model.brand",
       "delivery_order",
       "project",
       "site",

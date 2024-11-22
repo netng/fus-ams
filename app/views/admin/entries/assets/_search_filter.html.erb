@@ -88,6 +88,16 @@
           <%= f.search_field :user_asset_username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.brand')}", class: "fus-label" %>
+          <%= f.select :asset_model_brand_id_eq,
+            Brand.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.brand")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
       </div>
     <% end %>
   </div>
