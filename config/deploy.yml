@@ -16,21 +16,16 @@ servers:
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
-proxy:
+# proxy:
 #   healthcheck:
-#     path: /up
-#     interval: 2
-#     timeout: 2
+#    path: /up
+#    interval: 2
+#    timeout: 2
 #   app_port: 3000
-#   ssl: false
-#   host: ams.nandang.web.id
-#   ssl: true
-#   host: app.example.com
-  volumes:
-    - "/etc/ssl/fus-ams:/etc/ssl/fus-ams"
-  ssl:
-    certificate: "/etc/ssl/fus-ams/dev.fus-online.co.id.bundle.crt"
-    key: "/etc/ssl/fus-ams/dev.fus-online.co.id.key"
+  ssl: true
+  host: dev.fus-online.co.id
+# #   ssl: true
+# #   host: app.example.com
 
 # Credentials for your image host.
 registry:
