@@ -1,8 +1,9 @@
 module Admin::Entries
   class AssetModelsController < ApplicationAdminController
-    before_action :set_asset_model, only: [ :edit, :update, :destroy ]
+    before_action :set_asset_model, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,9 +14,12 @@ module Admin::Entries
       @pagy, @asset_models = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
-      @previous_url = admin_asset_models_path || root_path
 
       @asset_model = AssetModel.new
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [ name.capitalize, id ] } || []
@@ -23,7 +27,6 @@ module Admin::Entries
 
     def create
       authorize :authorization, :create?
-      @previous_url = admin_asset_models_path || root_path
 
       @asset_model = AssetModel.new(asset_model_params)
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [ name.capitalize, id ] } || []
@@ -40,13 +43,11 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_asset_models_path || root_path
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [ name.capitalize, id ] } || []
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_asset_models_path || root_path
       @asset_item_types = @asset_model.asset_type&.asset_item_types&.pluck(:name, :id)&.map { |name, id| [ name.capitalize, id ] } || []
 
       respond_to do |format|
@@ -196,6 +197,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_asset_models_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_asset_models_path || root_path
       end
   end
 end

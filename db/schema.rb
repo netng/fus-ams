@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_19_024143) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_21_061351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -588,6 +588,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_19_024143) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "assets_count", default: 0, null: false
     t.index ["department_id"], name: "index_user_assets_on_department_id"
     t.index ["id_user_asset"], name: "index_user_assets_on_id_user_asset", unique: true
     t.index ["site_id"], name: "index_user_assets_on_site_id"

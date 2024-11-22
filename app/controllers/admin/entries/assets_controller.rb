@@ -1,13 +1,13 @@
 module Admin::Entries
   class AssetsController < ApplicationAdminController
     before_action :set_asset, only: [
-      :edit, :update, :destroy,
+      :show, :edit, :update, :destroy,
       :edit_location, :update_location,
       :edit_software, :update_software
     ]
 
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update, :edit_location ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location ]
     before_action :set_previous_url
 
     def index
@@ -15,8 +15,28 @@ module Admin::Entries
 
       @q = Asset.ransack(params[:q])
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
-      scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
+      scope = @q.result.includes(
+        :project,
+        :site,
+        :asset_model,
+        :asset_class,
+        :delivery_order,
+        :components,
+        :softwares,
+        :user_asset
+      )
+
       @pagy, @assets = pagy(scope)
+    end
+
+    def show
+      authorize :authorization, :read?
+
+      # if turbo_frame_request? && turbo_frame_request_id == "second_modal"
+      #   render "admin/entries/assets/show", layout: false
+      # else
+      #   render "admin/entries/assets/show"
+      # end
     end
 
     def new

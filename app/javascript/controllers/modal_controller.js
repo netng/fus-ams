@@ -15,18 +15,44 @@ export default class extends Controller {
 
   // hide modal
   // action: "modal#hideModal"
-  hideModal() {
-    if (this.previousUrlValue) {
-      this.modalTarget.remove()
-      // update browser history
-      history.replaceState({}, "", this.previousUrlValue);
-    } else {
-      this.modalTarget.remove()
-    }
+  // hideModal() {
+  //   if (this.previousUrlValue) {
+  //     this.modalTarget.remove()
+  //     // update browser history
+  //     history.replaceState({}, "", this.previousUrlValue);
+  //   } else {
+  //     this.modalTarget.remove()
+  //   }
     
-    // clean up modal content
-    const frame = document.getElementById('modal')
-    frame.removeAttribute("src")
+  //   // clean up modal content
+  //   const frame = document.getElementById('modal')
+  //   frame.removeAttribute("src")
+  // }
+
+  // stacked hide modal
+  hideModal(event) {
+
+    // Jika event ada (misalnya dari tombol Cancel)
+    if (event) {
+      event.preventDefault()
+      event.stopPropagation() // Hentikan hanya untuk tombol Cancel
+    }
+
+    // Hapus elemen modal ini saja
+    this.element.remove()
+
+    // Jika URL sebelumnya diatur, kembalikan ke URL sebelumnya
+    if (this.previousUrlValue) {
+      history.replaceState({}, "", this.previousUrlValue)
+    }
+
+    // Jika ini adalah modal terakhir, bersihkan turbo frame "modal"
+    if (this.isTopModal()) {
+      const frame = document.getElementById("modal")
+      if (frame) {
+        frame.removeAttribute("src")
+      }
+    }
   }
 
   
@@ -41,7 +67,7 @@ export default class extends Controller {
   // hide modal when clicking ESC
   // action: "keyup@window->modal#closeWithKeyboard"
   closeWithKeyboard(e) {
-    if (e.code == "Escape") {
+    if (e.code == "Escape" && this.isTopModal()) {
       this.hideModal()
     }
   }
@@ -49,10 +75,16 @@ export default class extends Controller {
   // hide modal when clicking outside of modal
   // action: "click@window->modal#closeBackground"
   closeBackground(e) {
-    if (e && this.modalContentTarget.contains(e.target)) {
-      return;
+    if (this.isTopModal() && (!e || !this.modalContentTarget.contains(e.target))) {
+      // return;
+      this.hideModal()
     }
-    this.hideModal()
+  }
+
+  // Utility: Check if this is the top modal
+  isTopModal() {
+    const allModals = document.querySelectorAll("[data-controller='modal']")
+    return allModals[allModals.length - 1] === this.element
   }
 
 }

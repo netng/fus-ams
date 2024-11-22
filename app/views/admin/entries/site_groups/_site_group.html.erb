@@ -22,6 +22,19 @@
           %>
         <% end %>
 
+        <% if policy([:admin, :authorization]).read? %>
+          <%= link_to admin_site_group_path(site_group),
+            data: {
+              turbo_frame: :modal,
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "show.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.show")
+              %>
+          <% end %>
+        <% end %>
+
         <% if policy([:admin, :authorization]).update? %>
           <%= link_to edit_admin_site_group_path(site_group),
             data: {

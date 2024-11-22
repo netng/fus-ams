@@ -1,8 +1,10 @@
 module Admin::Entries
   class SiteStatsController < ApplicationAdminController
-    before_action :set_site_stat, only: [ :edit, :update, :destroy ]
+    before_action :set_site_stat, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :edit, :update, :new, :create ]
+    before_action :ensure_frame_response, only: [ :show, :edit, :update, :new, :create ]
+    before_action :set_previous_url
+
     def index
       authorize :authorization, :index?
 
@@ -14,15 +16,16 @@ module Admin::Entries
 
     def new
       authorize :authorization, :create?
-      @previous_url = admin_site_stats_path || root_path
 
       @site_stat = SiteStat.new
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def create
       authorize :authorization, :create?
-      @previous_url = admin_site_stats_path || root_path
-
 
       @site_stat = SiteStat.new(site_stat_params)
 
@@ -38,8 +41,6 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_site_stats_path || root_path
-
 
       respond_to do |format|
         format.turbo_stream do
@@ -51,8 +52,6 @@ module Admin::Entries
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_site_stats_path || root_path
-
 
       respond_to do |format|
         if @site_stat.update(site_stat_params)
@@ -109,6 +108,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_site_stats_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_site_stats_path || root_path
       end
   end
 end

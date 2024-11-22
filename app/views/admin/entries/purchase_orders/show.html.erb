@@ -1,0 +1,87 @@
+  <h2 class="fus-form-header mb-2">
+    <%= t("custom.label.show_detail", model: t("activerecord.models.purchase_order")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd">
+    <div class="bg-slate-50 rounded-md">
+      <div class="grid grid-cols-2 gap-2 p-4">
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.number") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.number %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.date") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.date %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.vendor_id") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.vendor.name %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.request_for_purchase_id") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.request_for_purchase.number %></span>
+        </div>
+      </div>
+
+      <% unless @rfp_details.blank? %>
+        <div class="px-4">
+          <%= render "show_rfp_details_table", rfp_details: @rfp_details %>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-2 gap-2 p-4 mb-4">
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.delivery_date") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.delivery_date %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.ship_to_site_id") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.ship_to_site.name %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.payment_remarks") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.payment_remarks.blank? ? "-" : @purchase_order.payment_remarks %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.approved_by_id") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.approved_by.username %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.purchase_order.status") %>
+          </label>
+          <span class="fus-readonly"><%= @purchase_order.status %></span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <%= link_to t("custom.label.back"), admin_purchase_orders_path, class: "fus-secondary-btn md:w-[100px]" %>
+    
+	</div>
+
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.purchase_order")).capitalize) %>

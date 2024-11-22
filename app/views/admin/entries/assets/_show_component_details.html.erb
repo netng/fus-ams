@@ -1,0 +1,23 @@
+<% ComponentType.all.each_with_index do |component_type, index| %>
+    <% id = asset_components.find { |ac| ac.component&.component_type&.id_component_type == component_type.id_component_type}&.id %>
+    <%= hidden_field_tag "asset[asset_components_attributes][#{index}][id]", id || nil %>
+    <%= tag.tr class: "border-b border-gray-200 hover:bg-gray-100" do %>
+    <td class="sticky left-0 py-3 px-6 text-left whitespace-nowrap border-r border-gray-300 bg-gray-100">
+        <%= component_type.name %>
+    </td>
+
+    <td class="py-3 px-6 text-left whitespace-nowrap">
+        <%= select_tag "asset[asset_components_attributes][#{index}][component_id]",
+            options_for_select(component_type.components.pluck(:name, :id), asset_components.map { |ac| ac.component&.id }),
+            include_blank: "",
+            class: "fus-select bg-slate-300",
+            disabled: true 
+        %>
+    </td>
+    
+    <td class="py-3 px-6 text-left whitespace-nowrap">
+        <% serial_number = asset_components.find { |ac| ac.component&.component_type&.id_component_type == component_type.id_component_type}&.serial_number %>
+        <input type="text" value="<%= serial_number || nil %>" class="fus-input bg-slate-50">
+    </td>
+    <% end %>
+<% end %>

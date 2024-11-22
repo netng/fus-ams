@@ -1,8 +1,8 @@
 module Admin::Entries
   class PurchaseOrdersController < ApplicationAdminController
-    before_action :set_purchase_order, only: [ :edit, :update, :destroy ]
+    before_action :set_purchase_order, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :set_request_for_purchases, only: [ :new, :create, :edit, :update ]
+    before_action :set_request_for_purchases, only: [ :show, :new, :create, :edit, :update ]
 
     def index
       authorize :authorization, :index?
@@ -11,6 +11,11 @@ module Admin::Entries
       @q.sorts = [ "date desc" ] if @q.sorts.empty?
       scope = @q.result.includes(:vendor, :request_for_purchase, :ship_to_site, :approved_by)
       @pagy, @purchase_orders = pagy(scope)
+    end
+
+    def show
+      authorize :authorization, :read?
+      @rfp_details = @purchase_order.request_for_purchase_details
     end
 
     def new

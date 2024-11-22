@@ -1,0 +1,14 @@
+<% if turbo_frame_request_id == "modal"%>
+  <%= render "layouts/turbo_modal" do %>
+    <%= render "show" %>
+    <%= render "cancel_button" %>
+  <% end %>
+<% else %>
+  <%= render "layouts/turbo_second_modal" do %>
+    <%= render "show" %>
+    <%= render "cancel_button" %>
+  <% end %>
+<% end %>
+
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset")).capitalize) %>

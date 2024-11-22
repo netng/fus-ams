@@ -1,8 +1,9 @@
 module Admin::Entries
   class BrandsController < ApplicationAdminController
-    before_action :set_brand, only: [ :edit, :update, :destroy ]
+    before_action :set_brand, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :edit, :new, :create, :update ]
+    before_action :ensure_frame_response, only: [ :show, :edit, :new, :create, :update ]
+    before_action :set_previous_url
 
 
     def index
@@ -14,16 +15,18 @@ module Admin::Entries
       @pagy, @brands = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
-      @previous_url = admin_brands_path || root_path
 
       @brand = Brand.new
     end
 
     def create
       authorize :authorization, :create?
-      @previous_url = admin_brands_path || root_path
 
       @brand = Brand.new(brand_params)
 
@@ -38,12 +41,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_brands_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_brands_path || root_path
 
       respond_to do |format|
         if @brand.update(brand_params)
@@ -154,6 +155,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_brands_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_brands_path || root_path
       end
   end
 end

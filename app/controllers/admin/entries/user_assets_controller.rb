@@ -1,8 +1,9 @@
 module Admin::Entries
   class UserAssetsController < ApplicationAdminController
-    before_action :set_user_asset, only: [ :edit, :update, :destroy ]
+    before_action :set_user_asset, only: [ :show, :edit, :update, :destroy, :assets ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :assets ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,18 +14,20 @@ module Admin::Entries
       @pagy, @user_assets = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @user_asset = UserAsset.new
-      @previous_url = admin_user_assets_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @user_asset = UserAsset.new(user_assets_params)
-      @previous_url = admin_user_assets_path || root_path
 
 
       # Note:
@@ -55,12 +58,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_user_assets_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_user_assets_path || root_path
 
       respond_to do |format|
         if @user_asset.update(user_assets_params)
@@ -222,6 +223,39 @@ module Admin::Entries
     end
 
 
+    def assets
+      authorize :authorization, :read?
+      @pundit_user = { account: current_account, function_access_code: FunctionAccessConstant::FA_ASSET }
+
+      @q = @user_asset.assets.ransack(params[:q])
+      @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
+      scope = @q.result.includes(:project, :site, :asset_model, :asset_class, :delivery_order)
+      @pagy, @assets = pagy(scope)
+
+      if params[:q].present?
+        respond_to do |format|
+          format.turbo_stream do
+            logger.debug "TURBO STREAM RENDER"
+            render turbo_stream: turbo_stream.replace(
+              "table_assets",
+              partial: "admin/entries/user_assets/assets/turbo_table",
+              locals: { assets: @assets, pagy: @pagy }
+            )
+          end
+          format.html do
+            logger.debug "fallback render"
+            render partial: "admin/entries/user_assets/assets/turbo_table",
+                   locals: { user_assets: @user_assets, pagy: @pagy }
+          end
+        end
+      else
+        # Permintaan awal: render view edit_location.html.erb
+        logger.debug "first render"
+        render :assets
+      end
+    end
+
+
 
     private
 
@@ -239,6 +273,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_user_assets_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_user_assets_path || root_path
       end
   end
 end

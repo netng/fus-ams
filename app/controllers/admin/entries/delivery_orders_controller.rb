@@ -1,8 +1,9 @@
 module Admin::Entries
   class DeliveryOrdersController < ApplicationAdminController
-    before_action :set_delivery_order, only: [ :edit, :update, :destroy ]
+    before_action :set_delivery_order, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,18 +14,20 @@ module Admin::Entries
       @pagy, @delivery_orders = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @delivery_order = DeliveryOrder.new
-      @previous_url = admin_delivery_orders_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @delivery_order = DeliveryOrder.new(delivery_order_params)
-      @previous_url = admin_delivery_orders_path || root_path
 
       respond_to do |format|
         if @delivery_order.save
@@ -37,12 +40,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_delivery_orders_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_delivery_orders_path || root_path
 
       respond_to do |format|
         if @delivery_order.update(delivery_order_params)
@@ -218,6 +219,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_delivery_orders_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_delivery_orders_path || root_path
       end
   end
 end

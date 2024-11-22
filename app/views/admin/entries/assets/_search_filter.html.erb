@@ -7,10 +7,10 @@
       filters_table_outlet: ".table-asset",
     } do |f| %>
   
-      <div class="md:grid grid-cols-3 gap-2"> 
+      <div class="md:grid grid-cols-4 gap-2"> 
         <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.asset.tagging_id')}", class: "fus-label" %>
-          <%= f.search_field :tagging_id_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+          <%= f.search_field :tagging_id_cont, value: params[:q] && params[:q][:tagging_id_eq], data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
         <div class="w-full mb-2">
@@ -51,6 +51,41 @@
             data: { action: "filters#submit", controller: "slim" },
             class: "fus-select"
           %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.asset_type')}", class: "fus-label" %>
+          <%= f.select :asset_model_asset_type_id_eq,
+            AssetType.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.asset_type")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.component')}", class: "fus-label" %>
+          <%= f.select :components_id_eq,
+            Component.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.component")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.software')}", class: "fus-label" %>
+          <%= f.select :softwares_id_eq,
+            Software.pluck(:name, :id).map { |name, id| [name, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.software")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
+          <%= f.search_field :user_asset_username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
         </div>
 
       </div>

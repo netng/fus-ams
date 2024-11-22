@@ -12,7 +12,7 @@ class Asset < ApplicationRecord
   belongs_to :project
   belongs_to :site
   belongs_to :asset_model
-  belongs_to :user_asset
+  belongs_to :user_asset, counter_cache: true
   belongs_to :delivery_order, optional: true
   belongs_to :asset_class, optional: true
 
@@ -32,7 +32,17 @@ class Asset < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    [ "asset_class", "asset_model", "delivery_order", "project", "site", "user_asset" ]
+    [
+      "asset_class",
+      "asset_model",
+      "delivery_order",
+      "project",
+      "site",
+      "user_asset",
+      "components",
+      "softwares",
+      "user_asset"
+    ]
   end
 
   private

@@ -1,8 +1,9 @@
 module Admin::Entries
   class DepartmentsController < ApplicationAdminController
-    before_action :set_department, only: [ :edit, :update, :destroy ]
+    before_action :set_department, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,18 +14,20 @@ module Admin::Entries
       @pagy, @departments = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @department = Department.new
-      @previous_url = admin_departments_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @department = Department.new(department_params)
-      @previous_url = admin_departments_path || root_path
 
       respond_to do |format|
         if @department.save
@@ -38,12 +41,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_departments_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_departments_path || root_path
 
       respond_to do |format|
         if @department.update(department_params)
@@ -157,6 +158,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_departments_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_departments_path || root_path
       end
   end
 end

@@ -1,8 +1,9 @@
 module Admin::Entries
   class AssetItemTypesController < ApplicationAdminController
-    before_action :set_asset_item_type, only: [ :edit, :update, :destroy ]
+    before_action :set_asset_item_type, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :new, :create, :edit, :update ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
+    before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
@@ -13,18 +14,20 @@ module Admin::Entries
       @pagy, @asset_item_types = pagy(scope)
     end
 
+    def show
+      authorize :authorization, :read?
+    end
+
     def new
       authorize :authorization, :create?
 
       @asset_item_type = AssetItemType.new
-      @previous_url = admin_asset_item_types_path || root_path
     end
 
     def create
       authorize :authorization, :create?
 
       @asset_item_type = AssetItemType.new(asset_item_type_params)
-      @previous_url = admin_asset_item_types_path || root_path
 
       respond_to do |format|
         if @asset_item_type.save
@@ -37,12 +40,10 @@ module Admin::Entries
 
     def edit
       authorize :authorization, :update?
-      @previous_url = admin_asset_item_types_path || root_path
     end
 
     def update
       authorize :authorization, :update?
-      @previous_url = admin_asset_item_types_path || root_path
 
       respond_to do |format|
         if @asset_item_type.update(asset_item_type_params)
@@ -162,6 +163,10 @@ module Admin::Entries
 
       def ensure_frame_response
         redirect_to admin_asset_item_types_path unless turbo_frame_request?
+      end
+
+      def set_previous_url
+        @previous_url = admin_asset_item_types_path || root_path
       end
   end
 end

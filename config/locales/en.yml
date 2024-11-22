@@ -427,6 +427,8 @@ en:
   
   custom:
     label:
+      total_asset: Total asset
+      asset_description: Asset description
       allow_read: Allow read
       allow_create: Allow create
       allow_update: Allow update
@@ -475,11 +477,13 @@ en:
       destroy: Delete
       edit: Edit
       update: Update
+      show: Show
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
       import_form: Import data %{model}
       select_to_delete: Select to delete
       default_new_form: "%{model} registration"
+      show_detail: "%{model} details"
       filter: Filter
       register: Register
       confirm:

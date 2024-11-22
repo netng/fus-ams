@@ -22,13 +22,29 @@
           %>
         <% end %>
 
+        <% if policy([:admin, :authorization]).read? %>
+          <%= link_to admin_user_asset_path(user_asset),
+            data: {
+              turbo_frame: :modal,
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "show.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.show")
+              %>
+          <% end %>
+        <% end %>
+
         <% if policy([:admin, :authorization]).update? %>
           <%= link_to edit_admin_user_asset_path(user_asset),
             data: {
               turbo_frame: :modal,
               turbo_action: "advance"
             } do %>
-              <%= inline_svg_tag "edit.svg", class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer", title: t("custom.label.edit") %>
+              <%= inline_svg_tag "edit.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.edit")
+              %>
           <% end %>
         <% end %>
 
@@ -42,5 +58,13 @@
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
   <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
-  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.description.blank? ? "-" : user_asset.description %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left">
+    <%= link_to assets_admin_user_asset_path(user_asset),
+      data: {
+        turbo_frame: :modal,
+        turbo_action: "advance"
+      } do %>
+        <span class="p-2 bg-fus-blue text-white rounded-md hover:bg-blue-400 font-semibold"><%= user_asset.assets_count %></span>
+    <% end %>
+  </td>
 <% end %>

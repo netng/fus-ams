@@ -1,0 +1,47 @@
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-10 bg-fus-blue text-white shadow-md ">
+    <%= t("custom.label.show_detail", model: t("activerecord.models.site_group")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd" class="p-8">
+    <div class="bg-slate-50 rounded-md">
+      <div class="grid grid-cols-2 gap-2 p-4">
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.site_group.id_site_group") %>
+          </label>
+          <span class="fus-readonly"><%= @site_group.id_site_group %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.site_group.name") %>
+          </label>
+          <span class="fus-readonly"><%= @site_group.name %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.models.project") %>
+          </label>
+          <span class="fus-readonly"><%= @site_group.project.name %></span>
+        </div>
+      </div>
+
+      <div class="mb-2 p-4">
+        <label class="fus-label">
+          <%= t("activerecord.attributes.site_group.description") %>
+        </label>
+        <span class="fus-readonly"><%= @site_group.description.blank? ? "-" : @site_group.description %></span>
+      </div>
+    </div>
+
+    <%= button_tag t("custom.label.cancel"),
+      data: { action: "modal#hideModal" },
+      class: "fus-secondary-btn md:w-[100px] mt-2"
+    %>
+    
+	</div>
+<% end %>
+
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.site_group")).capitalize) %>
