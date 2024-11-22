@@ -83,6 +83,11 @@
           %>
         </div>
 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
+          <%= f.search_field :user_asset_username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
       </div>
     <% end %>
   </div>

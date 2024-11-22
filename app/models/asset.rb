@@ -40,7 +40,8 @@ class Asset < ApplicationRecord
       "site",
       "user_asset",
       "components",
-      "softwares"
+      "softwares",
+      "user_asset"
     ]
   end
 

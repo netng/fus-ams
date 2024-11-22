@@ -22,7 +22,8 @@ module Admin::Entries
         :asset_class,
         :delivery_order,
         :components,
-        :softwares
+        :softwares,
+        :user_asset
       )
 
       @pagy, @assets = pagy(scope)
