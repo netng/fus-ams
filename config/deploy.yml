@@ -18,8 +18,8 @@ servers:
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
 proxy:
   # ssl: true
-  hosts: 
-    - dev.fus-online.co.id
+  # hosts: 
+    # - dev.fus-online.co.id
 
 
 # Credentials for your image host.
