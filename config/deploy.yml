@@ -16,17 +16,15 @@ servers:
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
-# proxy:
+proxy:
 #   healthcheck:
 #    path: /up
 #    interval: 2
 #    timeout: 2
 #   app_port: 3000
   ssl: true
-  host: dev.fus-online.co.id
-# #   ssl: true
-# #   host: app.example.com
-
+  hosts:
+    - dev.fus-online.co.id
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
