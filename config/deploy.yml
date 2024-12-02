@@ -18,7 +18,7 @@ servers:
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
 proxy:
   host: dev.fus-online.co.id
-  app_port: 3000
+  ssl: false
 #   ssl: true
 #   hosts: 
 #     - dev.fus-online.co.id
