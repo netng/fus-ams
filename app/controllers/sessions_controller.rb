@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
           render turbo_stream: turbo_stream.replace("flash-message", partial: "shared/flash")
         end
         format.html do
-          render :new, status: :unprocessable_entity
+          render :new
         end
       end
     end
