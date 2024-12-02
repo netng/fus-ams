@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :redirect_if_authenticated, only: [:new, :create]
+  before_action :redirect_if_authenticated, only: [ :new, :create ]
 
   def new
   end
@@ -14,7 +14,14 @@ class SessionsController < ApplicationController
       end
     else
       flash.now[:alert] = t("custom.flash.alerts.invalid_credential")
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("flash-message", partial: "shared/flash")
+        end
+        format.html do
+          render :new, status: :unprocessable_entity
+        end
+      end
     end
   end
 

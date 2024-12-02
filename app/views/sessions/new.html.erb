@@ -4,9 +4,11 @@
 
   <%= render "form" %>
 
-  <%# render "shared/flash" %>
+  <%= turbo_frame_tag "flash-message" do %>
+    <%= render "shared/flash" %>
+  <% end %>
 
   <div class="text-center">
-    <a href="#" class="text-sm text-blue-600 hover:underline"><%= t("custom.label.forgot_password") %></a>
+    <!-- forgot password todo -->
   </div>
 </div>
