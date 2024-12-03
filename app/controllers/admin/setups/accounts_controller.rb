@@ -89,7 +89,7 @@ module Admin::Setups
       end
 
       def set_previous_url
-        @previous_url = admin_accounts_path || root_path
+        @previous_url = request.referer || admin_accounts_path || root_path
       end
 
       def ensure_frame_response

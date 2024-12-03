@@ -477,7 +477,7 @@ module Admin::Entries
       end
 
       def set_previous_url
-        @previous_url = admin_assets_path || root_path
+        @previous_url = request.referer || admin_assets_path || root_path
       end
 
       def set_site_default(asset)

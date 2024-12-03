@@ -158,7 +158,7 @@ module Admin::Entries
       end
 
       def set_previous_url
-        @previous_url = admin_asset_types_path || root_path
+        @previous_url = request.referer || admin_asset_types_path || root_path
       end
   end
 end

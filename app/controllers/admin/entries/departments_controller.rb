@@ -161,7 +161,7 @@ module Admin::Entries
       end
 
       def set_previous_url
-        @previous_url = admin_departments_path || root_path
+        @previous_url = request.referer || admin_departments_path || root_path
       end
   end
 end

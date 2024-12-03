@@ -175,7 +175,9 @@ module Admin::Entries
       end
 
       def set_previous_url
-        @previous_url = admin_sites_path || root_path
+        @previous_url = request.referer || admin_sites_path || root_path
+        logger.debug "============ URL ===============: #{request.fullpath}"
+        logger.debug "URL REFERRER: #{request.referer}"
       end
 
       def set_parent_site

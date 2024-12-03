@@ -175,7 +175,7 @@ module Admin::Entries
       end
 
       def set_previous_url
-        @previous_url = admin_vendors_path || root_path
+        @previous_url = request.referer || admin_vendors_path || root_path
       end
   end
 end
