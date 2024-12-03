@@ -40,6 +40,18 @@
   </div>
 
   <div class="mb-2">
+    <%= form.label :parent_site, class: "fus-label mb-2" %>
+    <%= form.select :parent_site_id,
+      @parent_sites,
+      {include_blank: t("custom.label.select", model: t("activerecord.models.site_stat")).capitalize},
+      {data: { controller: 'slim' }, class: "fus-select"}
+    %>
+    <% @site.errors.full_messages_for(:site_stat).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
     <%= form.label :description, class: "fus-label mb-2" %>
     <%= form.textarea :description, class: "fus-input" %>
     <% @site.errors.full_messages_for(:description).each do |message| %>

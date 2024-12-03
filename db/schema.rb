@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_21_061351) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_03_021703) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -552,8 +552,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_21_061351) do
     t.datetime "updated_at", null: false
     t.string "description"
     t.string "id_site", null: false
+    t.uuid "parent_site_id"
     t.index ["id_site"], name: "index_sites_on_id_site", unique: true
     t.index ["name"], name: "index_sites_on_name"
+    t.index ["parent_site_id"], name: "index_sites_on_parent_site_id"
     t.index ["site_group_id"], name: "index_sites_on_site_group_id"
     t.index ["site_stat_id"], name: "index_sites_on_site_stat_id"
   end
@@ -661,6 +663,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_21_061351) do
   add_foreign_key "site_groups", "projects"
   add_foreign_key "sites", "site_groups"
   add_foreign_key "sites", "site_stats"
+  add_foreign_key "sites", "sites", column: "parent_site_id"
   add_foreign_key "user_assets", "departments"
   add_foreign_key "user_assets", "sites"
 end

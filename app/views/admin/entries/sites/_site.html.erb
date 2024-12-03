@@ -57,5 +57,6 @@
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.site_stat.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.site_group.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.parent_site.blank? ? "-" : site.parent_site.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= site.description.blank? ? "-" : site.description %></td>
 <% end %>

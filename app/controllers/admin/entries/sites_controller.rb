@@ -4,13 +4,14 @@ module Admin::Entries
     before_action :set_function_access_code
     before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update ]
     before_action :set_previous_url
+    before_action :set_parent_site, only: [ :new, :create, :edit, :update ]
 
     def index
       authorize :authorization, :index?
 
       @q = Site.ransack(params[:q])
       @q.sorts = [ "name asc" ] if @q.sorts.empty?
-      scope = @q.result.includes(:site_stat, :site_group)
+      scope = @q.result.includes(:site_stat, :site_group, :parent_site)
       @pagy, @sites = pagy(scope)
     end
 
@@ -158,7 +159,7 @@ module Admin::Entries
     private
 
       def site_params
-        params.expect(site: [ :id_site, :name, :site_stat_id, :site_id, :site_group_id, :description ])
+        params.expect(site: [ :id_site, :name, :site_stat_id, :site_id, :site_group_id, :parent_site_id, :description ])
       end
 
       def set_site
@@ -175,6 +176,12 @@ module Admin::Entries
 
       def set_previous_url
         @previous_url = admin_sites_path || root_path
+      end
+
+      def set_parent_site
+        @parent_sites = Site.all.reject { |site| site.parent_site != nil }
+          .pluck(:name, :id)
+          .map { |name, id| [ name, id ] }
       end
   end
 end

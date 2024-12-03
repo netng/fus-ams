@@ -108,6 +108,7 @@ en:
         id_site: ID
         name: Name
         description: Description
+        parent_site_id: Site parent
 
       software:
         id_software: ID
