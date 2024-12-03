@@ -48,6 +48,9 @@ module Admin::Entries
 
       respond_to do |format|
         if @site.update(site_params)
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(@site, partial: "admin/entries/sites/site", locals: { site: @site })
+          end
           format.html { redirect_to admin_sites_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.site")) }
         else
           format.html { render :edit, status: :unprocessable_entity }
