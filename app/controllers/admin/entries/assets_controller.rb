@@ -13,6 +13,8 @@ module Admin::Entries
     def index
       authorize :authorization, :index?
 
+      Rails.logger.debug "Params: #{params[:q].inspect}"
+
       @q = Asset.ransack(params[:q])
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
@@ -27,7 +29,20 @@ module Admin::Entries
         asset_model: :brand,
       )
 
+      if params[:q] && params[:q][:site_id]
+        site_id = params[:q][:site_id]
+        site_ids = Site.where(id: site_id)
+                    .or(Site.where(parent_site_id: site_id))
+                    .pluck(:id)
+        scope = scope.where(site_id: site_ids)
+      end
+
       @pagy, @assets = pagy(scope)
+
+      @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+
+      Rails.logger.debug "Generated Query: #{@q.result.to_sql}"
+
     end
 
     def show

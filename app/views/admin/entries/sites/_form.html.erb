@@ -43,7 +43,7 @@
     <%= form.label :parent_site, class: "fus-label mb-2" %>
     <%= form.select :parent_site_id,
       @parent_sites,
-      {include_blank: t("custom.label.select", model: t("activerecord.models.site_stat")).capitalize},
+      {include_blank: t("custom.label.select", model: t("activerecord.attributes.site.parent_site_id")).capitalize},
       {data: { controller: 'slim' }, class: "fus-select"}
     %>
     <% @site.errors.full_messages_for(:site_stat).each do |message| %>

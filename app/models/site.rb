@@ -24,16 +24,18 @@ class Site < ApplicationRecord
   validates :description, length: { maximum: 500 }
 
   def self.ransackable_associations(auth_object = nil)
-    [ "site_group", "site_stat", "parent_site" ]
+    [ "site_group", "site_stat", "parent_site", "assets" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)
     [ "created_at", "created_by", "description", "parent_site_id", "id_site", "id", "ip_address", "name", "request_id", "site_group_id", "site_stat_id", "updated_at", "user_agent" ]
   end
 
-  def strip_and_upcase_id_site
-    if id_site.present?
-      self.id_site = id_site.strip.upcase
+  private
+
+    def strip_and_upcase_id_site
+      if id_site.present?
+        self.id_site = id_site.strip.upcase
+      end
     end
-  end
 end

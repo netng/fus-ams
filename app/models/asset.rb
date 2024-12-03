@@ -46,6 +46,24 @@ class Asset < ApplicationRecord
     ]
   end
 
+  # ransacker :parent_or_child_site_id, formatter: proc { |site_id|
+  #   Rails.logger.debug "Ransacker Input: #{site_id.inspect}"  # Pastikan ini tidak NULL
+
+  #   site_ids = Site.where(id: site_id).or(Site.where(parent_site_id: site_id)).pluck(:id)
+
+  #   Rails.logger.debug "Ransacker Site IDs: #{site_ids.inspect}"
+
+  #   result = Asset.where(site_id: site_ids)
+
+  #   Rails.logger.debug "Ransacker Result: #{result.inspect}"
+  #   result
+  # } do |parent|
+  #   logger.debug "Parent result: #{parent.inspect}"
+  #   Rails.logger.debug "parent.table[:site_id]: #{parent.table[:site_id].inspect}"
+  #   parent.table[:site_id]
+  # end
+
+
   private
     def strip_and_upcase_tagging_id
       if tagging_id.present?
