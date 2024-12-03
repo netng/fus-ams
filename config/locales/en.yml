@@ -428,6 +428,7 @@ en:
   
   custom:
     label:
+      processor: Processor
       total_asset: Total asset
       asset_description: Asset description
       allow_read: Allow read
