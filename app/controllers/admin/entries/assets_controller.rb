@@ -29,7 +29,7 @@ module Admin::Entries
         asset_model: :brand,
       )
 
-      if params[:q] && params[:q][:site_id]
+      if params[:q] && params[:q][:site_id].present?
         site_id = params[:q][:site_id]
         site_ids = Site.where(id: site_id)
                     .or(Site.where(parent_site_id: site_id))
