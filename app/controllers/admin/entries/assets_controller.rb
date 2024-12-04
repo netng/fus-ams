@@ -13,7 +13,42 @@ module Admin::Entries
     def index
       authorize :authorization, :index?
 
-      @q = Asset.ransack(params[:q])
+
+      @ransack_params = ransack_params
+      @q = Asset.ransack(ransack_params)
+      @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
+      scope = @q.result.includes(
+        :project,
+        :site,
+        :asset_model,
+        :asset_class,
+        :delivery_order,
+        :components,
+        :softwares,
+        :user_asset,
+        asset_model: :brand,
+      )
+
+      if ransack_params && ransack_params[:site_id].present?
+        site_id = params[:q][:site_id]
+
+        site_ids = Site.where(id: site_id)
+          .or(Site.where(parent_site_id: site_id))
+          .pluck(:id)
+
+        scope = scope.where(site_id: site_ids)
+      end
+
+      @pagy, @assets = pagy(scope)
+
+      @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+    end
+
+    def export
+      authorize :authorization, :index?
+
+
+      @q = Asset.ransack(ransack_params)
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
         :project,
@@ -31,17 +66,28 @@ module Admin::Entries
         site_id = params[:q][:site_id]
 
         site_ids = Site.where(id: site_id)
-          .or(Site.where(parent_site_id: site_id))
-          .pluck(:id)
+                       .or(Site.where(parent_site_id: site_id))
+                       .pluck(:id)
 
         scope = scope.where(site_id: site_ids)
       end
 
       @pagy, @assets = pagy(scope)
 
-      @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+      if @pagy.pages >= 50
+        ExportAssetJob.perform_later(current_account, ransack_params)
+        redirect_to admin_assets_path, notice: "Data yang kamu export cukup banyak. Kami akan memberitahukan melalui lonceng diatas jika file siap didownload. Terimakasih"
+      else
+        @assets = scope
+        respond_to do |format|
+          format.xlsx do
+            response.headers["Content-Disposition"] = "attachment; filename=assets_report_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
+          end
+        end
+      end
 
     end
+
 
     def show
       authorize :authorization, :read?
@@ -474,6 +520,27 @@ module Admin::Entries
             :_destroy
           ] ]
         ])
+      end
+
+      def ransack_params
+        params.fetch(:q, {}).permit(
+          :tagging_id_cont,
+          :site_id,
+          :site_site_group_id_eq,
+          :site_site_stat_id_eq,
+          :asset_model_id_eq,
+          :asset_model_asset_type_id_eq,
+          :asset_model_brand_id_eq,
+          :delivery_order_number_cont,
+          :project_id_eq,
+          :components_id_eq,
+          :softwares_id_eq,
+          :monitor_sn_cont,
+          :keyboard_sn_cont,
+          :computer_name_cont,
+          :user_asset_username_cont,
+          :s
+        )
       end
 
       def set_asset
