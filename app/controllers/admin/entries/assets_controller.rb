@@ -47,6 +47,7 @@ module Admin::Entries
     def export
       authorize :authorization, :index?
 
+
       @q = Asset.ransack(ransack_params)
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
@@ -71,15 +72,20 @@ module Admin::Entries
         scope = scope.where(site_id: site_ids)
       end
 
-      @assets = scope
+      @pagy, @assets = pagy(scope)
 
-      logger.debug "Asset count #{@assets.count}"
-
-      respond_to do |format|
-        format.xlsx do
-          response.headers["Content-Disposition"] = "attachment; filename=assets_report_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
+      if @pagy.pages >= 50
+        ExportAssetJob.perform_later(current_account, ransack_params)
+        redirect_to admin_assets_path, notice: "Data yang kamu export cukup banyak. Kami akan memberitahukan melalui lonceng diatas jika file siap didownload. Terimakasih"
+      else
+        @assets = scope
+        respond_to do |format|
+          format.xlsx do
+            response.headers["Content-Disposition"] = "attachment; filename=assets_report_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
+          end
         end
       end
+
     end
 
 

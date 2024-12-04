@@ -81,4 +81,4 @@ gem "dotenv", "~> 3.1"
 
 # Gem for export to excel format
 gem "caxlsx"
-gem "axlsx_rails"
+gem "caxlsx_rails"
