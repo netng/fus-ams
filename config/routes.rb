@@ -189,6 +189,7 @@ Rails.application.routes.draw do
           get "import"
           post "process_import"
           get "site_default"
+          get "export"
         end
         
         member do

@@ -78,3 +78,7 @@ gem "roo", "~> 2.10"
 gem "inline_svg", "~> 1.10"
 
 gem "dotenv", "~> 3.1"
+
+# Gem for export to excel format
+gem "caxlsx"
+gem "axlsx_rails"
