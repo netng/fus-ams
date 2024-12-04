@@ -113,7 +113,9 @@ class ExportAssetJob < ApplicationJob
     end
 
     file_path = Rails.root.join("tmp", "exports", "aassets_report_#{Time.now.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
-    FileUtils.mkdir(File.dirname(file_path))
+    if !File.directory?(File.dirname(file_path))
+      FileUtils.mkdir(File.dirname(file_path))
+    end
     package.serialize(file_path)
 
     end_time = Time.now
