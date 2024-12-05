@@ -3,6 +3,7 @@ class ExportAssetJob < ApplicationJob
 
   def perform(account, ransack_params, current_ip)
     site_name = "All"
+    site_id = ransack_params["site_id"]
 
     # logger
     logger.debug "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
@@ -22,14 +23,13 @@ class ExportAssetJob < ApplicationJob
       asset_model: :brand,
     )
 
-    if ransack_params[:q] && ransack_params[:q][:site_id].present?
-      site_id = ransack_params[:q][:site_id]
-
+    if site_id.present?
       site_ids = Site.where(id: site_id)
                       .or(Site.where(parent_site_id: site_id))
                       .pluck(:id)
 
       scope = scope.where(site_id: site_ids)
+      site_name = Site.find(site_id)&.name
     end
 
     assets = scope
@@ -37,10 +37,6 @@ class ExportAssetJob < ApplicationJob
 
     package = Axlsx::Package.new
     wb = package.workbook
-
-    if ransack_params[:q] && ransack_params[:q][:site_id].present?
-      site_name = Site.find(ransack_params[:q][:site_id])&.name
-    end
 
     s = wb.styles
     bold_text = s.add_style b: true
@@ -114,9 +110,8 @@ class ExportAssetJob < ApplicationJob
       end
     end
 
-    generated_at = Time.now
 
-    file_path = Rails.root.join("tmp", "exports", "assets_report_#{generated_at.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
+    file_path = Rails.root.join("tmp", "exports", "assets_report_#{Time.now.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
     if !File.directory?(File.dirname(file_path))
       FileUtils.mkdir(File.dirname(file_path))
     end
@@ -130,15 +125,13 @@ class ExportAssetJob < ApplicationJob
     ReportQueue.create!(
       name: file_name,
       file_path: Rails.root.join(report_path, file_name),
-      generated_at: generated_at,
       generated_by: account,
       job_id: self.job_id,
       created_by: account.username,
       ip_address: current_ip
-
     )
 
-    logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{file_path}"
-    puts "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{file_path}"
+    logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
+    puts "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_05_051045) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -400,7 +400,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_051045) do
   create_table "report_queues", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", limit: 100, null: false
     t.string "file_path", null: false
-    t.datetime "generated_at"
     t.uuid "generated_by_id", null: false
     t.integer "download_count", default: 0
     t.string "last_downloaded_by", limit: 100
@@ -412,6 +411,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_051045) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "job_id", null: false
+    t.datetime "scheduled_at"
+    t.datetime "finished_at"
+    t.decimal "execution_time", precision: 5, scale: 2
     t.index ["generated_by_id"], name: "index_report_queues_on_generated_by_id"
   end
 

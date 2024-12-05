@@ -37,3 +37,6 @@
 !/app/assets/builds/.keep
 
 /config/credentials/production.key
+
+# Ignore all reports file
+/public/reports/*

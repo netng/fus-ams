@@ -90,7 +90,7 @@ module Admin::Entries
     def report_queues
       authorize :authorization, :read?
 
-      @report_queues = current_account.report_queues
+      @report_queues = current_account.report_queues.order(created_at: :desc)
 
       render "admin/entries/assets/report_queues/index"
     end
