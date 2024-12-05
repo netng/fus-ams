@@ -18,6 +18,7 @@
       </td>
     
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.name %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= human_readable_size(report_queue.file_path) %></td>
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.created_at.strftime("%Y-%m-%d %H:%M") %></td>
   <% end %>
 <% end %>

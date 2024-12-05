@@ -436,6 +436,7 @@ en:
   
   custom:
     label:
+      file_size: File size (MB)
       processor: Processor
       total_asset: Total asset
       asset_description: Asset description
