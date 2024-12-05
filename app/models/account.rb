@@ -7,6 +7,8 @@ class Account < ApplicationRecord
   belongs_to :role
   belongs_to :site
 
+  has_many :report_queues, class_name: "ReportQueue", foreign_key: "generated_by_id", dependent: :destroy
+
   downcase_fields :email
   downcase_fields :username
   before_validation :remove_trailing_whitespace

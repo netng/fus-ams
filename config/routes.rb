@@ -20,7 +20,6 @@ Rails.application.routes.draw do
     get "/", to: "home#index"
 
     scope module: :entries, path: "entries" do
-
       get "/", to: "entries#index", as: :entries
 
       resources :brands do
@@ -30,7 +29,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :vendors do
         collection do
           delete "destroy_many"
@@ -38,7 +37,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :departments do
         collection do
           delete "destroy_many"
@@ -46,7 +45,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :site_stats do
         collection do
           delete "destroy_many"
@@ -54,7 +53,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :projects do
         collection do
           delete "destroy_many"
@@ -62,7 +61,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :site_groups do
         collection do
           delete "destroy_many"
@@ -70,7 +69,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :sites do
         collection do
           delete "destroy_many"
@@ -78,7 +77,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :softwares do
         collection do
           delete "destroy_many"
@@ -86,7 +85,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :component_types do
         collection do
           delete "destroy_many"
@@ -94,7 +93,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :components do
         collection do
           delete "destroy_many"
@@ -102,7 +101,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :asset_types do
         collection do
           delete "destroy_many"
@@ -110,7 +109,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :asset_item_types do
         collection do
           delete "destroy_many"
@@ -118,7 +117,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :asset_models do
         collection do
           delete "destroy_many"
@@ -127,7 +126,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :user_assets do
         collection do
           delete "destroy_many"
@@ -139,7 +138,7 @@ Rails.application.routes.draw do
           get "assets", to: "assets"
         end
       end
-  
+
       resources :capital_proposals do
         collection do
           delete "destroy_many"
@@ -147,7 +146,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :request_for_purchases do
         collection do
           delete "destroy_many"
@@ -157,7 +156,7 @@ Rails.application.routes.draw do
           get "add_rfp_details"
         end
       end
-  
+
       resources :purchase_orders do
         collection do
           delete "destroy_many"
@@ -166,7 +165,7 @@ Rails.application.routes.draw do
           get :load_rfp_details
         end
       end
-  
+
       resources :delivery_orders do
         collection do
           delete "destroy_many"
@@ -174,7 +173,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :site_defaults do
         collection do
           delete "destroy_many"
@@ -182,7 +181,7 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
-  
+
       resources :assets do
         collection do
           delete "destroy_many"
@@ -190,13 +189,15 @@ Rails.application.routes.draw do
           post "process_import"
           get "site_default"
           get "export"
+          get "report_queues"
+          get "report_queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
         end
-        
+
         member do
           # get "search_user_assets"
           get "location", to: "edit_location"
           patch "location", to: "update_location"
-  
+
           get "software", to: "edit_software"
           patch "software", to: "update_software"
         end
@@ -232,7 +233,5 @@ Rails.application.routes.draw do
         post "asset_softwares_import"
       end
     end
-
-
   end
 end

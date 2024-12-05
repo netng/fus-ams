@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_03_021703) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_05_051045) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -397,6 +397,24 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_03_021703) do
     t.index ["vendor_id"], name: "index_purchase_orders_on_vendor_id"
   end
 
+  create_table "report_queues", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "file_path", null: false
+    t.datetime "generated_at"
+    t.uuid "generated_by_id", null: false
+    t.integer "download_count", default: 0
+    t.string "last_downloaded_by", limit: 100
+    t.datetime "last_downloaded_at"
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "job_id", null: false
+    t.index ["generated_by_id"], name: "index_report_queues_on_generated_by_id"
+  end
+
   create_table "request_for_purchase_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "qty"
     t.datetime "tentative_date"
@@ -650,6 +668,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_03_021703) do
   add_foreign_key "purchase_orders", "po_delivery_sites", column: "ship_to_site_id"
   add_foreign_key "purchase_orders", "request_for_purchases"
   add_foreign_key "purchase_orders", "vendors"
+  add_foreign_key "report_queues", "accounts", column: "generated_by_id"
   add_foreign_key "request_for_purchase_details", "currencies"
   add_foreign_key "request_for_purchase_details", "purchase_orders"
   add_foreign_key "request_for_purchase_details", "request_for_purchases"

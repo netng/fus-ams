@@ -75,8 +75,8 @@ module Admin::Entries
       @pagy, @assets = pagy(scope)
 
       if @pagy.pages >= 50
-        ExportAssetJob.perform_later(current_account, ransack_params)
-        redirect_to admin_assets_path, notice: "Data yang kamu export cukup banyak. Kami akan memberitahukan melalui lonceng diatas jika file siap didownload. Terimakasih"
+        ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address)
+        redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
       else
         @assets = scope
         respond_to do |format|
@@ -85,7 +85,37 @@ module Admin::Entries
           end
         end
       end
+    end
 
+    def report_queues
+      authorize :authorization, :read?
+
+      @report_queues = current_account.report_queues
+
+      render "admin/entries/assets/report_queues/index"
+    end
+
+    def report_queues_download
+      authorize :authorization, :read?
+
+      report = ReportQueue.find(params[:report_id])
+      logger.debug "=== REPORT PARAMS === : #{params[:report_id]}"
+
+      if report && File.exist?(Rails.root.join(report.file_path))
+        logger.debug "======== REPORT ======= #{report.inspect}"
+        send_file report.file_path,
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          filename: report.name,
+          disposition: "attachment"
+
+        report.update(
+          last_downloaded_by: current_account.username,
+          last_downloaded_at: Time.now,
+          download_count: report.download_count + 1
+        )
+      else
+        redirect_to admin_assets_path, alert: "File not found"
+      end
     end
 
 

@@ -431,6 +431,8 @@ en:
       processor: Processor
       total_asset: Total asset
       asset_description: Asset description
+      report_queues: Report queues download
+      download: Download
       allow_read: Allow read
       allow_create: Allow create
       allow_update: Allow update
@@ -533,6 +535,7 @@ en:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data
       notices:
+        report_queues: "The data you export is large. We process it in a queue. Please check the`Report Queues` button periodically."
         successfully:
           logged_in: Logged in successfully
           updated: "%{model} successfully updated"

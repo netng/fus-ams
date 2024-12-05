@@ -1,10 +1,12 @@
 class ExportAssetJob < ApplicationJob
   queue_as :low_priority
 
-  def perform(account, ransack_params)
+  def perform(account, ransack_params, current_ip)
     site_name = "All"
-    start_time = Time.now
-    puts "export dimulai"
+
+    # logger
+    logger.debug "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
+    puts "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
 
     q = Asset.ransack(ransack_params)
     q.sorts = [ "tagging_id asc" ] if q.sorts.empty?
@@ -112,14 +114,31 @@ class ExportAssetJob < ApplicationJob
       end
     end
 
-    file_path = Rails.root.join("tmp", "exports", "aassets_report_#{Time.now.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
+    generated_at = Time.now
+
+    file_path = Rails.root.join("tmp", "exports", "assets_report_#{generated_at.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
     if !File.directory?(File.dirname(file_path))
       FileUtils.mkdir(File.dirname(file_path))
     end
+
     package.serialize(file_path)
 
-    end_time = Time.now
-    puts "export selesai: start -> #{start_time}, end -> #{end_time}"
-    
+    file_name = File.basename(file_path)
+    report_path = Rails.root.join("public", "reports")
+    FileUtils.mv(file_path, report_path)
+
+    ReportQueue.create!(
+      name: file_name,
+      file_path: Rails.root.join(report_path, file_name),
+      generated_at: generated_at,
+      generated_by: account,
+      job_id: self.job_id,
+      created_by: account.username,
+      ip_address: current_ip
+
+    )
+
+    logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{file_path}"
+    puts "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{file_path}"
   end
 end

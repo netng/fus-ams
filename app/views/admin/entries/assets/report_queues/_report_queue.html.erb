@@ -1,0 +1,23 @@
+<% report_queues.each do |report_queue| %>
+  <%= tag.tr id: dom_id(report_queue), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+      <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+        <div class="flex items-center space-x-4">
+
+            <%= link_to report_queues_download_admin_assets_path(report_queue),
+              data: {
+                turbo: false
+              } do %>
+              <%= inline_svg_tag "download.svg",
+                class: "fus-icons",
+                title: t("custom.label.download")
+              %>
+            <% end %>
+
+        </div>
+      </td>
+    
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.name %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.generated_at.strftime("%Y-%m-%d %H:%M") %></td>
+  <% end %>
+<% end %>
