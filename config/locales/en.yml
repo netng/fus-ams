@@ -437,6 +437,10 @@ en:
   custom:
     label:
       file_size: File size (MB)
+      export_file_name: Export file name
+      file_name: "File name (If the name is empty, it will be filled with the default format `asset-report-[day-month-year-hour-minutes-seconds-millis]`)"
+      
+      submit: Submit
       processor: Processor
       total_asset: Total asset
       asset_description: Asset description
@@ -544,7 +548,7 @@ en:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data
       notices:
-        report_queues: "The data you export is large. We process it in a queue. Please check the`Report Queues` button periodically."
+        report_queues: "Please click the `Report queues` button to download the file. If the amount of data is large, it may take some time for the file to appear and can be downloaded, please check periodically."
         successfully:
           logged_in: Logged in successfully
           updated: "%{model} successfully updated"

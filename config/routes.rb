@@ -188,7 +188,8 @@ Rails.application.routes.draw do
           get "import"
           post "process_import"
           get "site_default"
-          get "export"
+          get "export_confirm"
+          post "export"
           get "report_queues"
           get "report_queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
         end

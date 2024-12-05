@@ -1,7 +1,7 @@
 class ExportAssetJob < ApplicationJob
   queue_as :low_priority
 
-  def perform(account, ransack_params, current_ip)
+  def perform(account, ransack_params, current_ip, file_name)
     site_name = "All"
     site_id = ransack_params["site_id"]
 
@@ -111,7 +111,7 @@ class ExportAssetJob < ApplicationJob
     end
 
 
-    file_path = Rails.root.join("tmp", "exports", "assets_report_#{Time.now.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
+    file_path = Rails.root.join("tmp", "exports", "#{file_name}_#{Time.now.strftime("%d-%m-%Y_%H_%M_%S_%s")}.xlsx")
     if !File.directory?(File.dirname(file_path))
       FileUtils.mkdir(File.dirname(file_path))
     end

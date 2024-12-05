@@ -44,8 +44,15 @@ module Admin::Entries
       @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
     end
 
+    def export_confirm
+      @ransack_params = ransack_params
+      authorize :authorization, :read?
+    end
     def export
       authorize :authorization, :index?
+
+      file_name = params[:file_name] || "asset_report"
+      logger.debug "FILE_NAME ======= #{file_name}"
 
 
       @q = Asset.ransack(ransack_params)
@@ -74,17 +81,20 @@ module Admin::Entries
 
       @pagy, @assets = pagy(scope)
 
-      if @pagy.pages >= 50
-        ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address)
-        redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
-      else
-        @assets = scope
-        respond_to do |format|
-          format.xlsx do
-            response.headers["Content-Disposition"] = "attachment; filename=assets_report_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
-          end
-        end
-      end
+      ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address, file_name)
+      redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
+
+      # if @pagy.pages >= 50
+      #   ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address, file_name)
+      #   redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
+      # else
+      #   @assets = scope
+      #   respond_to do |format|
+      #     format.xlsx do
+      #       response.headers["Content-Disposition"] = "attachment; filename=#{file_name}_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
+      #     end
+      #   end
+      # end
     end
 
     def report_queues
