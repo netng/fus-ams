@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_06_031800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -31,6 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
     t.uuid "role_id", null: false
     t.boolean "default"
     t.uuid "site_id", null: false
+    t.index ["email"], name: "index_accounts_on_email", unique: true
     t.index ["role_id"], name: "index_accounts_on_role_id"
     t.index ["site_id"], name: "index_accounts_on_site_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true

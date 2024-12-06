@@ -18,7 +18,7 @@ class Account < ApplicationRecord
 
   validates :password, length: { minimum: 3 }, unless: -> { password.blank? }
 
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, uniqueness: { case_sensitive: false }, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
     [ "active", "confirmed_at", "created_at", "created_by", "default", "email", "id", "id_value", "ip_address", "name", "password_digest", "request_id", "role_id", "site_id", "updated_at", "user_agent", "username" ]
