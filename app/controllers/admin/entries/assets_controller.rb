@@ -51,7 +51,7 @@ module Admin::Entries
     def export
       authorize :authorization, :index?
 
-      file_name = params[:file_name] || "asset_report"
+      file_name = params[:file_name].blank? ? "asset_report" : params[:file_name]
       logger.debug "FILE_NAME ======= #{file_name}"
 
 
