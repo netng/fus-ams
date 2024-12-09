@@ -52,6 +52,7 @@ module Admin::Entries
       authorize :authorization, :index?
 
       file_name = "asset_report_#{Time.now.strftime('%d-%m-%Y_%H_%M_%S_%s')}.xlsx"
+      sheet_password = params[:sheet_password].strip
 
       if params[:file_name].blank?
         file_name
@@ -87,7 +88,7 @@ module Admin::Entries
 
       @pagy, @assets = pagy(scope)
 
-      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name)
+      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password)
       puts "Export asset job: #{export_asset_job.job_id}"
 
       ReportQueue.create!(

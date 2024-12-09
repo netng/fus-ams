@@ -1,7 +1,7 @@
 class ExportAssetJob < ApplicationJob
   queue_as :low_priority
 
-  def perform(account, ransack_params, file_name)
+  def perform(account, ransack_params, file_name, sheet_password)
     site_name = "All"
     site_id = ransack_params["site_id"]
 
@@ -43,6 +43,13 @@ class ExportAssetJob < ApplicationJob
     header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
 
     wb.add_worksheet(name: "Assets") do |sheet|
+      unless sheet_password.blank?
+        sheet.sheet_protection do |protection|
+          protection.password = sheet_password
+        end
+      end
+
+
       sheet.add_row
       sheet.add_row [ "Report name", "Assets report" ], style: [ bold_text, nil ]
       sheet.add_row [ "Generated at", Time.now.strftime("%d-%m-%Y %H:%M"), "By", account.username.capitalize ], style: [ bold_text, nil, bold_text, nil ], types: [ nil, :string, nil, nil ]
@@ -123,7 +130,8 @@ class ExportAssetJob < ApplicationJob
 
     ReportQueue.where(job_id: self.job_id).update!(
       file_path: Rails.root.join(report_path, file_name),
-      finished_at: Time.now
+      finished_at: Time.now,
+      data_count: assets.count
     )
 
     logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"

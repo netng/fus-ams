@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_06_031800) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_09_065348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -415,6 +415,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_06_031800) do
     t.datetime "scheduled_at"
     t.datetime "finished_at"
     t.decimal "execution_time", precision: 5, scale: 2
+    t.integer "data_count", default: 0
     t.index ["generated_by_id"], name: "index_report_queues_on_generated_by_id"
   end
 

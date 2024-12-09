@@ -9,6 +9,11 @@
         <%= text_field_tag "file_name","", class: "fus-input" %>
       </div>
 
+      <div class="mb-2">
+        <%= form.label "#{t("custom.label.sheet_protection")} (It will make sheet Read-Only. Leave blank if you don't want to protect the sheet with password.)", class: "fus-label mb-2" %>
+        <%= password_field_tag "sheet_password","", class: "fus-input" %>
+      </div>
+
     <%= form.submit "#{t('custom.label.submit')}",
         data: { 
           turbo_action: "advance",

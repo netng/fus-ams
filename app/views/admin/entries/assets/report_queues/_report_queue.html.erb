@@ -39,6 +39,7 @@
       </td>
     
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.name %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.data_count %></td>
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= human_readable_size(report_queue.file_path) %></td>
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.scheduled_at&.strftime("%Y-%m-%d %H:%M") %></td>
     <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.finished_at&.strftime("%Y-%m-%d %H:%M") %></td>
