@@ -12,10 +12,22 @@ module Admin::Entries
 
     def index
       authorize :authorization, :index?
+      @q = nil
 
 
       @ransack_params = ransack_params
-      @q = Asset.ransack(ransack_params)
+
+      if current_account.site.site_default.blank?
+        @q = Asset.joins(:site).where(sites: { id: current_account.site.id })
+          .or(Asset.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(ransack_params)
+
+        @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
+      else
+        @q = Asset.ransack(ransack_params)
+        @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+      end
+
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
         :project,
@@ -40,8 +52,6 @@ module Admin::Entries
       end
 
       @pagy, @assets = pagy(scope)
-
-      @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
     end
 
     def export_confirm
@@ -62,7 +72,16 @@ module Admin::Entries
       logger.debug "FILE_NAME ======= #{file_name}"
 
 
-      @q = Asset.ransack(ransack_params)
+      @q = nil
+
+      if current_account.site.site_default.blank?
+        @q = Asset.joins(:site).where(sites: { id: current_account.site.id })
+          .or(Asset.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(ransack_params)
+      else
+        @q = Asset.ransack(ransack_params)
+      end
+
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
         :project,

@@ -58,7 +58,7 @@
                 %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 flex items-center justify-center text-left bg-gray-200 whitespace-nowrap">
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :active, "#{t('activerecord.attributes.account.active')}",
                   {
                     data: {
@@ -67,6 +67,10 @@
                     }
                   })
                 %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= t("custom.label.default") %>
               </th>
 
             </tr>

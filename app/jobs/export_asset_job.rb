@@ -9,7 +9,16 @@ class ExportAssetJob < ApplicationJob
     logger.debug "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
     puts "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
 
-    q = Asset.ransack(ransack_params)
+    q = nil
+    if account.site.site_default.blank?
+      q = Asset.joins(:site).where(sites: { id: account.site.id })
+        .or(Asset.joins(:site).where(sites: { parent_site: account.site }))
+        .ransack(ransack_params)
+
+    else
+      q = Asset.ransack(ransack_params)
+    end
+
     q.sorts = [ "tagging_id asc" ] if q.sorts.empty?
     scope = q.result.includes(
       :project,
