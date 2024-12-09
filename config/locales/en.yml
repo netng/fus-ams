@@ -446,6 +446,7 @@ en:
       asset_description: Asset description
       report_queues: Report queues download
       download: Download
+      processing: Processing...
       allow_read: Allow read
       allow_create: Allow create
       allow_update: Allow update
@@ -548,7 +549,7 @@ en:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data
       notices:
-        report_queues: "Please click the `Report queues` button to download the file. If the amount of data is large, it may take some time for the file to appear and can be downloaded, please check periodically."
+        report_queues: "Please click the `Report queues` button to download the file. If the amount of data is large, it may take some time for the file ready to download. Please check periodically."
         successfully:
           logged_in: Logged in successfully
           updated: "%{model} successfully updated"

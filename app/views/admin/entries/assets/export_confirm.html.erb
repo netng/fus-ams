@@ -10,7 +10,10 @@
       </div>
 
     <%= form.submit "#{t('custom.label.submit')}",
-        data: { turbo_frame: "main-content" },
+        data: { 
+          turbo_action: "advance",
+          turbo_frame: "main-content"
+        },
         class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
       %>
     <% end %>

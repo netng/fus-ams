@@ -41,6 +41,10 @@
     @apply w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer;
   }
 
+  .fus-icons-loader {
+    @apply w-5 h-5 text-blue-300 hover:text-blue-400;
+  }
+
   .fus-readonly {
     @apply border-b p-2 block w-full border-gray-300 text-slate-600 font-light;
   }
