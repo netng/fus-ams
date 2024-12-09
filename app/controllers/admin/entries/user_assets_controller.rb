@@ -7,8 +7,20 @@ module Admin::Entries
 
     def index
       authorize :authorization, :index?
+      @q = nil
 
-      @q = UserAsset.ransack(params[:q])
+      if current_account.site.site_default.blank?
+        @q = UserAsset.joins(:site).where(sites: { id: current_account.site.id })
+          .or(UserAsset.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(params[:q])
+
+        @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
+      else
+        @q = UserAsset.ransack(params[:q])
+        @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+      end
+
+      # @q = UserAsset.ransack(params[:q])
       @q.sorts = [ "id_user_asset asc" ] if @q.sorts.empty?
       scope = @q.result.includes(:site, :department)
       @pagy, @user_assets = pagy(scope)
