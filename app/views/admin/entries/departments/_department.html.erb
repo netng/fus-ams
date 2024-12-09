@@ -1,5 +1,5 @@
 <%= tag.tr id: dom_id(department), class: "border-b border-gray-200 hover:bg-gray-100" do %>
-  <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update?  %>
+  <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
 
     <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
       <div class="flex items-center space-x-4">
