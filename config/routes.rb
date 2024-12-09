@@ -185,6 +185,7 @@ Rails.application.routes.draw do
       resources :assets do
         collection do
           delete "destroy_many"
+          delete "report_queues_destroy_many"
           get "import"
           post "process_import"
           get "site_default"

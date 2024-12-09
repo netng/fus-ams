@@ -1,0 +1,15 @@
+<div class="mb-16 mt-4">
+  <%= form_with(url: report_queues_destroy_many_admin_assets_path, id: :report_queue_table, method: :delete, data: { action: "turbo:submit-end->table#resetDeleteButton" , turbo_frame: "report-queues" }) do |form| %>
+    <%= form.button type: :submit, value: "#{t('custom.label.destroy')}", 
+      class: "bg-slate-300 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-300",
+      data: {
+        table_target: "deleteButton",
+        turbo_confirm: "#{t('custom.label.confirm.to_destroy_many')}"
+      },
+      disabled: true do %>
+
+      <%= t("custom.label.destroy") %>
+
+    <% end %>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_09_082048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -29,8 +29,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
     t.string "name"
     t.string "email", null: false
     t.uuid "role_id", null: false
-    t.boolean "default"
+    t.boolean "default", default: false
     t.uuid "site_id", null: false
+    t.index ["email"], name: "index_accounts_on_email", unique: true
     t.index ["role_id"], name: "index_accounts_on_role_id"
     t.index ["site_id"], name: "index_accounts_on_site_id"
     t.index ["username"], name: "index_accounts_on_username", unique: true
@@ -414,6 +415,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
     t.datetime "scheduled_at"
     t.datetime "finished_at"
     t.decimal "execution_time", precision: 5, scale: 2
+    t.integer "data_count", default: 0
     t.index ["generated_by_id"], name: "index_report_queues_on_generated_by_id"
   end
 
@@ -493,6 +495,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_064123) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "default", default: false
     t.index ["name"], name: "index_roles_on_name", unique: true
   end
 

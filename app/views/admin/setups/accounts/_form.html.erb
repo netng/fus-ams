@@ -38,7 +38,7 @@
   <div class="mb-2">
     <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
     <%= form.select :site_id,
-      Site.pluck(:name, :id).map { |name, id| [name, id] },
+      Site.where(parent_site: nil).pluck(:name, :id).map { |name, id| [name, id] },
       {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
       {data: { controller: 'slim' }, class: "fus-select" }
     %>

@@ -7,15 +7,27 @@ module Admin::Entries
     ]
 
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location, :export_confirm, :report_queues ]
     before_action :set_previous_url
 
     def index
       authorize :authorization, :index?
+      @q = nil
 
 
       @ransack_params = ransack_params
-      @q = Asset.ransack(ransack_params)
+
+      if current_account.site.site_default.blank?
+        @q = Asset.joins(:site).where(sites: { id: current_account.site.id })
+          .or(Asset.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(ransack_params)
+
+        @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
+      else
+        @q = Asset.ransack(ransack_params)
+        @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+      end
+
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
         :project,
@@ -40,8 +52,6 @@ module Admin::Entries
       end
 
       @pagy, @assets = pagy(scope)
-
-      @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
     end
 
     def export_confirm
@@ -51,11 +61,27 @@ module Admin::Entries
     def export
       authorize :authorization, :index?
 
-      file_name = params[:file_name] || "asset_report"
+      file_name = "asset_report_#{Time.now.strftime('%d-%m-%Y_%H_%M_%S_%s')}.xlsx"
+      sheet_password = params[:sheet_password].strip
+
+      if params[:file_name].blank?
+        file_name
+      else
+        file_name = "#{params[:file_name]}_#{Time.now.strftime('%d-%m-%Y_%H_%M_%S_%s')}.xlsx"
+      end
       logger.debug "FILE_NAME ======= #{file_name}"
 
 
-      @q = Asset.ransack(ransack_params)
+      @q = nil
+
+      if current_account.site.site_default.blank?
+        @q = Asset.joins(:site).where(sites: { id: current_account.site.id })
+          .or(Asset.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(ransack_params)
+      else
+        @q = Asset.ransack(ransack_params)
+      end
+
       @q.sorts = [ "tagging_id asc" ] if @q.sorts.empty?
       scope = @q.result.includes(
         :project,
@@ -81,20 +107,20 @@ module Admin::Entries
 
       @pagy, @assets = pagy(scope)
 
-      ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address, file_name)
-      redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
+      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password)
+      puts "Export asset job: #{export_asset_job.job_id}"
 
-      # if @pagy.pages >= 50
-      #   ExportAssetJob.perform_later(current_account, ransack_params, Current.ip_address, file_name)
-      #   redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
-      # else
-      #   @assets = scope
-      #   respond_to do |format|
-      #     format.xlsx do
-      #       response.headers["Content-Disposition"] = "attachment; filename=#{file_name}_#{Time.now.strftime("%d-%m-%Y_%H:%M")}.xlsx"
-      #     end
-      #   end
-      # end
+      ReportQueue.create!(
+        name: file_name,
+        file_path: "-",
+        generated_by: current_account,
+        job_id: export_asset_job.job_id,
+        created_by: current_account.username,
+        ip_address: Current.ip_address,
+        scheduled_at: Time.now
+      )
+
+      redirect_to admin_assets_path, notice: t("custom.flash.notices.report_queues")
     end
 
     def report_queues
@@ -103,6 +129,34 @@ module Admin::Entries
       @report_queues = current_account.report_queues.order(created_at: :desc)
 
       render "admin/entries/assets/report_queues/index"
+    end
+
+    def report_queues_destroy_many
+      authorize :authorization, :destroy?
+
+      report_queue_ids = params[:report_queue_ids]
+
+      ActiveRecord::Base.transaction do
+        report_queues = ReportQueue.where(id: report_queue_ids)
+
+        report_queues.each do |report_queue|
+          file_path = report_queue.file_path
+          if report_queue.destroy
+            FileUtils.remove_file(file_path)
+          else
+            error_message = report_queue.errors.full_messages.join("")
+            redirect_to admin_report_queues_path, alert: "#{error_message} - #{t('activerecord.models.report_queue')} id: #{report_queue.id}"
+            raise ActiveRecord::Rollback
+          end
+        end
+
+        respond_to do |format|
+          format.turbo_stream do
+            @report_queues = current_account.report_queues.order(created_at: :desc)
+            render turbo_stream: turbo_stream.replace("report-queues", partial: "admin/entries/assets/report_queues/turbo_table", locals: { report_queues: @report_queues })
+          end
+        end
+      end
     end
 
     def report_queues_download

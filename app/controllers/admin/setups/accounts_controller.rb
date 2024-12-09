@@ -41,10 +41,12 @@ module Admin::Setups
 
     def edit
       authorize :authorization, :update?
+      redirect_to admin_accounts_path if @account.default
     end
 
     def update
       authorize :authorization, :update?
+      return redirect_to admin_accounts_path if @account.default
 
       respond_to do |format|
         if @account.update(account_params)
@@ -60,6 +62,7 @@ module Admin::Setups
 
     def destroy
       authorize :authorization, :delete?
+      redirect_to admin_accounts_path if @account.default
     end
 
     def destroy_many
@@ -71,6 +74,8 @@ module Admin::Setups
         accounts = Account.where(id: account_ids)
 
         accounts.each do |account|
+        return redirect_to admin_accounts_path if account.default
+
           unless account.destroy
             redirect_to admin_accounts_path, alert: "#{account.errors.full_messages.join("")} - #{t('activerecord.models.account')} id: #{account.username}"
             raise ActiveRecord::Rollback

@@ -9,7 +9,7 @@
         <div class="bg-white rounded-md md:w-2/3 border border-solid">
             <%= tag.div data: {
                     modal_target: "modalContent",
-                    action: "turbo:submit-end->modal#submitEnd keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
+                    action: "keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
                     class: "bg-white rounded-md shadow-lg w-full max-h-[90vh] overflow-auto" do %>
 
                 <%= yield %>
