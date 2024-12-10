@@ -1,0 +1,40 @@
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-20 bg-fus-blue text-white shadow-md">
+    <%= t("custom.label.default_new_form", model: t("activerecord.models.asset")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd" class="p-8">
+    <%= link_to t("custom.label.download_template"),
+      import_download_template_admin_assets_path,
+      class: "fus-secondary-btn",
+      data: { turbo: false } %>
+
+
+    <%= form_with(url: process_import_admin_assets_path, method: :post, local: true, multipart: true) do |form| %>
+      <div data-controller="file-upload" class="relative flex flex-col justify-center items-center mt-8 border-2 border-dashed border-gray-300 rounded-lg p-8 bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2">Drag and drop your file here</p>
+          <p class="text-sm text-gray-500">or click to browse</p>
+          <p id="file-name" class="text-sm text-gray-700 font-medium mt-2 hidden"></p>
+        </div>
+        <%= form.file_field :file,
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10",
+          data: { action: "change->file-upload#updateFileName" }
+        %>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit "#{t('custom.label.upload')}",
+          class: "bg-fus-blue p-2 rounded text-white",
+          data: {
+            turbo_action: "advance",
+            turbo_submits_with: t("custom.label.importing")
+          }
+        %>
+      </div>
+    <% end %>
+
+
+	</div>
+<% end %>
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset")).capitalize) %>

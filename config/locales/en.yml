@@ -440,6 +440,7 @@ en:
       sheet_protection: Sheet protection
       file_size: File size (MB)
       default: Default
+      download_template: Download template
       export_file_name: Export file name
       file_name: "File name (If the name is empty, it will be filled with the default format `asset-report-[day-month-year-hour-minutes-seconds-millis]`)"
       

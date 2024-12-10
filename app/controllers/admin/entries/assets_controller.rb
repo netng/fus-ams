@@ -420,7 +420,7 @@ module Admin::Entries
       authorize :authorization, :create?
     end
 
-    def process_import_details
+    def process_import
       authorize :authorization, :create?
       allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
@@ -580,6 +580,108 @@ module Admin::Entries
       else
         redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
       end
+    end
+
+    def import_download_template
+      authorize :authorization, :create?
+
+      template_path = Rails.root.join("public", "templates", "asset-import.xlsx")
+
+      package = Axlsx::Package.new
+      wb = package.workbook
+
+      s = wb.styles
+      bold_text = s.add_style b: true
+      header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
+
+      wb.add_worksheet(name: "Upload") do |sheet|
+        sheet.add_row [
+          "Tagging id",
+          "Project id",
+          "Site id",
+          "Asset model id",
+          "Asset class id",
+          "DO number",
+          "Warranty expired date",
+          "Computer name",
+          "IP computer",
+          "CPU sn",
+          "Monitor sn",
+          "Keyboard sn",
+          "Shipping date",
+          "Description",
+          "Mouse id",
+          "Floopy disk id",
+          "Processor id",
+          "Memory id",
+          "Hardisk id",
+          "CD / DVD rom id",
+          "NIC id",
+          "Others id"
+        ], style: header
+      end
+
+      wb.add_worksheet(name: "Panduan") do |sheet|
+        sheet.add_row [ "Panduan upload" ]
+        sheet.add_row [ "1. Tagging id harus diisi dan unik (tidak boleh sama)" ]
+        sheet.add_row [ "2. Row Project id, Site id, Asset model id, Asset class id diisi dengan id masing-masing. Id bisa dicek pada masing-masing sheet sesuai nama row" ]
+        sheet.add_row [ "3. Row Project id, Site id, Asset model id wajib diisi" ]
+        sheet.add_row [ "4. Row Mouse id, Floopy disk id, Processor id, Memory id, Hardisk id, CD / DVD room id, NIC id, Other id diisi dengan id masing-masing. Id bisa dicek pada sheet `Components ID`" ]
+      end
+
+      wb.add_worksheet(name: "Project ID") do |sheet|
+        sheet.add_row [ "Project id", "Name" ], style: header
+
+        Project.all.each do |project|
+          sheet.add_row [
+            project.id_project,
+            project.name
+          ]
+        end
+      end
+
+      wb.add_worksheet(name: "Site ID") do |sheet|
+        sheet.add_row [ "Site id", "Name" ], style: header
+
+        Site.all.each do |site|
+          sheet.add_row [
+            site.id_site,
+            site.name
+          ]
+        end
+      end
+
+      wb.add_worksheet(name: "Asset Model ID") do |sheet|
+        sheet.add_row [ "Asset model id", "Name" ], style: header
+
+        AssetModel.all.each do |asset_model|
+          sheet.add_row [
+            asset_model.id_asset_model,
+            asset_model.name
+          ]
+        end
+      end
+
+      wb.add_worksheet(name: "Component ID") do |sheet|
+        sheet.add_row [ "Component id", "Name", "Component type" ], style: header
+        components = Component.includes(:component_type).order("component_types.name ASC")
+
+        components.each do |component|
+          sheet.add_row [
+            component.id_component,
+            component.name,
+            component.component_type.name
+          ]
+        end
+      end
+
+      package.serialize(template_path)
+
+
+      send_file template_path,
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          filename: "asset-import.xlsx",
+          disposition: "attachment"
     end
 
 
