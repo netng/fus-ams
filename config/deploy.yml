@@ -78,6 +78,7 @@ volumes:
   - "fus_ams_storage:/rails/storage"
   - "fus_ams_tmp:/rails/tmp"
   - "fus_ams_public_reports:/rails/public/reports"
+  - "fus_ams_public_templates:/rails/public/templates"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
