@@ -40,3 +40,4 @@
 
 # Ignore all reports file
 /public/reports/*
+/public/templates/*
