@@ -96,6 +96,13 @@
 
       <div class="mb-2">
         <label class="fus-label">
+          <%= t("activerecord.attributes.asset.schedule") %>
+        </label>
+        <span class="fus-readonly"><%= @asset.schedule.blank? ? "-" : @asset.schedule %></span>
+      </div>
+
+      <div class="mb-2">
+        <label class="fus-label">
           <%= t("activerecord.attributes.shipping_date") %>
         </label>
         <span class="fus-readonly"><%= @asset.shipping_date.blank? ? "-" : @asset.shipping_date.strftime("%Y-%m-%d") %></span>

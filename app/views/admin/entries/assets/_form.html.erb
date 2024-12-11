@@ -139,6 +139,14 @@
     </div>
 
     <div class="mb-2">
+      <%= form.label :schedule, "#{t("activerecord.attributes.asset.schedule")}", class: "fus-label mb-2" %>
+      <%= form.text_field :schedule, class: "fus-input" %>
+      <% @asset.errors.full_messages_for(:schedule).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
       <%= form.label :shipping_date, "#{t("activerecord.attributes.asset.shipping_date")}", class: "fus-label mb-2" %>
       <%= form.date_field :shipping_date, class: "fus-input" %>
       <% @asset.errors.full_messages_for(:shipping_date).each do |message| %>
