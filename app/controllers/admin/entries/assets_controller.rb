@@ -426,7 +426,6 @@ module Admin::Entries
       allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
       data = []
-      asset_components = []
       batch_size = 1000
       maybe_error = false
 
@@ -663,17 +662,19 @@ module Admin::Entries
                 ip_address: ip_address,
                 asset_components: [
                   AssetComponent.new(component_id: comp_mouse&.id, serial_number: row[:mouse_sn]),
-                  AssetComponent.new(component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn])
+                  AssetComponent.new(component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn]),
+                  AssetComponent.new(component_id: comp_processor&.id, serial_number: row[:processor_sn]),
+                  AssetComponent.new(component_id: comp_memory&.id, serial_number: row[:memory_sn]),
+                  AssetComponent.new(component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn]),
+                  AssetComponent.new(component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn]),
+                  AssetComponent.new(component_id: comp_nic&.id, serial_number: row[:nic_sn]),
+                  AssetComponent.new(component_id: comp_others&.id, serial_number: row[:others_sn])
                 ]
               }
 
-              if data.size >= batch_size
-                Asset.create!(data)
-                data.clear
-              end
+              Asset.create!(data)
+              data.clear
             end
-
-            Asset.create!(data) unless data.empty?
           end
 
         rescue Roo::HeaderRowNotFoundError => e

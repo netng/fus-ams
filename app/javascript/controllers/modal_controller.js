@@ -67,6 +67,14 @@ export default class extends Controller {
   // hide modal when clicking ESC
   // action: "keyup@window->modal#closeWithKeyboard"
   closeWithKeyboard(e) {
+    const loader = document.querySelector('.loader');
+
+    // Cek apakah loader aktif (visible dan memiliki pointer-events)
+    if (loader && getComputedStyle(loader).pointerEvents !== 'none') {
+      // Jangan tutup modal jika loader aktif
+      return;
+    }
+
     if (e.code == "Escape" && this.isTopModal()) {
       this.hideModal()
     }
@@ -75,6 +83,14 @@ export default class extends Controller {
   // hide modal when clicking outside of modal
   // action: "click@window->modal#closeBackground"
   closeBackground(e) {
+    const loader = document.querySelector('.loader');
+
+    // Cek apakah loader aktif (visible dan memiliki pointer-events)
+    if (loader && getComputedStyle(loader).pointerEvents !== 'none') {
+      // Jangan tutup modal jika loader aktif
+      return;
+    }
+
     if (this.isTopModal() && (!e || !this.modalContentTarget.contains(e.target))) {
       // return;
       this.hideModal()
@@ -87,4 +103,14 @@ export default class extends Controller {
     return allModals[allModals.length - 1] === this.element
   }
 
+  preventCloseOnBusy(e) {
+    const loader = document.querySelector('.[class~=busy]');
+
+    // Cek apakah loader aktif (visible dan memiliki pointer-events)
+    if (loader && getComputedStyle(loader).pointerEvents !== 'none') {
+      // Jangan tutup modal jika loader aktif
+      e.preventDefault();
+      return;
+    }
+  }
 }
