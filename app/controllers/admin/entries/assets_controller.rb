@@ -640,7 +640,7 @@ module Admin::Entries
                   SiteDefault.find_by_site_id(site.id).id_user_site_default
                   ) unless site.nil?
 
-              data << {
+              asset = Asset.new(
                 tagging_date: Time.now,
                 user_asset_id: user_asset_default&.id,
                 tagging_id: row[:tagging_id].strip.upcase,
@@ -659,22 +659,74 @@ module Admin::Entries
                 created_by: created_by,
                 request_id: request_id,
                 user_agent: user_agent,
-                ip_address: ip_address,
-                asset_components: [
-                  AssetComponent.new(component_id: comp_mouse&.id, serial_number: row[:mouse_sn]),
-                  AssetComponent.new(component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn]),
-                  AssetComponent.new(component_id: comp_processor&.id, serial_number: row[:processor_sn]),
-                  AssetComponent.new(component_id: comp_memory&.id, serial_number: row[:memory_sn]),
-                  AssetComponent.new(component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn]),
-                  AssetComponent.new(component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn]),
-                  AssetComponent.new(component_id: comp_nic&.id, serial_number: row[:nic_sn]),
-                  AssetComponent.new(component_id: comp_others&.id, serial_number: row[:others_sn])
-                ]
-              }
+                ip_address: ip_address
+              )
 
-              Asset.create!(data)
-              data.clear
+              asset.asset_components.build([
+                { component_id: comp_mouse&.id, serial_number: row[:mouse_sn] },
+                { component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn] },
+                { component_id: comp_processor&.id, serial_number: row[:processor_sn] },
+                { component_id: comp_memory&.id, serial_number: row[:memory_sn] },
+                { component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn] },
+                { component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn] },
+                { component_id: comp_nic&.id, serial_number: row[:nic_sn] },
+                { component_id: comp_others&.id, serial_number: row[:others_sn] }
+              ])
+
+              data << asset
+
+              # data << {
+              #   tagging_date: Time.now,
+              #   user_asset_id: user_asset_default&.id,
+              #   tagging_id: row[:tagging_id].strip.upcase,
+              #   project_id: project&.id,
+              #   site_id: site&.id,
+              #   asset_model_id: asset_model&.id,
+              #   asset_class_id: asset_class&.id,
+              #   delivery_order_id: delivery_order&.id,
+              #   computer_name: row[:computer_name],
+              #   computer_ip: row[:computer_ip],
+              #   cpu_sn: row[:cpu_sn],
+              #   monitor_sn: row[:monitor_sn],
+              #   keyboard_sn: row[:keyboard_sn],
+              #   shipping_date: row[:shipping_date],
+              #   description: row[:description],
+              #   created_by: created_by,
+              #   request_id: request_id,
+              #   user_agent: user_agent,
+              #   ip_address: ip_address,
+              #   asset_components: [
+              #     AssetComponent.new(component_id: comp_mouse&.id, serial_number: row[:mouse_sn]),
+              #     AssetComponent.new(component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn]),
+              #     AssetComponent.new(component_id: comp_processor&.id, serial_number: row[:processor_sn]),
+              #     AssetComponent.new(component_id: comp_memory&.id, serial_number: row[:memory_sn]),
+              #     AssetComponent.new(component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn]),
+              #     AssetComponent.new(component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn]),
+              #     AssetComponent.new(component_id: comp_nic&.id, serial_number: row[:nic_sn]),
+              #     AssetComponent.new(component_id: comp_others&.id, serial_number: row[:others_sn])
+              #   ]
+              # }
+
+              # if data.size >= batch_size
+              #   # Asset.create!(data)
+              #   Asset.import data
+              #   data.clear
+              # end
             end
+
+            Asset.import data, batch_size: 500
+
+            # update counter cache di table user_assets untuk column assets_count
+            sql_update_user_assets_count = <<-SQL
+              UPDATE user_assets
+              SET assets_count = (
+                SELECT COUNT(*)
+                FROM assets a
+                WHERE a.user_asset_id = user_assets.id
+              )
+            SQL
+
+            ActiveRecord::Base.connection.execute(sql_update_user_assets_count)
           end
 
         rescue Roo::HeaderRowNotFoundError => e
