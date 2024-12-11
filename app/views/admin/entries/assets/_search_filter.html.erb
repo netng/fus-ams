@@ -14,6 +14,11 @@
         </div>
 
         <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.asset.schedule')}", class: "fus-label" %>
+          <%= f.search_field :schedule_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
           <%= f.label "#{t('activerecord.attributes.asset.site_id')}", class: "fus-label" %>
           <%= f.select :site_id,
             @parent_sites,

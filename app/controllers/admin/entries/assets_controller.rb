@@ -903,6 +903,7 @@ module Admin::Entries
       def ransack_params
         params.fetch(:q, {}).permit(
           :tagging_id_cont,
+          :schedule_cont,
           :site_id,
           :site_site_group_id_eq,
           :site_site_stat_id_eq,

@@ -116,7 +116,7 @@ class ExportAssetJob < ApplicationJob
             asset.delivery_order&.number,
             asset.delivery_order&.date&.strftime("%d-%m-%Y"),
             asset.delivery_order&.warranty_expired&.strftime("%d-%m-%Y"),
-            "schedule TODO",
+            asset.schedule,
             asset_spec,
             asset.asset_model.asset_type.name,
             asset.asset_model.brand.name,
