@@ -473,7 +473,7 @@ module Admin::Entries
           nic_id: "NIC id",
           nic_sn: "NIC sn",
           others_id: "Others id",
-          other_sn: "Others sn"
+          others_sn: "Others sn"
         }
 
         begin
