@@ -82,3 +82,5 @@ gem "dotenv", "~> 3.1"
 # Gem for export to excel format
 gem "caxlsx"
 gem "caxlsx_rails"
+
+gem "activerecord-import", "~> 2.0"

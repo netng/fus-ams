@@ -188,6 +188,7 @@ Rails.application.routes.draw do
           delete "report_queues_destroy_many"
           get "import"
           post "process_import"
+          get "import/download_template", to: "import_download_template", as: "import_download_template"
           get "site_default"
           get "export_confirm"
           post "export"

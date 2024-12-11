@@ -26,11 +26,12 @@
         %>
       <% end %>
 
-      <% if policy([:admin, :authorization]).allow_import? %>
+      <% if policy([:admin, :authorization]).create? %>
         <%= link_to "#{t("custom.label.import_form", model: t("activerecord.models.asset"))}",
           import_admin_assets_path,
           data: {
-            turbo_action: "advance"
+            turbo_action: "advance",
+            turbo_frame: :modal
           },
           class: "bg-green-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
         %>

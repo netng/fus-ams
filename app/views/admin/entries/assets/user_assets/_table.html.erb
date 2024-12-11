@@ -1,5 +1,10 @@
 <%= turbo_frame_tag "table_user_assets" do %>
-  <%= form_with url: location_admin_asset_path, method: :patch, data: { turbo_action: "advance" } do |form| %>
+  <%= form_with url: location_admin_asset_path,
+    method: :patch,
+    data: {
+      turbo_action: "advance",
+      action: "turbo:submit-end->modal#submitEnd"
+    } do |form| %>
     <div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-b">
       <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
         <table class="min-w-full bg-white table-auto" data-table-target="table">

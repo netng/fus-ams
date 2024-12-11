@@ -440,6 +440,7 @@ en:
       sheet_protection: Sheet protection
       file_size: File size (MB)
       default: Default
+      download_template: Download template
       export_file_name: Export file name
       file_name: "File name (If the name is empty, it will be filled with the default format `asset-report-[day-month-year-hour-minutes-seconds-millis]`)"
       
@@ -530,12 +531,13 @@ en:
 
     format: "%{attribute} %{message}"
     errors:
+      record_required: "%{record} must exists at %{row_index}"
       import_failed: Import failed
       invalid_code_format: hanya boleh huruf dan angka tanpa spasi
       delete_restriction_error: Gagal menghapus karena data digunakan pada tabel %{model}
       invalid_import_template: "Header template invalid: %{errors}"
       invalid_allowed_extension: "File extension is not valid"
-      activerecord_object_not_found: "%{model} id %{id} is not found"
+      activerecord_object_not_found: "%{model} id %{id} is not found at row %{row_index}"
       resolve_duplicate: Please check and make sure there are no duplicates
       duplicate_data: "Dulicate data found: '%{field}' with value '%{value}' already exists"
       general_error: Something wrong. Please contact admin
