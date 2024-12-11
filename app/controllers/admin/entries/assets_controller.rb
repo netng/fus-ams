@@ -426,7 +426,6 @@ module Admin::Entries
       allowed_extension = [ ".xlsx", ".csv" ]
       file = params[:file]
       data = []
-      batch_size = 1000
       maybe_error = false
 
       start_time = Time.now
@@ -674,47 +673,9 @@ module Admin::Entries
               ])
 
               data << asset
-
-              # data << {
-              #   tagging_date: Time.now,
-              #   user_asset_id: user_asset_default&.id,
-              #   tagging_id: row[:tagging_id].strip.upcase,
-              #   project_id: project&.id,
-              #   site_id: site&.id,
-              #   asset_model_id: asset_model&.id,
-              #   asset_class_id: asset_class&.id,
-              #   delivery_order_id: delivery_order&.id,
-              #   computer_name: row[:computer_name],
-              #   computer_ip: row[:computer_ip],
-              #   cpu_sn: row[:cpu_sn],
-              #   monitor_sn: row[:monitor_sn],
-              #   keyboard_sn: row[:keyboard_sn],
-              #   shipping_date: row[:shipping_date],
-              #   description: row[:description],
-              #   created_by: created_by,
-              #   request_id: request_id,
-              #   user_agent: user_agent,
-              #   ip_address: ip_address,
-              #   asset_components: [
-              #     AssetComponent.new(component_id: comp_mouse&.id, serial_number: row[:mouse_sn]),
-              #     AssetComponent.new(component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn]),
-              #     AssetComponent.new(component_id: comp_processor&.id, serial_number: row[:processor_sn]),
-              #     AssetComponent.new(component_id: comp_memory&.id, serial_number: row[:memory_sn]),
-              #     AssetComponent.new(component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn]),
-              #     AssetComponent.new(component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn]),
-              #     AssetComponent.new(component_id: comp_nic&.id, serial_number: row[:nic_sn]),
-              #     AssetComponent.new(component_id: comp_others&.id, serial_number: row[:others_sn])
-              #   ]
-              # }
-
-              # if data.size >= batch_size
-              #   # Asset.create!(data)
-              #   Asset.import data
-              #   data.clear
-              # end
             end
 
-            Asset.import data, batch_size: 500
+            Asset.import data, recursive: true, batch_size: 500
 
             # update counter cache di table user_assets untuk column assets_count
             sql_update_user_assets_count = <<-SQL

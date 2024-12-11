@@ -19,7 +19,7 @@ servers:
 proxy:
   host: dev.fus-online.co.id
   ssl: false
-  response_timeout: 600
+# response_timeout: 600
 #   ssl: true
 #   hosts: 
 #     - dev.fus-online.co.id
