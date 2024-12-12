@@ -107,7 +107,7 @@ module Admin::Entries
 
       @pagy, @assets = pagy(scope)
 
-      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password)
+      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password, @function_access_code)
       puts "Export asset job: #{export_asset_job.job_id}"
 
       ReportQueue.create!(

@@ -1,7 +1,11 @@
 class ExportAssetJob < ApplicationJob
   queue_as :low_priority
 
-  def perform(account, ransack_params, file_name, sheet_password)
+  after_perform do |job|
+    update_export_status
+  end
+
+  def perform(account, ransack_params, file_name, sheet_password, function_access_code)
     site_name = "All"
     site_id = ransack_params["site_id"]
 
@@ -143,7 +147,34 @@ class ExportAssetJob < ApplicationJob
       data_count: assets.count
     )
 
+
+    puts "current account : #{self.arguments.first}"
     logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
     puts "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
   end
+
+  private
+    def current_account
+      @current_account ||= Account.find(self.arguments.first.id)
+    end
+
+    def update_export_status
+      function_access_code = self.arguments[4]
+
+      pundit_context = {
+        account: current_account,
+        function_access_code: function_access_code
+      }
+
+      can_destroy = Pundit.policy(pundit_context, [ :admin, :authorization ]).destroy?
+
+      report_queue = current_account.report_queues.where(job_id: self.job_id).first
+
+      Turbo::StreamsChannel.broadcast_replace_to(
+        "account_#{current_account.id}",
+        target: "report_queue_#{report_queue.id}",
+        partial: "admin/entries/assets/report_queues/turbo_report_queue",
+        locals: { report_queue: report_queue, can_destroy: can_destroy }
+      )
+    end
 end

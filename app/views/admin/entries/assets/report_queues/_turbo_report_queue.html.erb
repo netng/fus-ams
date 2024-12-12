@@ -1,5 +1,4 @@
 <%= tag.tr id: dom_id(report_queue), class: "border-b border-gray-200 hover:bg-gray-100" do %>
-
     <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
       <div class="flex items-center space-x-4">
         <% if report_queue.finished_at.blank? %>
@@ -8,7 +7,7 @@
             title: t("custom.label.processing")
           %>
         <% else %>
-          <% if policy([:admin, :authorization]).destroy? %>
+          <% if can_destroy %>
             <%= check_box_tag "report_queue_ids[]",
               report_queue.id,
               nil,
