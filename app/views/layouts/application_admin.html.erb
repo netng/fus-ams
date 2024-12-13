@@ -10,7 +10,7 @@
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -25,9 +25,11 @@
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative">
-      <%= render "shared/sidebar" %>
-      <%= turbo_frame_tag "main-content", class: "main-content px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
+    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative w-full">
+      <%= turbo_stream_from dom_id(current_account) %>
+
+      <%= turbo_frame_tag "main-content", class: "mx-8 px-8 py-4 bg-white shadow-lg rounded-lg mb-12 w-full overflow-x-auto" do %>
+
         <div id="flash-message">
           <%= render "shared/flash" %>
         </div>
@@ -39,7 +41,5 @@
     <%= turbo_frame_tag :modal %>
     <%= turbo_frame_tag :second_modal %>
     <%= render "shared/loader" %>
-
-
   </body>
 </html>

@@ -1,0 +1,27 @@
+<% if controller_path == "admin/home" %>
+  <div
+    id="desktop-sidebar"
+    class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4">
+    
+    <div class="p-0"> <!-- Menghapus padding dari sidebar -->
+      <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Welcome</h2>
+      <div class="px-4 text-white text-sm">
+        <p class="my-2 text-base font-semibold">
+          <%= t("custom.label.logged_as") %> :
+        </p>
+
+        <p class="leading-relaxed">
+          <%= t("custom.label.name") %> : <%= current_account.username %>
+        </p>
+        
+        <p class="leading-relaxed">
+          <%= t("custom.label.ip_address") %> : <%= Current.ip_address %>
+        </p class="leading-relaxed">
+
+        <p class="leading-relaxed">
+          <%= t("custom.label.email") %> : <%= current_account.email %>
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>

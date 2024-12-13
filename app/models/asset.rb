@@ -24,11 +24,12 @@ class Asset < ApplicationRecord
   validates :keyboard_sn, length: { maximum: 100 }
   validates :shipping_date, length: { maximum: 100 }
   validates :description, length: { maximum: 500 }
+  validates :schedule, length: { maximum: 100 }
 
   before_validation :strip_and_upcase_tagging_id
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "asset_class_id", "asset_model_id", "computer_ip", "computer_name", "cpu_sn", "created_at", "created_by", "delivery_order_id", "description", "id", "ip_address", "keyboard_sn", "monitor_sn", "project_id", "request_id", "shipping_date", "site_id", "tagging_date", "tagging_id", "updated_at", "user_agent", "user_asset_id" ]
+    [ "asset_class_id", "asset_model_id", "computer_ip", "computer_name", "schedule", "cpu_sn", "created_at", "created_by", "delivery_order_id", "description", "id", "ip_address", "keyboard_sn", "monitor_sn", "project_id", "request_id", "shipping_date", "site_id", "tagging_date", "tagging_id", "updated_at", "user_agent", "user_asset_id" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

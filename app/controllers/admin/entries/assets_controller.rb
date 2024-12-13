@@ -7,7 +7,7 @@ module Admin::Entries
     ]
 
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location, :export_confirm, :report_queues ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location, :export_confirm, :report_queues, :import ]
     before_action :set_previous_url
 
     def index
@@ -107,7 +107,7 @@ module Admin::Entries
 
       @pagy, @assets = pagy(scope)
 
-      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password)
+      export_asset_job = ExportAssetJob.perform_later(current_account, ransack_params, file_name, sheet_password, @function_access_code)
       puts "Export asset job: #{export_asset_job.job_id}"
 
       ReportQueue.create!(
@@ -451,6 +451,7 @@ module Admin::Entries
           asset_model_id: "Asset model id *",
           asset_class_id: "Asset class id",
           delivery_order_number: "DO number",
+          schedule: "Schedule",
           computer_name: "Computer name",
           computer_ip: "Computer IP",
           cpu_sn: "CPU sn",
@@ -648,6 +649,7 @@ module Admin::Entries
                 asset_model_id: asset_model&.id,
                 asset_class_id: asset_class&.id,
                 delivery_order_id: delivery_order&.id,
+                schedule: row[:schedule],
                 computer_name: row[:computer_name],
                 computer_ip: row[:computer_ip],
                 cpu_sn: row[:cpu_sn],
@@ -756,6 +758,7 @@ module Admin::Entries
           "Asset model id *",
           "Asset class id",
           "DO number",
+          "Schedule",
           "Computer name",
           "Computer IP",
           "CPU sn",
@@ -880,6 +883,7 @@ module Admin::Entries
           :delivery_order_id,
           :shipping_date,
           :description,
+          :schedule,
           asset_components_attributes: [ [
             :id,
             :component_id,
@@ -899,6 +903,7 @@ module Admin::Entries
       def ransack_params
         params.fetch(:q, {}).permit(
           :tagging_id_cont,
+          :schedule_cont,
           :site_id,
           :site_site_group_id_eq,
           :site_site_stat_id_eq,

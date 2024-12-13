@@ -54,6 +54,7 @@ en:
         delivery_order_id: DO ref
         shipping_date: Shipping date
         description: Description
+        schedule: Schedule
 
       site_default:
         site_id: Site

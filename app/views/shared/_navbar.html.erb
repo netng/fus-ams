@@ -1,16 +1,17 @@
 <!-- Navbar -->
-<nav class="bg-fus-blue text-white fixed top-0 w-full z-50 p-2 shadow-lg flex justify-between items-center">
-    <div class="text-xl font-bold">
-      <%= link_to "Asset Management System", admin_path %>
-    </div>
-    <div class="md:hidden">
-      <button id="menu-button" class="text-white focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
-      </button>
-    </div>
-    <ul class="hidden md:flex space-x-8 md:items-center">
+<nav 
+  class="bg-fus-blue text-white fixed top-0 w-full z-50 px-8 py-2 shadow-lg flex justify-between items-center"
+  data-controller="active-menu">
+
+  <!-- brand title (pojok kanan) -->
+  <div class="flex-shrink-0">
+    <%= link_to "Asset Management System", admin_path, class: "text-xl font-bold" %>
+  </div>
+    
+
+  <!-- main menu (tengah) -->
+  <div class="flex-grow flex justify-center">
+    <ul class="flex space-x-8 items-center">
       <li>
         <%= link_to "#{t('custom.label.home')}",
           admin_path,
@@ -18,31 +19,26 @@
         %>
       </li>
 
-      <li><a href="#" class="hover:text-gray-200">Report</a></li>
-
-      <% if has_entry_menu? %>
-        <li>
-          <%= link_to "#{t('custom.label.entry_menu')}",
-            admin_entries_path,
-            class: "hover:text-gray-200"
-          %>
-        </li>
-      <% end %>
+      <%= render "shared/menus/assets_menu" %>
+      <%= render "shared/menus/asset_components_menu" %>
+      <%= render "shared/menus/locations_menu" %>
+      <%= render "shared/menus/masters_menu" %>
 
       <% if has_setup_menu? %>
-        <li>
-          <%= link_to "#{t('custom.label.setup_menu')}",
-            admin_setups_path,
-            class: "hover:text-gray-200"
-          %>
-        </li>
+        <%= render "shared/menus/setups_menu" %>
       <% end %>
 
-      <li><a href="#" class="hover:text-gray-200">Non</a></li>
-      <li>
-        <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
-      </li>
     </ul>
-</nav>
+  </div>
 
- 
+    <!-- sign out (pojok kiri) -->
+    <div class="flex-shrink-0">
+      <ul>
+        <li>
+          <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
+        </li>
+      </ul>
+    </div>
+
+    
+</nav>
