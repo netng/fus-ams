@@ -227,6 +227,15 @@ Rails.application.routes.draw do
       end
     end
 
+    scope module: :charts do
+      resources :charts, only: [] do
+        collection do
+          get "asset-registrations", to: "charts#asset_registrations"
+          get "asset-projects", to: "charts#asset_projects"
+        end
+      end
+    end
+
     resources :importers do
       collection do
         post "site_stats_import"

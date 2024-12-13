@@ -1,3 +1,59 @@
-<div class="flex items-center justify-center">
-  <%= image_tag "asset-logo.png", class: "w-full" %>
+<div class="my-2">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <!-- Card 1 -->
+    <div class="bg-fus-blue hover:bg-blue-300 rounded-lg shadow-md text-white p-4 flex flex-col items-center">
+      <h3 class="text-xl font-semibold text-[rgb(65,111,167)]">Assets</h3>
+      <p class="my-4 text-5xl font-semibold"><%= @assets_count %></p>
+      <%= link_to admin_assets_path do %>
+        <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
+          <span class="text-xl font-semibold">
+            View all
+          </span>
+          <%= inline_svg_tag "more.svg", class: "font-semibold size-8 transform transition-transform duration-200 group-hover:rotate-180"%>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-orange-400 hover:bg-orange-300 rounded-lg shadow-md text-white p-4 flex flex-col items-center">
+      <h3 class="text-xl font-semibold text-[rgb(159,93,17)]">User Assets</h3>
+      <p class="my-4 text-5xl font-semibold"><%= @user_assets_count %></p>
+      <%= link_to admin_user_assets_path do %>
+        <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
+          <span class="text-xl font-semibold">
+            View all
+          </span>
+          <%= inline_svg_tag "more.svg", class: "font-semibold size-8 transform transition-transform duration-200 group-hover:rotate-180"%>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-[rgb(156,213,176)] hover:bg-[rgb(176,223,193)] rounded-lg shadow-md text-white p-4 flex flex-col items-center">
+      <h3 class="text-xl font-semibold text-[rgb(21,159,72)]">Sites</h3>
+      <p class="my-4 text-5xl font-semibold"><%= @sites_count %></p>
+      <%= link_to admin_sites_path do %>
+        <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
+          <span class="text-xl font-semibold">
+            View all
+          </span>
+          <%= inline_svg_tag "more.svg", class: "font-semibold size-8 transform transition-transform duration-200 group-hover:rotate-180"%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="mt-8">
+  <div class="text-white p-4 rounded-lg shadow-md">
+    <h3 class="font-semibold text-gray-500 mb-4">Asset Registration Year to Year</h3>
+    <%= area_chart asset_registrations_admin_charts_path, loading: "Loading...", empty: "No data", download: true %>
+  </div>
+</div>
+
+<div class="mt-8">
+  <div class="text-white p-4 rounded-lg shadow-md">
+    <h3 class="font-semibold text-gray-500 mb-4">Asset by Projects</h3>
+    <%= column_chart asset_projects_admin_charts_path, loading: "Loading...", empty: "No data", download: true %>
+  </div>
 </div>

@@ -31,14 +31,33 @@
     </ul>
   </div>
 
-    <!-- sign out (pojok kiri) -->
-    <div class="flex-shrink-0">
-      <ul>
-        <li>
-          <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
+  <!-- user profile (pojok kanan) -->
+  <div 
+    class="relative flex-shrink-0"
+    data-controller="dropdown-menu"
+    data-action="mouseenter->dropdown-menu#show mouseleave->dropdown-menu#hide">
+
+    <!-- Profile Icon -->
+    <button 
+      class="w-10 h-10 bg-gray-200 text-gray-800 rounded-full flex items-center justify-center focus:outline-none hover:bg-gray-300"
+      id="profile-menu-button">
+      <span class="sr-only">Open user menu</span>
+      <i class="fas fa-user"></i>
+    </button>
+
+    <!-- Dropdown Menu -->
+    
+    <ul
+      class="absolute mt-2 hidden bg-white shadow-lg rounded py-2 px-2 whitespace-nowrap w-64 right-0"
+      data-dropdown-menu-target="menu">
+        <li class="py-2 px-2 text-gray-600">
+          Hi, <%= current_account.username %>
         </li>
-      </ul>
-    </div>
+        <li class="py-2 px-2 text-gray-600 hover:underline">
+          <%= link_to "Logout", auth_sign_out_path, data: { turbo_method: :delete, turbo_confirm: "Are your sure?" }, class: "w-full text-left" %>
+        </li>
+    </ul>
+  </div>
 
     
 </nav>
