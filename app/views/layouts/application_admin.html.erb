@@ -25,12 +25,10 @@
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative">
+    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative w-full">
       <%= turbo_stream_from dom_id(current_account) %>
 
-      <div id="testing-bro"></div>
-      <%= render "shared/sidebar" %>
-      <%= turbo_frame_tag "main-content", class: "main-content px-8 py-4 bg-white shadow-lg rounded-lg mb-12" do %>
+      <%= turbo_frame_tag "main-content", class: "mx-8 px-8 py-4 bg-white shadow-lg rounded-lg mb-12 w-full overflow-x-auto" do %>
 
         <div id="flash-message">
           <%= render "shared/flash" %>

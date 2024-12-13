@@ -6,9 +6,9 @@
       <button 
         data-action="click->toggle#toggle" 
         id="toggleSearchForm" 
-        class="bg-slate-200 text-gray-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200">
+        class="bg-fus-blue hover:bg-blue-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200">
 
-        <%= t("custom.label.filter") %>
+        <%= inline_svg_tag "filter.svg", class: "w-5 h-5 text-white cursor-pointer", title: t("custom.label.filter") %>
         
       </button>
     
