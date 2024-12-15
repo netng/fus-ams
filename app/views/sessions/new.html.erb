@@ -1,14 +1,3 @@
-<div class="rounded-lg p-8 max-w-md w-full bg-white">
-  <h2 class="text-center text-2xl font-bold text-gray-800 mb-8"><%= t("custom.label.sign_in") %></h2>
-  <hr class="mb-6 border-t-2 border-slate-200">
-
+<div class="rounded-lg md:p-8 w-full bg-gray-100">
   <%= render "form" %>
-
-  <%= turbo_frame_tag "flash-message" do %>
-    <%= render "shared/flash" %>
-  <% end %>
-
-  <div class="text-center">
-    <!-- forgot password todo -->
-  </div>
 </div>

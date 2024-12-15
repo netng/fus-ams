@@ -87,7 +87,7 @@
 			</div>
 		</div>
 
-		<div class="md:flex gap-2">
+		<%= render "shared/sticky_bottom_action" do %>
 			<%= form.submit t("custom.label.update"), 
 				data: { turbo_frame: "main-content" },
 				class: "fus-primary-btn md:w-[100px]"
@@ -98,7 +98,7 @@
 				type: "button",
 				class: "fus-secondary-btn md:w-[100px]"
 			%>
-		</div>
+		<% end %>
 
 	<% end %>
 <% end %>

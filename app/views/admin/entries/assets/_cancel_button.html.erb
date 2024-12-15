@@ -1,9 +1,9 @@
-<div class="px-6">
+<%= render "shared/sticky_bottom_action" do %>
   <%= button_tag t("custom.label.cancel"),
     data: { 
       action: "modal#hideModal"
     },
     type: :button,
-    class: "fus-secondary-btn md:w-[100px] my-2"
+    class: "fus-secondary-btn md:w-[100px] my-2 mx-8"
   %>
-</div>
+<% end %>

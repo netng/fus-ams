@@ -5,7 +5,7 @@
       turbo_action: "advance",
       action: "turbo:submit-end->modal#submitEnd"
     } do |form| %>
-    <div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-b">
+    <div class="overflow-x-auto bg-slate-50 p-2 rounded-b">
       <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
         <table class="min-w-full bg-white table-auto" data-table-target="table">
           <thead class="rounded-lg">
@@ -87,16 +87,18 @@
       </div>
     </div>
 
-    <%= form.submit t("custom.label.update"),
-			data: { turbo_frame: "main-content" },
-      class: "fus-primary-btn md:w-[100px]"
-    %>
+    <%= render "shared/sticky_bottom_action" do %>
+      <%= form.submit t("custom.label.update"),
+        data: { turbo_frame: "main-content" },
+        class: "fus-primary-btn md:w-[100px]"
+      %>
 
-		<%= button_tag t("custom.label.cancel"),
-      data: { action: "modal#hideModal" },
-      type: "button",
-      class: "fus-secondary-btn md:w-[100px]"
-    %>
+      <%= button_tag t("custom.label.cancel"),
+        data: { action: "modal#hideModal" },
+        type: "button",
+        class: "fus-secondary-btn md:w-[100px]"
+      %>
+    <% end %>
 
   <% end %>
 <% end %>

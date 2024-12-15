@@ -1,13 +1,27 @@
 <div id="flash-message">
   <% if flash[:notice] %>
-    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-blue-500 text-center mb-8 w-full p-4 bg-blue-200 rounded">
+    <div data-controller="flash" data-flash-target="flash" class="relative flex justify-between items-center fade-in-out font-semibold text-blue-500 text-center mb-8 w-full p-4 bg-blue-200 rounded">
       <%= flash[:notice] %>
+      <button 
+        type="button" 
+        data-action="click->flash#hide" 
+        class="absolute right-2 text-blue-500 size-8 hover:rounded-full hover:bg-blue-400 hover:text-blue-700">
+        &times;
+      </button>
     </div>
+
   <% end %>
 
   <% if flash[:alert] %>
-    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
-      <%= flash[:alert] %>
-    </div>
+    <div data-controller="flash" data-flash-target="flash" class="relative flex justify-between items-center fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
+      <div><%= flash[:alert] %></div>
+      <button 
+        type="button" 
+        data-action="click->flash#hide" 
+        class="absolute right-2 text-red-500 size-8 hover:rounded-full hover:bg-red-400 hover:text-red-700">
+        &times;
+      </button>
+  </div>
+
   <% end %>
 </div>

@@ -6,7 +6,7 @@
         class="fixed inset-0 flex items-center justify-center bg-gray-400 bg-opacity-90 z-[1000] p-8">
 
         <!-- Modal Content -->
-        <div class="bg-white rounded-md md:w-2/3 border border-solid">
+        <div class="bg-white rounded-md md:w-2/3 border border-solid overflow-auto">
             <%= tag.div data: {
                     modal_target: "modalContent",
                     action: "keyup@window->modal#closeWithKeyboard click@window->modal#closeBackground" },
