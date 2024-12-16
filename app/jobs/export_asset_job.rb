@@ -6,7 +6,7 @@ class ExportAssetJob < ApplicationJob
   end
 
   def perform(account, ransack_params, file_name, sheet_password, function_access_code)
-    site_name = "All"
+    # site_name = "All"
     site_id = ransack_params["site_id"]
 
     # logger
@@ -23,7 +23,9 @@ class ExportAssetJob < ApplicationJob
       q = Asset.ransack(ransack_params)
     end
 
+
     q.sorts = [ "tagging_id asc" ] if q.sorts.empty?
+
     scope = q.result.includes(
       :project,
       :site,
@@ -42,17 +44,16 @@ class ExportAssetJob < ApplicationJob
                       .pluck(:id)
 
       scope = scope.where(site_id: site_ids)
-      site_name = Site.find(site_id)&.name
+      # site_name = Site.find(site_id)&.name
     end
 
     assets = scope
-
 
     package = Axlsx::Package.new
     wb = package.workbook
 
     s = wb.styles
-    bold_text = s.add_style b: true
+    # bold_text = s.add_style b: true
     header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
 
     wb.add_worksheet(name: "Assets") do |sheet|
@@ -63,24 +64,24 @@ class ExportAssetJob < ApplicationJob
       end
 
 
-      sheet.add_row
-      sheet.add_row [ "Report name", "Assets report" ], style: [ bold_text, nil ]
-      sheet.add_row [ "Generated at", Time.now.strftime("%d-%m-%Y %H:%M"), "By", account.username.capitalize ], style: [ bold_text, nil, bold_text, nil ], types: [ nil, :string, nil, nil ]
+      # sheet.add_row
+      # sheet.add_row [ "Report name", "Assets report" ], style: [ bold_text, nil ]
+      # sheet.add_row [ "Generated at", Time.now.strftime("%d-%m-%Y %H:%M"), "By", account.username.capitalize ], style: [ bold_text, nil, bold_text, nil ], types: [ nil, :string, nil, nil ]
 
-      sheet.add_row
+      # sheet.add_row
 
-      sheet.add_row [ "Site", site_name ], style: [ bold_text, nil ], types: [ nil, :string ]
-      sheet.add_row [ "Total asset", assets.count ], style: [ bold_text, nil ], types: [ nil, :string ]
+      # sheet.add_row [ "Site", site_name ], style: [ bold_text, nil ], types: [ nil, :string ]
+      # sheet.add_row [ "Total asset", assets.count ], style: [ bold_text, nil ], types: [ nil, :string ]
 
-      sheet.add_row
-      sheet.add_row
+      # sheet.add_row
+      # sheet.add_row
 
 
       # Tambahkan Header
       # Freeze header
       sheet.sheet_view.pane do |pane|
         pane.state = :frozen
-        pane.y_split = 9
+        pane.y_split = 1
       end
 
       sheet.add_row [
@@ -102,7 +103,6 @@ class ExportAssetJob < ApplicationJob
         "Project"
       ], style: header
 
-      sheet.auto_filter = "A9:P9"
 
       # Tambahkan Data
       assets.find_in_batches do |asset_batch|
@@ -128,6 +128,10 @@ class ExportAssetJob < ApplicationJob
           ]
         end
       end
+
+      row_count = 1 + assets.size # Baris header dimulai dari A9
+      sheet.auto_filter = "A1:P#{row_count}"
+      sheet.auto_filter.sort_state.add_sort_condition column_index: 0, order: :asc
     end
 
 
