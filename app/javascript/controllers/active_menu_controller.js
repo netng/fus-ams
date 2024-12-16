@@ -32,7 +32,7 @@ export default class extends Controller {
     this.itemTargets.forEach((item) => {
       const menuPattern = item.dataset.menu; // Pattern menu dari <li>
 
-      if (currentUrl.includes(menuPattern)) {
+      if (currentUrl === menuPattern) {
         item.classList.add("rounded", "bg-blue-200", "font-bold", "text-white");
         item.dataset.active = "true";
         activeMenu = menuPattern; // Set menu aktif
