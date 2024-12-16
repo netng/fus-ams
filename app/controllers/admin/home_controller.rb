@@ -14,6 +14,7 @@ module Admin
 
         @sites_count = Site.where(id: current_account.site.id)
           .or(Site.where(parent_site: current_account.site.id))
+          .count
       else
         @assets_count = Asset.count
         @user_assets_count = UserAsset.count
