@@ -4,7 +4,10 @@
     <div class="bg-fus-blue hover:bg-blue-300 rounded-lg shadow-md text-white p-4 flex flex-col items-center">
       <h3 class="text-xl font-semibold text-[rgb(65,111,167)]">Assets</h3>
       <p class="my-4 text-5xl font-semibold"><%= @assets_count %></p>
-      <%= link_to admin_assets_path do %>
+      <%= link_to admin_assets_path, data: {
+        turbo_frame: "main-content",
+        turbo_action: "advance"
+      } do %>
         <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
           <span class="text-xl font-semibold">
             View all
@@ -18,7 +21,10 @@
     <div class="bg-orange-400 hover:bg-orange-300 rounded-lg shadow-md text-white p-4 flex flex-col items-center">
       <h3 class="text-xl font-semibold text-[rgb(159,93,17)]">User Assets</h3>
       <p class="my-4 text-5xl font-semibold"><%= @user_assets_count %></p>
-      <%= link_to admin_user_assets_path do %>
+      <%= link_to admin_user_assets_path, data: {
+        turbo_frame: "main-content",
+        turbo_action: "advance"
+      } do %>
         <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
           <span class="text-xl font-semibold">
             View all
@@ -32,7 +38,10 @@
     <div class="bg-[rgb(156,213,176)] hover:bg-[rgb(176,223,193)] rounded-lg shadow-md text-white p-4 flex flex-col items-center">
       <h3 class="text-xl font-semibold text-[rgb(21,159,72)]">Sites</h3>
       <p class="my-4 text-5xl font-semibold"><%= @sites_count %></p>
-      <%= link_to admin_sites_path do %>
+      <%= link_to admin_sites_path, data: {
+        turbo_frame: "main-content",
+        turbo_action: "advance"
+      } do %>
         <div class="flex items-center gap-2 bg-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.24)] rounded py-2 px-4">
           <span class="text-xl font-semibold">
             View all
