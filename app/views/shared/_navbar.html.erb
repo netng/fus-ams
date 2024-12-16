@@ -12,9 +12,16 @@
   <!-- main menu (tengah) -->
   <div class="flex-grow flex justify-center">
     <ul class="flex space-x-8 items-center">
-      <li>
+      <li
+        data-active-menu-target="item"
+        data-action="click->active-menu#activate"
+        class="px-2 py-2">
         <%= link_to "#{t('custom.label.home')}",
           admin_path,
+          data: {
+            turbo_frame: "main-content",
+            turbo_action: "advance",
+          },
           class: "hover:text-gray-200"
         %>
       </li>
