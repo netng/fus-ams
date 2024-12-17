@@ -139,9 +139,13 @@
     </div>
 
     <div class="mb-2">
-      <%= form.label :schedule, "#{t("activerecord.attributes.asset.schedule")}", class: "fus-label mb-2" %>
-      <%= form.text_field :schedule, class: "fus-input" %>
-      <% @asset.errors.full_messages_for(:schedule).each do |message| %>
+      <%= form.label :asset_schedule_id, class: "fus-label mb-2" %>
+      <%= form.select :asset_schedule_id,
+        AssetSchedule.pluck(:name, :id).map { |name, id| [name, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.asset_schedule")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @asset.errors.full_messages_for(:asset_schedule).each do |message| %>
         <p class="text-red-500 text-sm mt-1"><%= message %></p>
       <% end %>
     </div>

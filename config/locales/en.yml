@@ -39,7 +39,7 @@ en:
       asset_schedule:
         name: Name
         description: Description
-        
+
       asset_software:
         asset_id: Asset
         software_id: Software
@@ -59,7 +59,7 @@ en:
         delivery_order_id: DO ref
         shipping_date: Shipping date
         description: Description
-        schedule: Schedule
+        asset_schedule_id: Schedule
 
       site_default:
         site_id: Site

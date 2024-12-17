@@ -38,6 +38,7 @@ module Admin::Entries
         :components,
         :softwares,
         :user_asset,
+        :asset_schedule,
         asset_model: :brand,
       )
 
@@ -885,7 +886,7 @@ module Admin::Entries
           :delivery_order_id,
           :shipping_date,
           :description,
-          :schedule,
+          :asset_schedule_id,
           asset_components_attributes: [ [
             :id,
             :component_id,
@@ -905,7 +906,7 @@ module Admin::Entries
       def ransack_params
         params.fetch(:q, {}).permit(
           :tagging_id_cont,
-          :schedule_cont,
+          :asset_schedule_id_eq,
           :site_id,
           :site_site_group_id_eq,
           :site_site_stat_id_eq,
