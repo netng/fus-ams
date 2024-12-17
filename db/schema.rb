@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_17_012845) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -102,6 +102,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_012845) do
     t.index ["name"], name: "index_asset_models_on_name"
   end
 
+  create_table "asset_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "description", limit: 500
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.index ["name"], name: "index_asset_schedules_on_name", unique: true
+  end
+
   create_table "asset_softwares", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "asset_id", null: false
     t.uuid "software_id", null: false
@@ -154,8 +166,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_012845) do
     t.datetime "updated_at", null: false
     t.uuid "asset_class_id"
     t.string "schedule", limit: 100
+    t.uuid "asset_schedule_id"
     t.index ["asset_class_id"], name: "index_assets_on_asset_class_id"
     t.index ["asset_model_id"], name: "index_assets_on_asset_model_id"
+    t.index ["asset_schedule_id"], name: "index_assets_on_asset_schedule_id"
     t.index ["delivery_order_id"], name: "index_assets_on_delivery_order_id"
     t.index ["project_id"], name: "index_assets_on_project_id"
     t.index ["site_id"], name: "index_assets_on_site_id"
@@ -674,6 +688,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_012845) do
   add_foreign_key "asset_softwares", "softwares"
   add_foreign_key "assets", "asset_classes"
   add_foreign_key "assets", "asset_models"
+  add_foreign_key "assets", "asset_schedules"
   add_foreign_key "assets", "delivery_orders"
   add_foreign_key "assets", "projects"
   add_foreign_key "assets", "sites"

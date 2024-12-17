@@ -213,6 +213,12 @@ Rails.application.routes.draw do
           post "process_import"
         end
       end
+
+      resources :asset_schedules do
+        collection do
+          delete "destroy_many"
+        end
+      end
     end
 
     scope module: :setups, path: "setups" do

@@ -15,6 +15,7 @@ class Asset < ApplicationRecord
   belongs_to :user_asset, counter_cache: true
   belongs_to :delivery_order, optional: true
   belongs_to :asset_class, optional: true
+  belongs_to :asset_schedule, optional: true
 
   validates :tagging_id, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :computer_name, length: { maximum: 100 }

@@ -1,6 +1,7 @@
 en:
   activerecord:
     models:
+      asset_schedule: Asset schedule
       role: Role
       account: Account
       brand: Brand
@@ -35,6 +36,10 @@ en:
       
 
     attributes:
+      asset_schedule:
+        name: Name
+        description: Description
+        
       asset_software:
         asset_id: Asset
         software_id: Software

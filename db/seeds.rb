@@ -13,7 +13,6 @@ Current.account = Account.new(username: "system")
 # Initialize default system data
 
 # Function Access
-if FunctionAccess.all.blank?
   FunctionAccess.create(
     [
       { code: "FA_MST_SITE_STAT", description: "Function access for Asset Status menu", active: true },
@@ -34,17 +33,18 @@ if FunctionAccess.all.blank?
       { code: "FA_ASS_RFP", description: "Function access for Request for Purchase menu", active: true },
       { code: "FA_ASS_PO", description: "Function access for Purchase Order menu", active: true },
       { code: "FA_ASS_DO", description: "Function access for Delivery Order menu", active: true },
+      { code: "FA_ASS_INVENTORY_LOCACTION", description: "Function access for Asset inventory location menu", active: true },
       { code: "FA_LOC_SITE_DEFAULT", description: "Function access for Site Default menu", active: true },
       { code: "FA_ASSET", description: "Function access for Register Asset menu", active: true },
       { code: "FA_ROLE", description: "Function access for Role configuration menu", active: true },
-      { code: "FA_ACCOUNT", description: "Function access for Account administration menu", active: true }
+      { code: "FA_ACCOUNT", description: "Function access for Account administration menu", active: true },
+      { code: "FA_MST_ASS_SCHEDULE", description: "Function access for Asset schedule menu", active: true },
     ]
   )
-end
 
 # Role
-role = nil
-if Role.all.blank?
+role = Role.find_by_name("administrator")
+if role.blank?
   role = Role.new(name: 'administrator', description: "Super administrator role", active: true)
 end
 
@@ -52,6 +52,17 @@ end
 RoutePath.create(
   [
     # master
+    {
+      function_access: FunctionAccess.find_by_code("FA_MST_ASS_SCHEDULE"),
+      path: "admin_asset_schedules_path",
+      parent: "entry",
+      group: "master",
+      index: true,
+      sort: 4,
+      label: "activerecord.models.asset_schedule",
+      description: "Route for asset_schedule index"
+    },
+
     {
       function_access: FunctionAccess.find_by_code("FA_MST_SITE_STAT"),
       path: "admin_site_stats_path",
@@ -83,6 +94,8 @@ RoutePath.create(
       label: "activerecord.models.brand",
       description: "Route for Brand index"
     },
+
+    
 
     # location
     {
@@ -301,15 +314,24 @@ RoutePath.create(
 )
 
 # Create Role function access for role: administrator
-FunctionAccess.all.each do |fa|
-  RoleFunctionAccess.create(
-    role: role,
-    function_access: fa,
+# Ambil semua function_access dan persiapkan data
+data_to_upsert = FunctionAccess.all.map do |fa|
+  {
+    role_id: role.id,
+    function_access_id: fa.id,
     allow_create: true,
     allow_read: true,
     allow_update: true,
     allow_delete: true,
     allow_confirm: true,
-    allow_cancel_confirm: true
-  )
+    allow_cancel_confirm: true,
+    created_at: Time.current,
+    updated_at: Time.current
+  }
 end
+
+# Upsert data dalam satu query
+RoleFunctionAccess.upsert_all(
+  data_to_upsert,
+  unique_by: [ :role_id, :function_access_id ]
+)
