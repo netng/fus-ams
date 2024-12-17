@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -175,6 +175,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
     t.index ["site_id"], name: "index_assets_on_site_id"
     t.index ["tagging_id"], name: "index_assets_on_tagging_id", unique: true
     t.index ["user_asset_id"], name: "index_assets_on_user_asset_id"
+  end
+
+  create_table "assets_inventory_locations_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "asset_id", null: false
+    t.uuid "inventory_locations_detail_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id", "inventory_locations_detail_id"], name: "idx_on_asset_id_inventory_locations_detail_id_ae93c1387b", unique: true
+    t.index ["asset_id"], name: "index_assets_inventory_locations_details_on_asset_id"
+    t.index ["inventory_locations_detail_id"], name: "idx_on_inventory_locations_detail_id_75cdb5f61d"
   end
 
   create_table "brands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -348,18 +358,31 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
   end
 
   create_table "inventory_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "id_inventory_location", limit: 100, null: false
+    t.string "floor", limit: 100, null: false
+    t.uuid "site_id", null: false
+    t.string "room", limit: 100, null: false
     t.string "description", limit: 500
-    t.integer "assets_count"
+    t.boolean "active"
     t.string "created_by"
     t.string "request_id"
     t.string "user_agent"
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "site_default_id", null: false
-    t.index ["id_inventory_location"], name: "index_inventory_locations_on_id_inventory_location", unique: true
-    t.index ["site_default_id"], name: "index_inventory_locations_on_site_default_id"
+    t.index ["floor", "site_id", "room"], name: "index_inventory_locations_on_floor_and_site_id_and_room", unique: true
+    t.index ["floor", "site_id"], name: "index_inventory_locations_on_floor_and_site_id", unique: true
+    t.index ["site_id"], name: "index_inventory_locations_on_site_id"
+  end
+
+  create_table "inventory_locations_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_location_id", null: false
+    t.uuid "storage_unit_id", null: false
+    t.string "label", limit: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_location_id"], name: "index_inventory_locations_details_on_inventory_location_id"
+    t.index ["storage_unit_id", "label"], name: "index_inventory_locations_details_on_storage_unit_id_and_label", unique: true
+    t.index ["storage_unit_id"], name: "index_inventory_locations_details_on_storage_unit_id"
   end
 
   create_table "personal_boards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -629,6 +652,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
     t.index ["name"], name: "index_softwares_on_name"
   end
 
+  create_table "storage_units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_storage_units_on_name", unique: true
+  end
+
   create_table "user_assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "id_user_asset", null: false
     t.string "aztec_code"
@@ -693,6 +728,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
   add_foreign_key "assets", "projects"
   add_foreign_key "assets", "sites"
   add_foreign_key "assets", "user_assets"
+  add_foreign_key "assets_inventory_locations_details", "assets"
+  add_foreign_key "assets_inventory_locations_details", "inventory_locations_details"
   add_foreign_key "capital_proposal_groups", "capital_proposal_group_headers"
   add_foreign_key "capital_proposals", "capital_proposal_groups"
   add_foreign_key "capital_proposals", "capital_proposal_types"
@@ -701,7 +738,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_063841) do
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
   add_foreign_key "delivery_orders", "purchase_orders"
-  add_foreign_key "inventory_locations", "site_defaults"
+  add_foreign_key "inventory_locations", "sites"
+  add_foreign_key "inventory_locations_details", "inventory_locations"
+  add_foreign_key "inventory_locations_details", "storage_units"
   add_foreign_key "purchase_orders", "currencies"
   add_foreign_key "purchase_orders", "personal_boards", column: "approved_by_id"
   add_foreign_key "purchase_orders", "po_delivery_sites", column: "ship_to_site_id"

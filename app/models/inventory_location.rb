@@ -1,17 +1,45 @@
 class InventoryLocation < ApplicationRecord
-  include Trackable
+  belongs_to :site
 
-  belongs_to :site_default
+  has_many :inventory_locations_details, dependent: :restrict_with_error
 
-  before_validation :strip_and_upcase_id_inventory_location
+  before_validation :strip_and_upcase_floor_and_room
 
-  validates :id_inventory_location, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
-  validates :description, length: { maximum: 500 }
+  # Validasi untuk kombinasi floor dan site
+  validates :floor, uniqueness: {
+    scope: :site_id,
+    message: ->(object, _data) do
+      I18n.t(
+        "custom.errors.uniqueness_scope",
+        field: object.class.human_attribute_name(:floor),
+        related_model: object.site.class.model_name.human
+      )
+    end
+  }
+
+
+  # Validasi untuk kombinasi room, floor dan site
+  validates :room, uniqueness: {
+    scope: %i[floor site_id],
+    message: ->(object, _data) do
+      I18n.t(
+        "custom.errors.uniqueness_scope_with_floor",
+        field: object.class.human_attribute_name(:room),
+        floor: object.class.human_attribute_name(:floor),
+        related_model: object.site.class.model_name.human
+      )
+    end
+  }
+
 
   private
-    def strip_and_upcase_id_inventory_location
-      if id_inventory_location.present?
-        self.id_inventory_location = id_inventory_location.strip.upcase
+    def strip_and_upcase_floor_and_room
+      if floor.present?
+        self.floor = floor.strip.gsub(/\s+/, ' ').upcase
+      end
+
+      if room.present?
+        self.room = room.strip.gsub(/\s+/, ' ').upcase
       end
     end
 end

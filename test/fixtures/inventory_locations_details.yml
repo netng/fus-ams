@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inventory_location: one
+  storage_unit: one
+  label: MyString
+
+two:
+  inventory_location: two
+  storage_unit: two
+  label: MyString

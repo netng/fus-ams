@@ -33,9 +33,14 @@ en:
       asset_class: Asset class
       asset_component: Component detail
       asset_software: Asset software
+      storage_unit: Storage unit
       
 
     attributes:
+      storage_unit:
+        name: Name
+        description: Description
+        
       asset_schedule:
         name: Name
         description: Description
@@ -538,6 +543,8 @@ en:
 
     format: "%{attribute} %{message}"
     errors:
+      uniqueness_scope: "Combination of %{field} and %{related_model} must be unique"
+      uniqueness_scope_with_floor: "Combination of %{field}, %{floor}, and %{related_model} must be unique"
       record_required: "%{record} must exists at %{row_index}"
       import_failed: Import failed
       invalid_code_format: hanya boleh huruf dan angka tanpa spasi
@@ -548,7 +555,7 @@ en:
       resolve_duplicate: Please check and make sure there are no duplicates
       duplicate_data: "Dulicate data found: '%{field}' with value '%{value}' already exists"
       general_error: Something wrong. Please contact admin
-      not_null_violation: 
+      not_null_violation:
     
     flash:
       alerts:
