@@ -113,9 +113,6 @@ class ExportAssetJob < ApplicationJob
         "Project"
       ], style: header
 
-      sheet.auto_filter = "A1:P10"
-
-
       # Tambahkan Data
       row_number = 0
       scope.find_each_with_order(order: "tagging_id ASC", limit: 1000) do |asset|
@@ -123,7 +120,7 @@ class ExportAssetJob < ApplicationJob
           # asset_batch.each do |asset|
           asset_spec = asset.components.joins(:component_type).where(component_type: { id_component_type: 2 }).first&.name
           sheet.add_row [
-            row_number,
+            row_number || "",
             asset.tagging_id || "",
             asset.asset_model&.name || "",
             asset.cpu_sn || "",
@@ -135,7 +132,7 @@ class ExportAssetJob < ApplicationJob
             asset.delivery_order&.number || "",
             asset.delivery_order&.date&.strftime("%d-%m-%Y") || "",
             asset.delivery_order&.warranty_expired&.strftime("%d-%m-%Y") || "",
-            asset.schedule || "",
+            asset.asset_schedule&.name || "",
             asset_spec || "",
             asset.asset_model.asset_type.name || "",
             asset.asset_model.brand.name || "",
@@ -165,6 +162,7 @@ class ExportAssetJob < ApplicationJob
       # row_count = 1 + assets.size # Baris header dimulai dari A9
       # sheet.auto_filter = "A1:P#{row_count}"
       # sheet.auto_filter.sort_state.add_sort_condition column_index: 0, order: :asc
+      sheet.auto_filter = "A1:Q1"
     end
 
 
