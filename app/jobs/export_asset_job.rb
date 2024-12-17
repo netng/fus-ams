@@ -1,8 +1,16 @@
 class ExportAssetJob < ApplicationJob
   queue_as :low_priority
 
+  after_discard do |job|
+    puts "Job #{job.job_id} was discarded."
+    puts "AFTER DISCARD : #{job.inspect}"
+    update_export_status(false)
+  end
+
   after_perform do |job|
-    update_export_status
+    puts "AFTER PERFORM : #{job.inspect}"
+
+    update_export_status(true)
   end
 
   def perform(account, ransack_params, file_name, sheet_password, function_access_code)
@@ -11,6 +19,7 @@ class ExportAssetJob < ApplicationJob
 
     # logger
     logger.debug "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
+    start_time = Time.now
     puts "Starting export assets data to excel. job_id: #{self.job_id} - At #{Time.now}"
 
     q = nil
@@ -46,8 +55,6 @@ class ExportAssetJob < ApplicationJob
       scope = scope.where(site_id: site_ids)
       # site_name = Site.find(site_id)&.name
     end
-
-    assets = scope
 
     package = Axlsx::Package.new
     wb = package.workbook
@@ -103,35 +110,37 @@ class ExportAssetJob < ApplicationJob
         "Project"
       ], style: header
 
+      sheet.auto_filter = "A1:P9"
+
 
       # Tambahkan Data
-      assets.find_in_batches do |asset_batch|
-        asset_batch.each do |asset|
+      scope.find_each_with_order(order: "tagging_id ASC", limit: 1000) do |asset|
+          # asset_batch.each do |asset|
           asset_spec = asset.components.joins(:component_type).where(component_type: { id_component_type: 2 }).first&.name
           sheet.add_row [
-            asset.tagging_id,
-            asset.asset_model&.name,
-            asset.cpu_sn,
-            asset.user_asset&.username,
-            asset.user_asset&.aztec_code,
-            asset.user_asset&.email,
-            asset.site&.name,
-            asset.site.site_group.name,
-            asset.delivery_order&.number,
-            asset.delivery_order&.date&.strftime("%d-%m-%Y"),
-            asset.delivery_order&.warranty_expired&.strftime("%d-%m-%Y"),
-            asset.schedule,
-            asset_spec,
-            asset.asset_model.asset_type.name,
-            asset.asset_model.brand.name,
-            asset.project&.name
+            asset.tagging_id || "",
+            asset.asset_model&.name || "",
+            asset.cpu_sn || "",
+            asset.user_asset&.username || "",
+            asset.user_asset&.aztec_code || "",
+            asset.user_asset&.email || "",
+            asset.site&.name || "",
+            asset.site.site_group.name || "",
+            asset.delivery_order&.number || "",
+            asset.delivery_order&.date&.strftime("%d-%m-%Y") || "",
+            asset.delivery_order&.warranty_expired&.strftime("%d-%m-%Y") || "",
+            asset.schedule || "",
+            asset_spec || "",
+            asset.asset_model.asset_type.name || "",
+            asset.asset_model.brand.name || "",
+            asset.project&.name || ""
           ]
-        end
+        # end
       end
 
-      row_count = 1 + assets.size # Baris header dimulai dari A9
-      sheet.auto_filter = "A1:P#{row_count}"
-      sheet.auto_filter.sort_state.add_sort_condition column_index: 0, order: :asc
+      # row_count = 1 + assets.size # Baris header dimulai dari A9
+      # sheet.auto_filter = "A1:P#{row_count}"
+      # sheet.auto_filter.sort_state.add_sort_condition column_index: 0, order: :asc
     end
 
 
@@ -147,11 +156,13 @@ class ExportAssetJob < ApplicationJob
 
     ReportQueue.where(job_id: self.job_id).update!(
       file_path: Rails.root.join(report_path, file_name),
-      finished_at: Time.now,
-      data_count: assets.count
+      data_count: scope.count
     )
 
 
+    end_time = Time.now
+    execution_time = (end_time - start_time).to_f.round(2) / 60
+    puts "Execution time: #{execution_time} minute"
     puts "current account : #{self.arguments.first}"
     logger.debug "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
     puts "Export finished job_id: #{self.job_id} - At #{Time.now}. File path #{report_path}"
@@ -162,7 +173,7 @@ class ExportAssetJob < ApplicationJob
       @current_account ||= Account.find(self.arguments.first.id)
     end
 
-    def update_export_status
+    def update_export_status(status)
       function_access_code = self.arguments[4]
 
       pundit_context = {
@@ -173,6 +184,7 @@ class ExportAssetJob < ApplicationJob
       can_destroy = Pundit.policy(pundit_context, [ :admin, :authorization ]).destroy?
 
       report_queue = current_account.report_queues.where(job_id: self.job_id).first
+      report_queue.update!(status: status, finished_at: Time.now)
 
       Turbo::StreamsChannel.broadcast_replace_to(
         "account_#{current_account.id}",

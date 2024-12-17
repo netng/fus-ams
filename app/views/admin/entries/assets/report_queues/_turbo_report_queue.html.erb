@@ -1,7 +1,7 @@
 <%= tag.tr id: dom_id(report_queue), class: "border-b border-gray-200 hover:bg-gray-100" do %>
     <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
       <div class="flex items-center space-x-4">
-        <% if report_queue.finished_at.blank? %>
+        <% if report_queue.finished_at.blank? && report_queue.status.nil? %>
           <%= inline_svg_tag "loading.svg",
             class: "fus-icons-loader",
             title: t("custom.label.processing")
@@ -23,13 +23,20 @@
               }
             %>
           <% end %>
-          <%= link_to report_queues_download_admin_assets_path(report_queue),
-              data: {
-                turbo: false
-              } do %>
-              <%= inline_svg_tag "download.svg",
-                class: "fus-icons",
-                title: t("custom.label.download")
+            <% if report_queue.status %>
+              <%= link_to report_queues_download_admin_assets_path(report_queue),
+                  data: {
+                    turbo: false
+                  } do %>
+                  <%= inline_svg_tag "download.svg",
+                    class: "fus-icons",
+                    title: t("custom.label.download")
+                  %>
+              <% end %>
+            <% else %>
+              <%= inline_svg_tag "error.svg",
+                class: "fus-icons-error",
+                title: t("custom.label.export_error")
               %>
             <% end %>
         <% end %>

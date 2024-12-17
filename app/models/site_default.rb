@@ -2,6 +2,7 @@ class SiteDefault < ApplicationRecord
   include Trackable
 
   belongs_to :site
+  has_many :inventory_locations, dependent: :restrict_with_error
 
   
   # validates :id_user_site_default, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }

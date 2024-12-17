@@ -437,6 +437,7 @@ en:
   
   custom:
     label:
+      export_error: Failed to export
       total_data: Total data
       sheet_protection: Sheet protection
       file_size: File size (MB)

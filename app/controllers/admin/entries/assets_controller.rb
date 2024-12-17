@@ -142,7 +142,9 @@ module Admin::Entries
         report_queues.each do |report_queue|
           file_path = report_queue.file_path
           if report_queue.destroy
-            FileUtils.remove_file(file_path)
+            if File.exist?(report_queue.file_path)
+              FileUtils.remove_file(file_path)
+            end
           else
             error_message = report_queue.errors.full_messages.join("")
             redirect_to admin_report_queues_path, alert: "#{error_message} - #{t('activerecord.models.report_queue')} id: #{report_queue.id}"

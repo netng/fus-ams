@@ -205,6 +205,14 @@ Rails.application.routes.draw do
           patch "software", to: "update_software"
         end
       end
+
+      resources :inventory_locations do
+        collection do
+          delete "destroy_many"
+          get "import"
+          post "process_import"
+        end
+      end
     end
 
     scope module: :setups, path: "setups" do
