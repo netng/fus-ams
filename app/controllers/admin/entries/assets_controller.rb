@@ -483,6 +483,7 @@ module Admin::Entries
         begin
           ActiveRecord::Base.transaction do
             sheet.parse(assets_attributes_headers).each_with_index do |row, index|
+              index = index + 1
               project = Project.find_by_id_project(row[:project_id]&.strip)
               site = Site.find_by_id_site(row[:site_id]&.strip)
               asset_model = AssetModel.find_by_id_asset_model(row[:asset_model_id]&.strip)
@@ -497,6 +498,7 @@ module Admin::Entries
               comp_nic = Component.find_by_id_component(row[:nic_id]&.strip)
               comp_others = Component.find_by_id_component(row[:others_id]&.strip)
               asset = Asset.find_by_tagging_id(row[:tagging_id]&.strip)
+              schedule = AssetSchedule.find_by_name(row[:schedule]&.strip)
 
               if row[:tagging_id].nil?
                 maybe_error = true
@@ -638,6 +640,16 @@ module Admin::Entries
                 end
               end
 
+              if row[:schedule].present?
+                if schedule.nil?
+                  maybe_error = true
+                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_schedule"), id: row[:schedule], row_index: index + 1)
+                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: asset schedule `#{row[:schedule]}` is not found"
+                  raise ActiveRecord::Rollback
+                  return
+                end
+              end
+
               user_asset_default = UserAsset
                 .find_by_id_user_asset(
                   SiteDefault.find_by_site_id(site.id).id_user_site_default
@@ -652,7 +664,7 @@ module Admin::Entries
                 asset_model_id: asset_model&.id,
                 asset_class_id: asset_class&.id,
                 delivery_order_id: delivery_order&.id,
-                schedule: row[:schedule],
+                asset_schedule_id: schedule&.id,
                 computer_name: row[:computer_name],
                 computer_ip: row[:computer_ip],
                 cpu_sn: row[:cpu_sn],
@@ -800,6 +812,18 @@ module Admin::Entries
         sheet.add_row [ "3. Tagging id harus unik (tidak boleh sama)" ]
         sheet.add_row [ "4. Kolom Project id, Site id, Asset model id, Asset class id diisi dengan id masing-masing. Id bisa dicek pada masing-masing sheet sesuai nama kolom" ]
         sheet.add_row [ "5. Kolom Mouse id, Floopy disk id, Processor id, Memory id, Hardisk id, CD / DVD room id, NIC id, Other id diisi dengan id masing-masing. Id bisa dicek pada sheet `Components ID`" ]
+        sheet.add_row [ "6. Kolom Schedule jika diisi maka diisi sesuai dengan Schedule name pada daftar Schedule yang ada pada sheet Schedule." ]
+      end
+
+      wb.add_worksheet(name: "Schedule") do |sheet|
+        sheet.add_row [ "Schedule name", "Description" ], style: header
+
+        AssetSchedule.all.each do |asset_schedule|
+          sheet.add_row [
+            asset_schedule.name,
+            asset_schedule.description
+          ]
+        end
       end
 
       wb.add_worksheet(name: "Project ID") do |sheet|
