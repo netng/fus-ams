@@ -61,7 +61,9 @@ class ExportAssetJob < ApplicationJob
 
     s = wb.styles
     # bold_text = s.add_style b: true
-    header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
+    header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :top, horizontal: :center }
+    text_center = s.add_style alignment: { horizontal: :center, vertical: :top }
+    text_top = s.add_style alignment: { vertical: :top }
 
     wb.add_worksheet(name: "Assets") do |sheet|
       unless sheet_password.blank?
@@ -92,6 +94,7 @@ class ExportAssetJob < ApplicationJob
       end
 
       sheet.add_row [
+        "No",
         "Tagging Id",
         "Model",
         "Serial No.",
@@ -110,14 +113,17 @@ class ExportAssetJob < ApplicationJob
         "Project"
       ], style: header
 
-      sheet.auto_filter = "A1:P9"
+      sheet.auto_filter = "A1:P10"
 
 
       # Tambahkan Data
+      row_number = 0
       scope.find_each_with_order(order: "tagging_id ASC", limit: 1000) do |asset|
+          row_number = row_number + 1
           # asset_batch.each do |asset|
           asset_spec = asset.components.joins(:component_type).where(component_type: { id_component_type: 2 }).first&.name
           sheet.add_row [
+            row_number,
             asset.tagging_id || "",
             asset.asset_model&.name || "",
             asset.cpu_sn || "",
@@ -134,6 +140,24 @@ class ExportAssetJob < ApplicationJob
             asset.asset_model.asset_type.name || "",
             asset.asset_model.brand.name || "",
             asset.project&.name || ""
+          ], style: [
+            text_center,
+            text_center,
+            text_center,
+            text_center,
+            text_top,
+            text_top,
+            text_top,
+            text_top,
+            text_top,
+            text_center,
+            text_center,
+            text_center,
+            text_top,
+            text_top,
+            text_top,
+            text_top,
+            text_top
           ]
         # end
       end
