@@ -24,5 +24,4 @@ class Brand < ApplicationRecord
         self.id_brand = id_brand.strip.upcase
       end
     end
-
 end
