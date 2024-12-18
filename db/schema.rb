@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_18_045406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -360,7 +360,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
   create_table "inventory_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "floor", limit: 100, null: false
     t.uuid "site_id", null: false
-    t.string "room", limit: 100, null: false
     t.string "description", limit: 500
     t.boolean "active"
     t.string "created_by"
@@ -369,7 +368,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["floor", "site_id", "room"], name: "index_inventory_locations_on_floor_and_site_id_and_room", unique: true
     t.index ["floor", "site_id"], name: "index_inventory_locations_on_floor_and_site_id", unique: true
     t.index ["site_id"], name: "index_inventory_locations_on_site_id"
   end
@@ -552,6 +550,37 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
     t.datetime "updated_at", null: false
     t.boolean "default", default: false
     t.index ["name"], name: "index_roles_on_name", unique: true
+  end
+
+  create_table "rooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "inventory_location_id", null: false
+    t.index ["inventory_location_id"], name: "index_rooms_on_inventory_location_id"
+    t.index ["name", "inventory_location_id"], name: "index_rooms_on_name_and_inventory_location_id", unique: true
+  end
+
+  create_table "rooms_storage_units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "room_id", null: false
+    t.uuid "storage_unit_id", null: false
+    t.string "label", limit: 100, null: false
+    t.string "capacity", limit: 100
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["label", "room_id", "storage_unit_id"], name: "idx_on_label_room_id_storage_unit_id_10022de3c0", unique: true
+    t.index ["room_id"], name: "index_rooms_storage_units_on_room_id"
+    t.index ["storage_unit_id"], name: "index_rooms_storage_units_on_storage_unit_id"
   end
 
   create_table "route_paths", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -755,6 +784,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_17_093156) do
   add_foreign_key "request_for_purchases", "departments", column: "to_department_id"
   add_foreign_key "role_function_accesses", "function_accesses"
   add_foreign_key "role_function_accesses", "roles"
+  add_foreign_key "rooms", "inventory_locations"
+  add_foreign_key "rooms_storage_units", "rooms"
+  add_foreign_key "rooms_storage_units", "storage_units"
   add_foreign_key "route_paths", "function_accesses"
   add_foreign_key "site_defaults", "sites"
   add_foreign_key "site_groups", "projects"

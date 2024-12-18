@@ -16,6 +16,8 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         'fus-blue': 'rgb(134 181 239)',
+        'fus-primary-green': 'rgb(156,213,176)',
+        'fus-hover-green': 'rgb(176,223,193)',
       },
     },
   },

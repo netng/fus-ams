@@ -206,14 +206,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :inventory_locations do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
       resources :asset_schedules do
         collection do
           delete "destroy_many"
@@ -223,6 +215,13 @@ Rails.application.routes.draw do
       resources :storage_units do
         collection do
           delete "destroy_many"
+        end
+      end
+
+      resources :inventory_locations do
+        collection do
+          delete "destroy_many"
+          post "add_fields"
         end
       end
     end

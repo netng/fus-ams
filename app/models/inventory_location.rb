@@ -1,13 +1,16 @@
 class InventoryLocation < ApplicationRecord
   belongs_to :site
 
+  has_many :rooms, inverse_of: :inventory_location, dependent: :destroy
+  accepts_nested_attributes_for :rooms, allow_destroy: true, reject_if: :all_blank
+
   has_many :inventory_locations_details, dependent: :restrict_with_error
 
-  before_validation :strip_and_upcase_floor_and_room
-
+  before_validation :strip_and_upcase_floor
   # Validasi untuk kombinasi floor dan site
   validates :floor, uniqueness: {
     scope: :site_id,
+    case_sensitive: false,
     message: ->(object, _data) do
       I18n.t(
         "custom.errors.uniqueness_scope",
@@ -17,29 +20,20 @@ class InventoryLocation < ApplicationRecord
     end
   }
 
+  validates :description, length: { maximum: 500 }
 
-  # Validasi untuk kombinasi room, floor dan site
-  validates :room, uniqueness: {
-    scope: %i[floor site_id],
-    message: ->(object, _data) do
-      I18n.t(
-        "custom.errors.uniqueness_scope_with_floor",
-        field: object.class.human_attribute_name(:room),
-        floor: object.class.human_attribute_name(:floor),
-        related_model: object.site.class.model_name.human
-      )
-    end
-  }
+  def self.ransackable_attributes(auth_object = nil)
+    [ "active", "created_at", "created_by", "description", "floor", "id", "id_value", "ip_address", "request_id", "site_id", "updated_at", "user_agent" ]
+  end
 
+  def self.ransackable_associations(auth_object = nil)
+    [ "inventory_locations_details", "rooms", "site" ]
+  end
 
   private
-    def strip_and_upcase_floor_and_room
+    def strip_and_upcase_floor
       if floor.present?
-        self.floor = floor.strip.gsub(/\s+/, ' ').upcase
-      end
-
-      if room.present?
-        self.room = room.strip.gsub(/\s+/, ' ').upcase
+        self.floor = floor.strip.gsub(/\s+/, " ").upcase
       end
     end
 end

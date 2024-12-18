@@ -1,0 +1,50 @@
+<div 
+  data-controller="dynamic-remove"
+  data-dynamic-remove-target="container" 
+  class="relative border border-solid shadow-md rounded-md p-2">
+
+  <%= f.hidden_field :_destroy, 
+    class: 'destroy-field',
+    data: { dynamic_remove_target: "destroyField" }
+  %>
+
+  <button 
+    type="button" 
+    data-action="click->dynamic-remove#removeDetail"
+    class="absolute right-2 font-bold top-0 text-red-500 size-8 hover:text-red-900"
+    title=<%= t("custom.label.destroy")%>>
+    &times;
+  </button>
+
+  <div class="mb-2">
+    <%= f.label :name, class: "fus-label mb-2" %>
+    <%= f.text_field :name, class: "fus-input", required: true %>
+    <% f.object.errors.full_messages_for(:name).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+    <%= f.textarea :description, class: "fus-input" %>
+  </div>
+
+  <hr class="my-4" />
+  <div class="mb-4 flex items-center">
+    <div>
+      <%= link_to "Add storage units",
+        add_fields_admin_inventory_locations_path(name: f.field_name(:rooms_storage_units, index: nil)),
+        data: { turbo_method: :post },
+        class: "bg-fus-primary-green w-full text-white px-4 py-2 rounded hover:bg-fus-hover-green hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-fus-primary-green mb-4 md:mb-0 md:w-auto"
+      %>
+    </div>
+  </div>
+
+  <%= tag.div id: f.field_id(:rooms_storage_units, index: nil) do %>
+    <%= f.fields_for :rooms_storage_units do |ff| %>
+      <%= render "rooms_storage_unit_fields", f: ff %>
+    <% end %>
+  <% end %>
+
+</div>
+

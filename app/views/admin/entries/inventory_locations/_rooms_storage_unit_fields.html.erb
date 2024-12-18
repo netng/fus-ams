@@ -1,0 +1,53 @@
+<div 
+  data-controller="dynamic-remove"
+  data-dynamic-remove-target="container" 
+  class="relative flex gap-2 border border-solid shadow-md rounded-md p-2 mb-2">
+
+  <%= f.hidden_field :_destroy, 
+    class: 'destroy-field',
+    data: { dynamic_remove_target: "destroyField" }
+  %>
+
+  <button 
+    type="button" 
+    data-action="click->dynamic-remove#removeDetail"
+    class="absolute right-2 font-bold top-0 text-red-500 size-8 hover:text-red-900"
+    title=<%= t("custom.label.destroy")%>>
+    &times;
+  </button>
+
+  <div class="mb-2">
+    <%= f.label :storage_unit_id, "Type", class: "fus-label mb-2" %>
+    <%= f.select :storage_unit_id,
+      StorageUnit.pluck(:name, :id).map { |name, id| [name, id]},
+      {include_blank: false},
+      { data: { controller: "slim-no-search" }, class: "fus-select" }
+    %>
+    <% f.object.errors.full_messages_for(:storage_unit).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= f.label :label, class: "fus-label mb-2" %>
+    <%= f.text_field :label, class: "fus-input", required: true %>
+    <% f.object.errors.full_messages_for(:label).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= f.label :capacity, class: "fus-label mb-2" %>
+    <%= f.text_field :capacity, class: "fus-input" %>
+    <% f.object.errors.full_messages_for(:capacity).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+    <%= f.text_field :description, class: "fus-input" %>
+  </div>
+
+</div>
+

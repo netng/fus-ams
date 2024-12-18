@@ -299,6 +299,17 @@ RoutePath.create(
       description: "Route for register user asset index"
     },
 
+    {
+      function_access: FunctionAccess.find_by_code("FA_ASS_INVENTORY_LOCATION"),
+      path: "admin_user_assets_path",
+      parent: "entry",
+      group: "asset",
+      index: true,
+      sort: 7,
+      label: "activerecord.models.user_asset",
+      description: "Route for register user asset index"
+    },
+
     # setup
     {
       function_access: FunctionAccess.find_by_code("FA_ACCOUNT"),
