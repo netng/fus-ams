@@ -1,4 +1,4 @@
-class CreateInventoryLocations < ActiveRecord::Migration[8.0]
+class CreateInventoryLocationsx < ActiveRecord::Migration[8.0]
   def change
     create_table :inventory_locations, id: :uuid do |t|
       t.string :floor, null: false, limit: 100
