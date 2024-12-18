@@ -39,6 +39,7 @@ Current.account = Account.new(username: "system")
       { code: "FA_ROLE", description: "Function access for Role configuration menu", active: true },
       { code: "FA_ACCOUNT", description: "Function access for Account administration menu", active: true },
       { code: "FA_MST_ASS_SCHEDULE", description: "Function access for Asset schedule menu", active: true },
+      { code: "FA_MST_STORAGE_UNIT", description: "Function access for Storage unit menu", active: true }
     ]
   )
 
@@ -52,6 +53,17 @@ end
 RoutePath.create(
   [
     # master
+    {
+      function_access: FunctionAccess.find_by_code("FA_MST_STORAGE_UNIT"),
+      path: "admin_storage_units_path",
+      parent: "entry",
+      group: "master",
+      index: true,
+      sort: 5,
+      label: "activerecord.models.storage_unit",
+      description: "Route for storage_unit index"
+    },
+
     {
       function_access: FunctionAccess.find_by_code("FA_MST_ASS_SCHEDULE"),
       path: "admin_asset_schedules_path",

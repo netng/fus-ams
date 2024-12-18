@@ -219,6 +219,12 @@ Rails.application.routes.draw do
           delete "destroy_many"
         end
       end
+
+      resources :storage_units do
+        collection do
+          delete "destroy_many"
+        end
+      end
     end
 
     scope module: :setups, path: "setups" do
