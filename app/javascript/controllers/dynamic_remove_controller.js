@@ -19,7 +19,11 @@ export default class extends Controller {
     }
 
     if (row) {
+      row.querySelectorAll("input, select, textarea").forEach((input) => {
+        input.removeAttribute("required");
+      });
       row.style.display = "none"
+      console.log("row ", row)
     }
   }
 }

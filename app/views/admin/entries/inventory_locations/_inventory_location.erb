@@ -1,4 +1,4 @@
-<%= tag.tr id: dom_id(asset_schedule), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+<%= tag.tr id: dom_id(inventory_location), class: "border-b border-gray-200 hover:bg-gray-100" do %>
 
   <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
 
@@ -7,13 +7,13 @@
 
         <% if policy([:admin, :authorization]).destroy? %>
 
-          <%= check_box_tag "asset_schedule_ids[]",
-            asset_schedule.id,
+          <%= check_box_tag "inventory_location_ids[]",
+            inventory_location.id,
             nil,
             {
               class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
               multiple: true,
-              form: :asset_schedule_table,
+              form: :inventory_location_table,
               data: {
                 table_target: "childCheckbox",
                 action: "change->table#toggleParentCheckbox"
@@ -26,7 +26,7 @@
 
         <% if policy([:admin, :authorization]).read? %>
 
-          <%= link_to admin_asset_schedule_path(asset_schedule),
+          <%= link_to admin_inventory_location_path(inventory_location),
             data: {
               turbo_frame: :modal,
               turbo_action: "advance"
@@ -41,9 +41,9 @@
         
         <% if policy([:admin, :authorization]).update? %>
 
-          <%= link_to edit_admin_asset_schedule_path(asset_schedule),
+          <%= link_to edit_admin_inventory_location_path(inventory_location),
             data: {
-              turbo_frame: :modal,
+              turbo_frame: "main-content",
               turbo_action: "advance"
             } do %>
               <%= inline_svg_tag "edit.svg",
@@ -58,6 +58,6 @@
     </td>
 
   <% end %>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_schedule.name %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset_schedule.description.blank? ? "-" : asset_schedule.description %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.floor %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.description.blank? ? "-" : inventory_location.description %></td>
 <% end %>

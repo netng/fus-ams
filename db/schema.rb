@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_18_045406) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_19_015501) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -583,6 +583,20 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_18_045406) do
     t.index ["storage_unit_id"], name: "index_rooms_storage_units_on_storage_unit_id"
   end
 
+  create_table "rooms_storage_units_bins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "rooms_storage_unit_id", null: false
+    t.string "label", limit: 100, null: false
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["label", "rooms_storage_unit_id"], name: "idx_on_label_rooms_storage_unit_id_fdfa0f7385", unique: true
+    t.index ["rooms_storage_unit_id"], name: "index_rooms_storage_units_bins_on_rooms_storage_unit_id"
+  end
+
   create_table "route_paths", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "function_access_id", null: false
     t.string "path", limit: 100, null: false
@@ -787,6 +801,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_18_045406) do
   add_foreign_key "rooms", "inventory_locations"
   add_foreign_key "rooms_storage_units", "rooms"
   add_foreign_key "rooms_storage_units", "storage_units"
+  add_foreign_key "rooms_storage_units_bins", "rooms_storage_units"
   add_foreign_key "route_paths", "function_accesses"
   add_foreign_key "site_defaults", "sites"
   add_foreign_key "site_groups", "projects"

@@ -1,0 +1,34 @@
+<div 
+  class="border border-solid shadow-md rounded-md p-2 my-2"
+  data-controller="dynamic-remove"
+  data-dynamic-remove-target="container">
+
+  <div class="relative flex gap-2">
+    <%= f.hidden_field :_destroy, 
+      class: 'destroy-field',
+      data: { dynamic_remove_target: "destroyField" }
+    %>
+
+    <button 
+      type="button" 
+      data-action="click->dynamic-remove#removeDetail"
+      class="absolute right-2 font-bold top-0 text-red-500 size-8 hover:text-red-900"
+      title=<%= t("custom.label.destroy")%>>
+      &times;
+    </button>
+
+    <div class="mb-2 w-full">
+      <%= f.label :label, class: "fus-label mb-2" %>
+      <%= f.text_field :label, class: "fus-input", required: true %>
+      <% f.object.errors.full_messages_for(:label).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2 w-full">
+      <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+      <%= f.text_field :description, class: "fus-input" %>
+    </div>
+
+  </div>
+</div>

@@ -35,9 +35,14 @@ en:
       asset_software: Asset software
       storage_unit: Storage unit
       inventory_location: Inventory location
+      rooms_storage_units_bin: Storage bin
       
 
     attributes:
+      rooms_storage_units_bin:
+        label: Label
+        description: Description
+        
       inventory_location:
         name: Name
         description: Description

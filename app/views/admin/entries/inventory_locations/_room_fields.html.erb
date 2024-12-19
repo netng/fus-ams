@@ -18,7 +18,7 @@
 
   <div class="mb-2">
     <%= f.label :name, class: "fus-label mb-2" %>
-    <%= f.text_field :name, class: "fus-input", required: true %>
+    <%= f.text_field :name, class: "fus-input font-bold", required: true %>
     <% f.object.errors.full_messages_for(:name).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
     <% end %>

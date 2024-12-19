@@ -10,9 +10,9 @@
 
 Current.account = Account.new(username: "system")
 
-# Initialize default system data
+  # Initialize default system data
 
-# Function Access
+  # Function Access
   FunctionAccess.create(
     [
       { code: "FA_MST_SITE_STAT", description: "Function access for Asset Status menu", active: true },
@@ -107,7 +107,7 @@ RoutePath.create(
       description: "Route for Brand index"
     },
 
-    
+
 
     # location
     {
@@ -308,6 +308,17 @@ RoutePath.create(
       sort: 7,
       label: "activerecord.models.user_asset",
       description: "Route for register user asset index"
+    },
+
+    {
+      function_access: FunctionAccess.find_by_code("FA_ASS_INVENTORY_LOCACTION"),
+      path: "admin_inventory_locations_path",
+      parent: "entry",
+      group: "asset",
+      index: true,
+      sort: 8,
+      label: "activerecord.models.inventory_location",
+      description: "Route for register inventory location index"
     },
 
     # setup

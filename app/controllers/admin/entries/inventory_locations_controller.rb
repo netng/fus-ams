@@ -33,7 +33,7 @@ module Admin::Entries
       form_model, *nested_attributes = params[:name].split(/\[|\]/).compact_blank
       helpers.fields form_model.classify.constantize.new do |form|
         nested_form_builder_for form, nested_attributes do |f|
-          # NOTE: this block should run only once for the last association
+      # NOTE: this block should run only once for the last association
       #       cocktail[cocktail_ingredients_attributes]
       #           this ^^^^^^^^^^^^^^^^^^^^        or this vvvvvv
       #       cocktail[cocktail_ingredients_attributes][0][things_attributes]
@@ -53,7 +53,7 @@ module Admin::Entries
       render turbo_stream: turbo_stream.append(
         params[:name].parameterize(separator: "_"),
         partial: "#{f.object.class.name.underscore}_fields",
-        locals: {f:}
+        locals: { f: }
       )
         end
       end
@@ -136,7 +136,14 @@ module Admin::Entries
               :label,
               :capacity,
               :description,
-              :_destroy
+              :_destroy,
+              rooms_storage_units_bins_attributes: [ [
+                :id,
+                :rooms_storage_unit_id,
+                :label,
+                :description,
+                :_destroy
+              ] ]
             ] ]
           ] ]
         ])
@@ -159,7 +166,11 @@ module Admin::Entries
       end
 
       def handle_unique_constraint_error(exception)
-        if exception.message.include?("index_rooms_on_name_and_inventory_location_id") || exception.message.include?("idx_on_label_room_id_storage_unit_id_10022de3c0")
+        if exception.message.include?("index_rooms_on_name_and_inventory_location_id") ||
+            exception.message.include?("idx_on_label_room_id_storage_unit_id_10022de3c0") ||
+            exception.message.include?("idx_on_label_rooms_storage_unit_id_fdfa0f7385")
+
+
           @inventory_location.rooms.each do |room|
             # Periksa konflik di database
             db_conflict = Room.exists?(name: room.name, inventory_location_id: room.inventory_location_id)
@@ -202,6 +213,31 @@ module Admin::Entries
                 )
 
                 logger.debug "Storage unit error: #{storage_unit.errors.inspect}"
+              end
+
+              # Validasi rooms_storage_units_bins
+              storage_unit.rooms_storage_units_bins.each do |storage_bin|
+                logger.debug "Storage UNIT bins: #{storage_bin.inspect}"
+                # Periksa konflik di database
+                db_conflict_storage = RoomsStorageUnitsBin.exists?(label: storage_bin.label, rooms_storage_unit_id: storage_bin.rooms_storage_unit_id)
+
+                # Periksa konflik di memori (nested attributes)
+                memory_conflict_storage = storage_unit.rooms_storage_units_bins.any? do |other_storage_bin|
+                  other_storage_bin != storage_bin && other_storage_bin.label == storage_bin.label && other_storage_bin.rooms_storage_unit_id == storage_bin.rooms_storage_unit_id
+                end
+
+                if db_conflict_storage || memory_conflict_storage
+                  storage_bin.errors.add(
+                    :label,
+                    I18n.t(
+                      "custom.errors.nested_uniqueness_scope",
+                      field: RoomsStorageUnitsBin.human_attribute_name(:label),
+                      related_model: RoomsStorageUnit.model_name.human
+                    )
+                  )
+
+                  logger.debug "Storage unit error: #{storage_bin.errors.inspect}"
+                end
               end
             end
           end

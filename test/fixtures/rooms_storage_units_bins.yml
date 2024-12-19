@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rooms_storage_unit: one
+  label: MyString
+  description: MyString
+
+two:
+  rooms_storage_unit: two
+  label: MyString
+  description: MyString
