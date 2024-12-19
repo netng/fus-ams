@@ -65,6 +65,8 @@ module Admin::Entries
       @inventory_location = InventoryLocation.new(inventory_location_params)
       @inventory_location.site = current_account.site
 
+      logger.debug "INVENTORY PARAMS : #{inventory_location_params.inspect}"
+
       respond_to do |format|
         begin
           if @inventory_location.save
@@ -129,6 +131,7 @@ module Admin::Entries
             :id,
             :name,
             :description,
+            :room_photo,
             :_destroy,
             rooms_storage_units_attributes: [ [
               :id,
@@ -136,6 +139,7 @@ module Admin::Entries
               :label,
               :capacity,
               :description,
+              :rooms_storage_unit_photo,
               :_destroy,
               rooms_storage_units_bins_attributes: [ [
                 :id,

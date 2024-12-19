@@ -2,6 +2,8 @@ class RoomsStorageUnit < ApplicationRecord
   belongs_to :room
   belongs_to :storage_unit
 
+  has_one_attached :rooms_storage_unit_photo
+
   has_many :rooms_storage_units_bins, inverse_of: :rooms_storage_unit, dependent: :destroy
   accepts_nested_attributes_for :rooms_storage_units_bins, allow_destroy: true, reject_if: :all_blank
 

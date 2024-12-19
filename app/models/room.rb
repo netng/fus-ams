@@ -3,6 +3,8 @@ class Room < ApplicationRecord
 
   belongs_to :inventory_location
 
+  has_one_attached :room_photo
+
   has_many :rooms_storage_units, inverse_of: :room, dependent: :destroy
   accepts_nested_attributes_for :rooms_storage_units, allow_destroy: true, reject_if: :all_blank
 

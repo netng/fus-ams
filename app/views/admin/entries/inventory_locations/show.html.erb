@@ -19,22 +19,35 @@
 </div>
 
 <!-- room -->
+<div class="my-4">
+  <h2 class="fus-form-sub-header mb-4">
+    <%= t("activerecord.models.room").capitalize.pluralize %>
+  </h2>
+</div>
 <div class="md:grid grid-cols-2 gap-2 mt-4">
   <% @inventory_location.rooms.each do |room| %>
 
     <div class="relative border border-solid shadow-md rounded-md p-2">
-      <div class="mb-2">
-        <label class="fus-label">
-          <%= t("activerecord.attributes.room.name") %>
-        </label>
-        <span class="fus-readonly font-bold"><%= room.name %></span>
-      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <div class="mb-2">
+            <label class="fus-label">
+              <%= t("activerecord.attributes.room.name") %>
+            </label>
+            <span class="fus-readonly font-bold"><%= room.name %></span>
+          </div>
 
-      <div class="mb-2">
-        <label class="fus-label">
-          <%= t("activerecord.attributes.room.name") %>
-        </label>
-        <span class="fus-readonly"><%= room.description %></span>
+          <div class="mb-2">
+            <label class="fus-label">
+              <%= t("activerecord.attributes.room.description") %>
+            </label>
+            <span class="fus-readonly"><%= room.description %></span>
+          </div>
+        </div>
+
+        <div class="border-2 border-dashed rounded p-2">
+          <%= image_tag room.room_photo if room.room_photo.attached? %>
+        </div>
       </div>
 
       <div class="my-4">
@@ -105,6 +118,7 @@
       <% end %>
 
     </div>
+    
   <% end %>
 </div>
 
