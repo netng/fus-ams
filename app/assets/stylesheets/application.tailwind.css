@@ -37,6 +37,10 @@
     @apply text-xl font-bold text-gray-500;
   }
 
+  .fus-form-title {
+    @apply text-lg font-bold text-gray-500;
+  }
+
   .fus-icons {
     @apply w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer;
   }

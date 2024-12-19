@@ -36,13 +36,18 @@ en:
       storage_unit: Storage unit
       inventory_location: Inventory location
       rooms_storage_units_bin: Storage bin
+      room: Room
       
 
     attributes:
+      room:
+        name: Name
+        description: Description
+
       rooms_storage_units_bin:
         label: Label
         description: Description
-        
+
       inventory_location:
         name: Name
         description: Description
@@ -457,6 +462,7 @@ en:
   
   custom:
     label:
+      floor: Floor
       export_error: Failed to export
       total_data: Total data
       sheet_protection: Sheet protection

@@ -28,7 +28,7 @@
 
           <%= link_to admin_inventory_location_path(inventory_location),
             data: {
-              turbo_frame: :modal,
+              turbo_frame: "main-content",
               turbo_action: "advance"
             } do %>
               <%= inline_svg_tag "show.svg",

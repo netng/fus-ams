@@ -2,7 +2,7 @@ module Admin::Entries
   class InventoryLocationsController < ApplicationAdminController
     before_action :set_inventory_location, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :show ]
+    #before_action :ensure_frame_response, only: [ :show ]
     before_action :set_previous_url
 
 

@@ -1,34 +1,115 @@
-<%= render "layouts/turbo_modal" do %>
-  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-10 bg-fus-blue text-white shadow-md ">
-    <%= t("custom.label.show_detail", model: t("activerecord.models.asset_schedule")).capitalize %>
-  </h2>
-	<div data-action="turbo:submit-end->modal#submitEnd" class="px-8 py-2">
-    <div class="bg-slate-50 rounded-md">
-      <div class="grid grid-cols-2 gap-2 p-4">
-        <div class="mb-2">
-          <label class="fus-label">
-            <%= t("activerecord.attributes.asset_schedule.name") %>
-          </label>
-          <span class="fus-readonly"><%= @asset_schedule.name %></span>
-        </div>
-      </div>
+<h2 class="fus-form-header mb-4">
+  <%= t("activerecord.models.inventory_location").capitalize %>
+</h2>
 
-      <div class="mb-2 p-4">
+<div class="border border-solid shadow-md rounded-md p-2">
+  <div class="mb-2">
+    <label class="fus-label">
+      <%= t("activerecord.attributes.inventory_location.floor") %>
+    </label>
+    <span class="fus-readonly font-bold"><%= @inventory_location.floor %></span>
+  </div>
+
+  <div class="mb-2">
+    <label class="fus-label">
+      <%= t("activerecord.attributes.inventory_location.description") %>
+    </label>
+    <span class="fus-readonly"><%= @inventory_location.description %></span>
+  </div>
+</div>
+
+<!-- room -->
+<div class="md:grid grid-cols-2 gap-2 mt-4">
+  <% @inventory_location.rooms.each do |room| %>
+
+    <div class="relative border border-solid shadow-md rounded-md p-2">
+      <div class="mb-2">
         <label class="fus-label">
-          <%= t("activerecord.attributes.asset_schedule.description") %>
+          <%= t("activerecord.attributes.room.name") %>
         </label>
-        <span class="fus-readonly"><%= @asset_schedule.description.blank? ? "-" : @asset_schedule.description %></span>
+        <span class="fus-readonly font-bold"><%= room.name %></span>
       </div>
-      
+
+      <div class="mb-2">
+        <label class="fus-label">
+          <%= t("activerecord.attributes.room.name") %>
+        </label>
+        <span class="fus-readonly"><%= room.description %></span>
+      </div>
+
+      <div class="my-4">
+        <h2 class="fus-form-sub-header mb-4">
+          <%= t("activerecord.models.storage_unit").capitalize.pluralize %>
+        </h2>
+      </div>
+
+      <!-- storage units -->
+      <% room.rooms_storage_units.each do |room_storage_unit| %>
+        <div class="border border-solid shadow-md rounded-md p-2 mb-2">
+          <div class="relative flex gap-2">
+            <div class="mb-2 w-full">
+              <label class="fus-label">
+                Type
+              </label>
+              <span class="fus-readonly font-bold"><%= room_storage_unit.storage_unit.name %></span>
+            </div>
+
+            <div class="mb-2 w-full">
+              <label class="fus-label">
+                <%= t("activerecord.attributes.room_storage_unit.label") %>
+              </label>
+              <span class="fus-readonly font-bold"><%= room_storage_unit.label %></span>
+            </div>
+
+            <div class="mb-2 w-full">
+              <label class="fus-label">
+                <%= t("activerecord.attributes.room_storage_unit.capacity") %>
+              </label>
+              <span class="fus-readonly"><%= room_storage_unit.capacity %></span>
+            </div>
+
+            <div class="mb-2 w-full">
+              <label class="fus-label">
+                <%= t("activerecord.attributes.room_storage_unit.description") %>
+              </label>
+              <span class="fus-readonly"><%= room_storage_unit.description %></span>
+            </div>
+
+          </div>
+
+          <!-- rooms storage units bins -->
+          <div class="my-4">
+            <h2 class="fus-form-title mb-4">
+              <%= t("activerecord.models.rooms_storage_units_bin").capitalize.pluralize %>
+            </h2>
+          </div>
+          <% room_storage_unit.rooms_storage_units_bins.each do |rooms_storage_units_bin| %>
+            <div class="border flex gap-2 border-solid shadow-md rounded-md p-2 my-2">
+              <div class="mb-2 w-full">
+                <label class="fus-label">
+                  <%= t("activerecord.attributes.rooms_storage_units_bin.label") %>
+                </label>
+                <span class="fus-readonly font-bold"><%= rooms_storage_units_bin.label %></span>
+              </div>
+
+              <div class="mb-2 w-full">
+                <label class="fus-label">
+                  <%= t("activerecord.attributes.rooms_storage_units_bin.description") %>
+                </label>
+                <span class="fus-readonly"><%= rooms_storage_units_bin.description %></span>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      <% end %>
+
     </div>
+  <% end %>
+</div>
 
-    <%= button_tag t("custom.label.cancel"),
-      data: { action: "modal#hideModal" },
-      class: "fus-secondary-btn md:w-[100px] mt-2"
-    %>
-    
-	</div>
-<% end %>
+<div class="my-6">
+  <%= link_to t("custom.label.back"), admin_inventory_locations_path, class: "fus-secondary-btn md:w-[100px]" %>
+</div>
 
-
-<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset_schedule")).capitalize) %>
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.inventory_location")).capitalize) %>
