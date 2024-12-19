@@ -16,18 +16,40 @@
     &times;
   </button>
 
-  <div class="mb-2">
-    <%= f.label :name, class: "fus-label mb-2" %>
-    <%= f.text_field :name, class: "fus-input font-bold", required: true %>
-    <% f.object.errors.full_messages_for(:name).each do |message| %>
-      <p class="text-red-500 text-sm mt-1"><%= message %></p>
-    <% end %>
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Kolom Kiri -->
+    <div>
+      <div class="mb-2">
+        <%= f.label :name, class: "fus-label mb-2" %>
+        <%= f.text_field :name, class: "fus-input font-bold", required: true %>
+        <% f.object.errors.full_messages_for(:name).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <%= f.label :description, class: "fus-label mb-2" %>
+        <%= f.textarea :description, class: "fus-input" %>
+      </div>
+    </div>
+
+    <!-- Kolom Kanan -->
+    <div>
+      <%= f.label :photo, class: "fus-label mb-2" %>
+      <div class="relative flex flex-col justify-center items-center border-2 border-dashed border-gray-300 rounded-lg p-8 bg-gray-50 hover:bg-gray-100">
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2">Drag and drop your room photo here</p>
+          <p class="text-sm text-gray-500">or click to browse</p>
+          <p id="file-name" class="text-sm text-gray-700 font-medium mt-2 hidden"></p>
+        </div>
+        <%= f.file_field :photo,
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer",
+          data: { action: "change->file-upload#updateFileName" }
+        %>
+      </div>
+    </div>
   </div>
 
-  <div class="mb-2">
-    <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
-    <%= f.textarea :description, class: "fus-input" %>
-  </div>
 
   <hr class="my-4" />
   <div class="mb-4 flex items-center">

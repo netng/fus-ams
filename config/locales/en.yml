@@ -43,6 +43,7 @@ en:
       room:
         name: Name
         description: Description
+        photo: Photo
 
       rooms_storage_units_bin:
         label: Label
