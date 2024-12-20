@@ -50,8 +50,9 @@ en:
         description: Description
 
       inventory_location:
-        name: Name
+        floor: Floor
         description: Description
+        rooms_count: Number of rooms
 
       storage_unit:
         name: Name

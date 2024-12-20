@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="image-preview"
 export default class extends Controller {
-  static targets = ["fileInput", "fileName", "preview"]
+  static targets = ["fileInput", "fileName", "preview", "defaultText"]
 
   connect() {
     console.log("Image preview controller connected")
@@ -19,6 +19,7 @@ export default class extends Controller {
         this.previewTarget.classList.remove("hidden") // Show the image preview
         this.fileNameTarget.textContent = file.name // Display file name
         this.fileNameTarget.classList.remove("hidden")
+        this.defaultTextTarget.classList.add("hidden")
       }
 
       reader.readAsDataURL(file)
@@ -27,6 +28,7 @@ export default class extends Controller {
       this.previewTarget.classList.add("hidden") // Hide the image preview
       this.fileNameTarget.textContent = ""
       this.fileNameTarget.classList.add("hidden")
+      this.defaultTextTarget.classList.remove("hidden")
     }
   }
 }

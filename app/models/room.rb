@@ -1,7 +1,7 @@
 class Room < ApplicationRecord
   include Trackable
 
-  belongs_to :inventory_location
+  belongs_to :inventory_location, counter_cache: true
 
   has_one_attached :room_photo
 
