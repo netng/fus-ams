@@ -11,7 +11,7 @@
   <button 
     type="button" 
     data-action="click->dynamic-remove#removeDetail"
-    class="absolute right-2 font-bold top-0 text-red-500 size-8 hover:text-red-900"
+    class="absolute right-2 font-bold top-1 text-white size-8 hover:text-red-900 bg-red-500 rounded-lg"
     title=<%= t("custom.label.destroy")%>>
     &times;
   </button>
@@ -19,11 +19,11 @@
   <div class="grid grid-cols-4 gap-4 pt-4">
     <div class="col-span-3">
       <div class="mb-2">
-        <%= f.label :storage_unit_id, "Type", class: "fus-label mb-2" %>
+        <%= f.label :storage_unit_id, "#{t('activerecord.attributes.rooms_storage_unit.storage_unit_id')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
         <%= f.select :storage_unit_id,
           StorageUnit.pluck(:name, :id).map { |name, id| [name, id]},
-          { include_blank: false },
-          { data: { controller: "slim-no-search" }, class: "fus-select" }
+          { include_blank: t("custom.label.select_storage_type") },
+          { data: { controller: "slim-no-search" }, class: "fus-select font-bold" }
         %>
         <% f.object.errors.full_messages_for(:storage_unit).each do |message| %>
           <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -99,7 +99,7 @@
     </div>
   </div>
 
-  <%= tag.div id: f.field_id(:rooms_storage_units_bins, index: nil), class: "mt-4" do %>
+  <%= tag.div id: f.field_id(:rooms_storage_units_bins, index: nil), class: "mt-4 max-h-96 overflow-auto" do %>
     <%= f.fields_for :rooms_storage_units_bins do |ff| %>
       <%= render "rooms_storage_units_bin_fields", f: ff %>
     <% end %>

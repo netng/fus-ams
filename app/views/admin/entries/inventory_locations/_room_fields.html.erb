@@ -11,7 +11,7 @@
   <button 
     type="button" 
     data-action="click->dynamic-remove#removeDetail"
-    class="absolute right-2 font-bold top-0 text-red-500 size-8 hover:text-red-900"
+    class="absolute right-2 font-bold top-1 text-white size-8 hover:text-red-900 bg-red-500 rounded-lg"
     title=<%= t("custom.label.destroy")%>>
     &times;
   </button>
@@ -20,7 +20,7 @@
     <!-- Kolom Kiri -->
     <div class="col-span-3">
       <div class="mb-2">
-        <%= f.label :name, class: "fus-label mb-2" %>
+        <%= f.label :name, "#{t('activerecord.attributes.room.name')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
         <%= f.text_field :name, class: "fus-input font-bold", required: true %>
         <% f.object.errors.full_messages_for(:name).each do |message| %>
           <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -39,34 +39,54 @@
       <div 
         class="relative flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 max-h-48">
         
-        <!-- Image Preview -->
-        <% if f.object.room_photo.attached? %>
-          <img 
-            src="<%= url_for(f.object.room_photo) %>" 
-            data-image-preview-target="preview" 
-            class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
-            alt="Image Preview"
-            onclick="this.previousElementSibling.click()" />
-        <% else %>
-          <img 
-            data-image-preview-target="preview" 
-            class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
-            alt="Image Preview"
-            onclick="this.previousElementSibling.click()" />
-        <% end %>
+        <!-- Iterasi melalui rooms_attributes untuk mendapatkan setiap room_photo -->
 
-        <div class="text-center pointer-events-none">
-          <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
-          <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
-        </div>
+        <%= f.object.room_photo.attached? %>
 
-        <%= f.file_field :room_photo, 
-          class: "absolute inset-0 w-40 h-40 opacity-0 cursor-pointer", 
-          accept: "image/*", 
-          data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
+          <!-- Image Preview jika ada file yang sudah ter-upload -->
+          <% if f.object.persisted? && f.object.room_photo.attached? %>
+            <img 
+              src="<%= url_for(f.object.room_photo) %>" 
+              data-image-preview-target="preview" 
+              class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
+              alt="Image Preview"
+              onclick="this.previousElementSibling.click()" />
+          <% elsif params[:blob_signed_id].present? %>
+            <!-- Jika file sementara diunggah -->
+            <% blob = ActiveStorage::Blob.find_signed(params[:blob_signed_id]) %>
+            <img 
+              src="<%= url_for(blob) %>" 
+              data-image-preview-target="preview" 
+              class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
+              alt="Image Preview"
+              onclick="this.previousElementSibling.click()" />
+          <% else %>
+            <!-- Default jika belum ada file -->
+            <img 
+              data-image-preview-target="preview" 
+              class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
+              alt="Image Preview"
+              onclick="this.previousElementSibling.click()" />
+          <% end %>
         
+
+          <!-- Text Default -->
+          <div class="text-center pointer-events-none">
+            <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
+            <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
+          </div>
+
+          <!-- Input File untuk setiap room -->
+          <%= f.file_field :room_photo, 
+            direct_upload: true,
+            class: "absolute inset-0 w-40 h-40 opacity-0 cursor-pointer", 
+            accept: "image/*", 
+            data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
       </div>
     </div>
+
+
+
 
 
   </div>

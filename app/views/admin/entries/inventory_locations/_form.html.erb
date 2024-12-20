@@ -1,6 +1,6 @@
 <%= form_with model: [:admin, inventory_location], data: { turbo_action: "advance" }, html: { multipart: true } do |f| %>
   <div class="mb-2">
-    <%= f.label :floor, class: "fus-label mb-2" %>
+    <%= f.label :floor, "#{t('activerecord.attributes.inventory_location.floor')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
     <%= f.text_field :floor, class: "fus-input font-bold", required: true %>
     <% @inventory_location.errors.full_messages_for(:floor).each do |message| %>
       <p class="text-red-500 text-sm mt-1"><%= message %></p>
@@ -8,7 +8,7 @@
   </div>
 
   <div class="mb-2">
-    <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+    <%= f.label :description, class: "fus-label mb-2" %>
     <%= f.textarea :description, class: "fus-input" %>
   </div>
 

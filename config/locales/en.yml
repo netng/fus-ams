@@ -37,13 +37,17 @@ en:
       inventory_location: Inventory location
       rooms_storage_units_bin: Storage bin
       room: Room
-      
+      rooms_storage_unit: Room storage unit
 
     attributes:
+      rooms_storage_unit:
+        storage_unit_id: Type
+        
       room:
         name: Name
         description: Description
         photo: Photo
+        rooms_storage_units_count: Number of storage units
 
       rooms_storage_units_bin:
         label: Label
@@ -464,6 +468,7 @@ en:
   
   custom:
     label:
+      select_storage_type: Select storage type
       floor: Floor
       export_error: Failed to export
       total_data: Total data

@@ -2,7 +2,7 @@ module Admin::Entries
   class InventoryLocationsController < ApplicationAdminController
     before_action :set_inventory_location, only: [ :show, :edit, :update, :destroy ]
     before_action :set_function_access_code
-    #before_action :ensure_frame_response, only: [ :show ]
+    # before_action :ensure_frame_response, only: [ :show ]
     before_action :set_previous_url
 
 
@@ -65,8 +65,6 @@ module Admin::Entries
       @inventory_location = InventoryLocation.new(inventory_location_params)
       @inventory_location.site = current_account.site
 
-      logger.debug "INVENTORY PARAMS : #{inventory_location_params.inspect}"
-
       respond_to do |format|
         begin
           if @inventory_location.save
@@ -89,9 +87,14 @@ module Admin::Entries
       authorize :authorization, :update?
 
       respond_to do |format|
-        if @inventory_location.update(inventory_location_params)
-          format.html { redirect_to admin_inventory_locations_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.inventory_location")) }
-        else
+        begin
+          if @inventory_location.update(inventory_location_params)
+            format.html { redirect_to admin_inventory_locations_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.inventory_location")) }
+          else
+            format.html { render :edit, status: :unprocessable_entity }
+          end
+        rescue ActiveRecord::RecordNotUnique => e
+          handle_unique_constraint_error(e)
           format.html { render :edit, status: :unprocessable_entity }
         end
       end
@@ -128,7 +131,6 @@ module Admin::Entries
           :floor,
           :description,
           rooms_attributes: [ [
-            :id,
             :name,
             :description,
             :room_photo,

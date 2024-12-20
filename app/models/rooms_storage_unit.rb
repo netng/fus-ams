@@ -1,5 +1,6 @@
 class RoomsStorageUnit < ApplicationRecord
-  belongs_to :room
+  belongs_to :room, counter_cache: true
+
   belongs_to :storage_unit
 
   has_one_attached :rooms_storage_unit_photo
