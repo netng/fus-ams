@@ -33,55 +33,38 @@
       </div>
     </div>
 
-    <!-- Kolom Kanan -->
+   <!-- Kolom Kanan: File Field -->
     <div data-controller="image-preview">
       <%= f.label :room_photo, class: "fus-label mb-2" %>
       <div 
         class="relative flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 max-h-48">
         
-        <!-- Iterasi melalui rooms_attributes untuk mendapatkan setiap room_photo -->
+        <!-- Image Preview -->
+        <% if f.object.persisted? && f.object.room_photo.attached? %>
+          <img 
+            src="<%= url_for(f.object.room_photo) %>" 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% else %>
+          <img 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% end %>
 
-        <%= f.object.room_photo.attached? %>
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
+          <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
+        </div>
 
-          <!-- Image Preview jika ada file yang sudah ter-upload -->
-          <% if f.object.persisted? && f.object.room_photo.attached? %>
-            <img 
-              src="<%= url_for(f.object.room_photo) %>" 
-              data-image-preview-target="preview" 
-              class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
-              alt="Image Preview"
-              onclick="this.previousElementSibling.click()" />
-          <% elsif params[:blob_signed_id].present? %>
-            <!-- Jika file sementara diunggah -->
-            <% blob = ActiveStorage::Blob.find_signed(params[:blob_signed_id]) %>
-            <img 
-              src="<%= url_for(blob) %>" 
-              data-image-preview-target="preview" 
-              class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
-              alt="Image Preview"
-              onclick="this.previousElementSibling.click()" />
-          <% else %>
-            <!-- Default jika belum ada file -->
-            <img 
-              data-image-preview-target="preview" 
-              class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
-              alt="Image Preview"
-              onclick="this.previousElementSibling.click()" />
-          <% end %>
+        <%= f.file_field :room_photo, 
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer", 
+          accept: "image/*", 
+          data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
         
-
-          <!-- Text Default -->
-          <div class="text-center pointer-events-none">
-            <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
-            <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
-          </div>
-
-          <!-- Input File untuk setiap room -->
-          <%= f.file_field :room_photo, 
-            direct_upload: true,
-            class: "absolute inset-0 w-40 h-40 opacity-0 cursor-pointer", 
-            accept: "image/*", 
-            data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
       </div>
     </div>
 

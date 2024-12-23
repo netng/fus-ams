@@ -10,7 +10,7 @@ module Admin::Entries
       authorize :authorization, :index?
 
       @q = InventoryLocation.ransack(params[:q])
-      @q.sorts = [ "floor ascname" ] if @q.sorts.empty?
+      @q.sorts = [ "floor asc" ] if @q.sorts.empty?
       scope = @q.result
       @pagy, @inventory_locations = pagy(scope)
     end
@@ -131,6 +131,7 @@ module Admin::Entries
           :floor,
           :description,
           rooms_attributes: [ [
+            :id,
             :name,
             :description,
             :room_photo,
