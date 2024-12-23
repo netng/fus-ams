@@ -2,9 +2,9 @@
 <h3 class="fus-form-header mt-6 mb-2">
   <%= t("activerecord.models.inventory_locations") %>
 </h3>
-<div class="overflow-x-auto rounded-lg my-4" id="inventory_locations_table">
-  <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
-      <table class="min-w-full bg-white table-auto">
+<div class="rounded-lg my-4" id="inventory_locations_table">
+  <div class="min-w-full bg-white rounded-lg max-h-[500px]">
+      <table class="min-w-full bg-white">
         <thead class="rounded-lg">
           <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
 
@@ -31,54 +31,64 @@
             <%= tag.tr class: "border-b border-gray-200 hover:bg-gray-100" do %>
               <td class="py-2 px-2 text-left whitespace-nowrap">
                   <%= select_tag "inventory_location_id",
-                    options_for_select(inventory_locations.pluck(:floor, :id).map { |floor, id| [floor, id] }),
+                    options_for_select(
+                      inventory_locations.pluck(:floor, :id).map { |floor, id| [floor, id] },
+                      params[:inventory_location_id]
+                    ),
                     include_blank: t("custom.label.select", model: t("activerecord.models.inventory_location")).capitalize,
                     data: {
                       controller: "turbo-dependent-select",
                       action: "change->turbo-dependent-select#loadRooms",
                       turbo_dependent_select_target: "select"
 
-                    },
-                    class: "fus-select"
+                    }
                   %>
                 </td>
 
                 <td id="rooms" class="py-2 px-2 text-left whitespace-nowrap">
                   <%= select_tag "room_id",
-                    options_for_select([]),
+                    options_for_select(
+                      rooms.map { |room| [room["name"], room["id"]]},
+                      params[:room_id]
+                    ),
                     include_blank: t("custom.label.select", model: t("activerecord.models.room")).capitalize,
                     data: {
                       controller: "turbo-dependent-select",
                       action: "change->turbo-dependent-select#loadStorageUnits",
                       turbo_dependent_select_target: "select"
-
                     },
-                    class: "fus-select"
+                    disabled: true
                   %>
                 </td>
 
                 <td id="rooms_storage_units" class="py-2 px-2 text-left whitespace-nowrap">
                   <%= select_tag "rooms_storage_unit_id",
-                    options_for_select([]),
+                    options_for_select(
+                      storage_units.map { |storage_unit| [storage_unit["label"], storage_unit["id"]] },
+                      params[:rooms_storage_unit_id]
+                    ),
                     include_blank: t("custom.label.select", model: t("activerecord.models.rooms_storage_unit")).capitalize,
                     data: { 
                       controller: "turbo-dependent-select",
                       action: "change->turbo-dependent-select#loadStorageUnitBins",
                       turbo_dependent_select_target: "select",
                     },
-                    class: "fus-select"
+                    disabled: true
                   %>
                 </td>
 
                 <td id="rooms_storage_units_bins" class="py-2 px-2 text-left whitespace-nowrap">
                   <%= select_tag "rooms_storage_units_bin_id",
-                    options_for_select([]),
+                    options_for_select(
+                      bins.map { |bin| [bin["label"], bin["id"]] },
+                      params[:rooms_storage_units_bin_id]
+                    ),
                     include_blank: t("custom.label.select", model: t("activerecord.models.rooms_storage_units_bin")).capitalize,
                     data: {
                       controller: "turbo-dependent-select",
                       turbo_dependent_select_target: "select"
                     },
-                    class: "fus-select"
+                    disabled: true
                   %>
                 </td>
 

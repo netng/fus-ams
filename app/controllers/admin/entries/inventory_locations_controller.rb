@@ -143,7 +143,7 @@ module Admin::Entries
       authorize :authorization, :read?
 
       query = params[:query]
-      room = Room.find(query)
+      room = Room.find_by_id(query)
       inventory_location_id = room&.inventory_location&.id
 
       @rooms_storage_units = RoomsStorageUnit.where(room: room)
@@ -160,7 +160,7 @@ module Admin::Entries
       authorize :authorization, :read?
 
       query = params[:query]
-      rooms_storage_unit = RoomsStorageUnit.find(query)
+      rooms_storage_unit = RoomsStorageUnit.find_by_id(query)
       inventory_location_id = rooms_storage_unit&.room&.inventory_location&.id
 
       @rooms_storage_units_bins = RoomsStorageUnitsBin.where(rooms_storage_unit: rooms_storage_unit)

@@ -93,3 +93,11 @@
    width: calc(100% + 1rem);
    border-bottom: 1px solid rgb(147,197, 253);
  }
+
+
+ select[data-ssid] {
+  pointer-events: none;
+  opacity: 0;
+  display: flex !important;
+  position: absolute;
+}

@@ -221,7 +221,6 @@ module Admin::Entries
           ) unless @asset.site_id.nil?
 
       set_site_default(@asset)
-      set_inventory_locations(@asset.site)
 
       respond_to do |format|
         if @asset.save
@@ -230,6 +229,11 @@ module Admin::Entries
             notice: t("custom.flash.notices.successfully.created", model: t("activerecord.models.asset"))
           }
         else
+          @inventory_locations = InventoryLocation.where(site: @asset.site)
+          @rooms = Room.where(inventory_location_id: params[:inventory_location_id])
+          @storage_units = RoomsStorageUnit.where(room_id: params[:room_id])
+          @bins = RoomsStorageUnitsBin.where(rooms_storage_unit_id: params[:rooms_storage_unit_id])
+
           puts @asset.errors.messages
           format.html { render :new, status: :unprocessable_entity }
         end
@@ -910,12 +914,22 @@ module Admin::Entries
         @inventory_locations = InventoryLocation.where(site_id: params[:id])
       # end
 
+      @rooms = [ { id: "", name: "" } ]
+      @storage_units = [ { id: "", label: "" } ]
+      @bins = [ { id: "", label: "" } ]
+
       @selected_details = (params[:selected_details] || []).map(&:to_s)
 
       render turbo_stream: turbo_stream.replace(
         "inventory_locations_table",
         partial: "admin/entries/assets/inventory_locations_table",
-        locals: { inventory_locations: @inventory_locations, selected_details: @selected_details })
+        locals: { 
+          inventory_locations: @inventory_locations,
+          selected_details: @selected_details,
+          rooms: @rooms,
+          storage_units: @storage_units,
+          bins: @bins
+        })
     end
 
     

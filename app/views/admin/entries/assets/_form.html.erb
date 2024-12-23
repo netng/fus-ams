@@ -60,7 +60,13 @@
   </div>
 
   <div id="inventory_locations_table">
-    <%= render "inventory_locations_table", inventory_locations: @inventory_locations, selected_details: @selected_details %>
+    <%= render "inventory_locations_table",
+      inventory_locations: @inventory_locations,
+      rooms: @rooms,
+      storage_units: @storage_units,
+      bins: @bins,
+      selected_details: @selected_details
+    %>
   </div>
 
   <div class="md:grid grid-cols-2 gap-2">
