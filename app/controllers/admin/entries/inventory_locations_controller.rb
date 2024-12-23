@@ -149,6 +149,7 @@ module Admin::Entries
                 :rooms_storage_unit_id,
                 :label,
                 :description,
+                :rooms_storage_units_bin_photo,
                 :_destroy
               ] ]
             ] ]

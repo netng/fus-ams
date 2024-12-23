@@ -16,18 +16,55 @@
     &times;
   </button>
 
-  <div class="flex gap-2 pt-4">
-    <div class="mb-2 w-full">
-      <%= f.label :label, "#{t('activerecord.attributes.rooms_storage_units_bin.label')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
-      <%= f.text_field :label, class: "fus-input", required: true %>
-      <% f.object.errors.full_messages_for(:label).each do |message| %>
-        <p class="text-red-500 text-sm mt-1"><%= message %></p>
-      <% end %>
+  <div class="grid grid-cols-4 gap-4 pt-4">
+    <div class="col-span-3">
+      <div class="mb-2">
+        <%= f.label :label, "#{t('activerecord.attributes.rooms_storage_units_bin.label')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
+        <%= f.text_field :label, class: "fus-input", required: true %>
+        <% f.object.errors.full_messages_for(:label).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+        <%= f.text_field :description, class: "fus-input" %>
+      </div>
     </div>
 
-    <div class="mb-2 w-full">
-      <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
-      <%= f.text_field :description, class: "fus-input" %>
+    <!-- Kolom Kanan: File Field -->
+    <div data-controller="image-preview">
+      <%= f.label :bin_photo, class: "fus-label mb-2" %>
+      <div 
+        class="relative flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 max-h-48">
+        
+        <!-- Image Preview -->
+        <% if f.object.persisted? && f.object.rooms_storage_units_bin_photo.attached? %>
+          <img 
+            src="<%= url_for(f.object.rooms_storage_units_bin_photo) %>" 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% else %>
+          <img 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% end %>
+
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
+          <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
+        </div>
+
+        <%= f.file_field :rooms_storage_units_bin_photo, 
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer", 
+          accept: "image/*", 
+          data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
+        
+      </div>
     </div>
 
   </div>

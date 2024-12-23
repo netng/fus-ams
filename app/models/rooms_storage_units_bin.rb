@@ -3,6 +3,9 @@ class RoomsStorageUnitsBin < ApplicationRecord
 
   before_validation :strip_and_upcase_label
 
+  has_one_attached :rooms_storage_units_bin_photo
+
+
   validates :label, length: { maximum: 100 }, uniqueness: {
     scope: :rooms_storage_unit_id,
     case_sensitive: false,
