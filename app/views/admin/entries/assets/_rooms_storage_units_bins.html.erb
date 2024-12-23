@@ -1,0 +1,11 @@
+<td id="rooms_storage_units_bins" class="py-2 px-2 text-left whitespace-nowrap">
+  <%= select_tag "rooms_storage_units_bin_id",
+    options_for_select(rooms_storage_units_bins.map { |s| [s.label, s.id] }), 
+    include_blank: t("custom.label.select", model: t("activerecord.models.rooms_storage_units_bin")).capitalize,
+    data: {
+      controller: "turbo-dependent-select",
+      turbo_dependent_select_target: "select",
+    },
+    class: "fus-select"
+  %>
+</td>

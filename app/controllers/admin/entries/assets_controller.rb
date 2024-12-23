@@ -202,6 +202,7 @@ module Admin::Entries
       @asset = Asset.new
 
       @site_defaults = []
+      @inventory_locations = []
     end
 
     def create
@@ -211,12 +212,16 @@ module Admin::Entries
 
       @asset.tagging_date = Date.today
 
+      rooms_storage_units_bin = RoomsStorageUnitsBin.find(params[:rooms_storage_units_bin_id]) if params[:rooms_storage_units_bin_id].present?
+      @asset.rooms_storage_units_bin = rooms_storage_units_bin
+
       @asset.user_asset = UserAsset
         .find_by_id_user_asset(
           SiteDefault.find_by_site_id(@asset.site_id).id_user_site_default
           ) unless @asset.site_id.nil?
 
       set_site_default(@asset)
+      set_inventory_locations(@asset.site)
 
       respond_to do |format|
         if @asset.save
@@ -892,6 +897,28 @@ module Admin::Entries
           disposition: "attachment"
     end
 
+    def inventory_locations
+      authorize :authorization, :create?
+
+      asset = Asset.find(params[:asset_id]) unless params[:asset_id].blank?
+
+      # if purchase_order && purchase_order.persisted? && params[:id] == purchase_order.request_for_purchase.id
+      #   rfp_details = purchase_order.request_for_purchase_details
+      #   unused_rfp_details = RequestForPurchaseDetail.where(request_for_purchase: purchase_order.request_for_purchase, purchase_order: nil)
+      #   @request_for_purchase_details = rfp_details + unused_rfp_details
+      # else
+        @inventory_locations = InventoryLocation.where(site_id: params[:id])
+      # end
+
+      @selected_details = (params[:selected_details] || []).map(&:to_s)
+
+      render turbo_stream: turbo_stream.replace(
+        "inventory_locations_table",
+        partial: "admin/entries/assets/inventory_locations_table",
+        locals: { inventory_locations: @inventory_locations, selected_details: @selected_details })
+    end
+
+    
 
     private
 
@@ -972,6 +999,10 @@ module Admin::Entries
           .where(projects: { id: @asset.project_id })
           .pluck(:id, :name)
           .map { |id, name| [ name, id ] } || []
+      end
+
+      def set_inventory_locations(site)
+        @inventory_locations = InventoryLocation.where(site: site)
       end
   end
 end

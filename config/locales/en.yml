@@ -37,7 +37,7 @@ en:
       inventory_location: Inventory location
       rooms_storage_units_bin: Storage bin
       room: Room
-      rooms_storage_unit: Room storage unit
+      rooms_storage_unit: Storage unit
 
     attributes:
       rooms_storage_unit:

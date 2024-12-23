@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_20_040933) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_23_081512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -195,11 +195,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_20_040933) do
     t.uuid "asset_class_id"
     t.string "schedule", limit: 100
     t.uuid "asset_schedule_id"
+    t.uuid "rooms_storage_units_bin_id"
     t.index ["asset_class_id"], name: "index_assets_on_asset_class_id"
     t.index ["asset_model_id"], name: "index_assets_on_asset_model_id"
     t.index ["asset_schedule_id"], name: "index_assets_on_asset_schedule_id"
     t.index ["delivery_order_id"], name: "index_assets_on_delivery_order_id"
     t.index ["project_id"], name: "index_assets_on_project_id"
+    t.index ["rooms_storage_units_bin_id"], name: "index_assets_on_rooms_storage_units_bin_id"
     t.index ["site_id"], name: "index_assets_on_site_id"
     t.index ["tagging_id"], name: "index_assets_on_tagging_id", unique: true
     t.index ["user_asset_id"], name: "index_assets_on_user_asset_id"
@@ -801,6 +803,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_20_040933) do
   add_foreign_key "assets", "asset_schedules"
   add_foreign_key "assets", "delivery_orders"
   add_foreign_key "assets", "projects"
+  add_foreign_key "assets", "rooms_storage_units_bins"
   add_foreign_key "assets", "sites"
   add_foreign_key "assets", "user_assets"
   add_foreign_key "assets_inventory_locations_details", "assets"

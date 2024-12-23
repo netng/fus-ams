@@ -5,6 +5,8 @@ class RoomsStorageUnitsBin < ApplicationRecord
 
   has_one_attached :rooms_storage_units_bin_photo
 
+  has_many :assets, dependent: :restrict_with_error
+
 
   validates :label, length: { maximum: 100 }, uniqueness: {
     scope: :rooms_storage_unit_id,

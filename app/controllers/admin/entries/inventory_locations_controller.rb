@@ -125,6 +125,53 @@ module Admin::Entries
       end
     end
 
+    def rooms
+      authorize :authorization, :read?
+
+      query = params[:query]
+
+      @rooms = Room.where(inventory_location_id: query)
+
+      render turbo_stream: turbo_stream.replace(
+        "rooms",
+        partial: "admin/entries/assets/rooms",
+        locals: { rooms: @rooms }
+      )
+    end
+
+    def rooms_storage_units
+      authorize :authorization, :read?
+
+      query = params[:query]
+      room = Room.find(query)
+      inventory_location_id = room&.inventory_location&.id
+
+      @rooms_storage_units = RoomsStorageUnit.where(room: room)
+      logger.debug "Rooms storage units: #{@rooms_storage_units.inspect}"
+
+      render turbo_stream: turbo_stream.replace(
+        "rooms_storage_units",
+        partial: "admin/entries/assets/rooms_storage_units",
+        locals: { rooms_storage_units: @rooms_storage_units, inventory_location_id: inventory_location_id }
+      )
+    end
+
+    def rooms_storage_units_bins
+      authorize :authorization, :read?
+
+      query = params[:query]
+      rooms_storage_unit = RoomsStorageUnit.find(query)
+      inventory_location_id = rooms_storage_unit&.room&.inventory_location&.id
+
+      @rooms_storage_units_bins = RoomsStorageUnitsBin.where(rooms_storage_unit: rooms_storage_unit)
+
+      render turbo_stream: turbo_stream.replace(
+        "rooms_storage_units_bins",
+        partial: "admin/entries/assets/rooms_storage_units_bins",
+        locals: { rooms_storage_units_bins: @rooms_storage_units_bins, inventory_location_id: inventory_location_id }
+      )
+    end
+
     private
       def inventory_location_params
         params.expect(inventory_location: [

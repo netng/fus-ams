@@ -194,6 +194,7 @@ Rails.application.routes.draw do
           post "export"
           get "report_queues"
           get "report_queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
+          get "inventory_locations"
         end
 
         member do
@@ -222,6 +223,9 @@ Rails.application.routes.draw do
         collection do
           delete "destroy_many"
           post "add_fields"
+          get "rooms"
+          get "rooms_storage_units"
+          get "rooms_storage_units_bins"
         end
       end
     end

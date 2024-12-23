@@ -51,7 +51,7 @@ export default class extends Controller {
           const items = [{ text: defaultOption, value: '' }]
 
           data.forEach(item => {
-            items.push({ text: item.name, value: item.id })
+            items.push({ text: item.name || item.label, value: item.id })
           })
 
           childSelect.setData(items)

@@ -16,6 +16,7 @@ class Asset < ApplicationRecord
   belongs_to :delivery_order, optional: true
   belongs_to :asset_class, optional: true
   belongs_to :asset_schedule, optional: true
+  belongs_to :rooms_storage_units_bin, optional: true
 
   validates :tagging_id, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 100 }
   validates :computer_name, length: { maximum: 100 }
