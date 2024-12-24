@@ -33,6 +33,10 @@
     @apply text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300;
   }
 
+  .fus-green-btn {
+    @apply text-center bg-fus-primary-green w-full px-4 py-2 rounded hover:bg-fus-hover-green hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300;
+  }
+
   .fus-form-header {
     @apply text-2xl font-bold text-gray-500;
   }

@@ -186,7 +186,6 @@ Rails.application.routes.draw do
         collection do
           delete "destroy_many"
           delete "report_queues_destroy_many"
-          get "import"
           post "process_import"
           get "import/download_template", to: "import_download_template", as: "import_download_template"
           get "site_default"
@@ -195,6 +194,11 @@ Rails.application.routes.draw do
           get "report_queues"
           get "report_queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
           get "inventory_locations"
+
+          scope "/import" do
+            get "/", to: "import", as: "import"
+            get "asset_registrations", to: "import_asset_registrations", as: "import_asset_registrations"
+          end
         end
 
         member do

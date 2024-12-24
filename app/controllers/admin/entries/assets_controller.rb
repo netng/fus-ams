@@ -355,6 +355,10 @@ module Admin::Entries
       end
     end
 
+    def import_asset_registrations
+      authorize :authorization, :create?
+    end
+
     # kode ini tidak dipakai
     # sudah dipindah ke edit_location
     # supaya tidak beda action
