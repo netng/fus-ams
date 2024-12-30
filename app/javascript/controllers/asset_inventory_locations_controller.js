@@ -27,7 +27,7 @@ export default class extends Controller {
     const siteId = this.selectTarget.value
     const asset_id = this.assetIdValue;
 
-    let endpoint = `/admin/entries/assets/inventory_locations?id=${siteId}`;
+    let endpoint = `/admin/asset-management/assets/inventory-locations?id=${siteId}`;
     if (asset_id) {
       endpoint += `&asset_id=${asset_id}`;
     }

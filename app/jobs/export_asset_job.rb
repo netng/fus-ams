@@ -211,7 +211,7 @@ class ExportAssetJob < ApplicationJob
       Turbo::StreamsChannel.broadcast_replace_to(
         "account_#{current_account.id}",
         target: "report_queue_#{report_queue.id}",
-        partial: "admin/entries/assets/report_queues/turbo_report_queue",
+        partial: "admin/asset_management/assets/report_queues/turbo_report_queue",
         locals: { report_queue: report_queue, can_destroy: can_destroy }
       )
     end

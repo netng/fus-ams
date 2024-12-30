@@ -1,5 +1,5 @@
-<% master_menus_path ||= master_menus.flat_map(&:route_paths) %>
-<% if master_menus_path.present? %>
+<% inventory_management_menus_path ||= inventory_management_menus.flat_map(&:route_paths) %>
+<% if inventory_management_menus_path.present? %>
 
   <li
     class="relative group"
@@ -7,7 +7,7 @@
     data-action="mouseenter->dropdown-menu#show mouseleave->dropdown-menu#hide">
 
     <div class="hover:text-gray-200 focus:outline-none flex items-center" aria-expanded="false">
-      <%= t("custom.label.masters_menu") %>
+      <%= t("custom.label.inventory_management_menu") %>
       <%= inline_svg_tag "dropdown.svg", class: "size-5 transform transition-transform duration-200 group-hover:rotate-180" %>
     </div>
 
@@ -15,7 +15,7 @@
       class="absolute left-0 mt-2 hidden bg-white shadow-lg rounded py-2 px-2 whitespace-nowrap w-64"
       data-dropdown-menu-target="menu">
 
-      <% master_menus_path.sort_by(&:sort).each do |menu| %>
+      <% inventory_management_menus_path.sort_by(&:sort).each do |menu| %>
         <li
           class="py-2 px-2 text-gray-600 hover:underline"
           data-menu=<%= send(menu.path) %>

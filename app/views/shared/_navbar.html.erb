@@ -23,14 +23,12 @@
         %>
       </li>
 
-      <%= render "shared/menus/assets_menu" %>
-      <%= render "shared/menus/asset_components_menu" %>
-      <%= render "shared/menus/locations_menu" %>
+      <%= render "shared/menus/procurements_menu" %>
+      <%= render "shared/menus/asset_management_menu" %>
+      <%= render "shared/menus/inventory_management_menu" %>
+      <%= render "shared/menus/settings_menu" %>
       <%= render "shared/menus/masters_menu" %>
-
-      <% if has_setup_menu? %>
-        <%= render "shared/menus/setups_menu" %>
-      <% end %>
+      <%= render "shared/menus/access_management_menu" %>
 
     </ul>
   </div>

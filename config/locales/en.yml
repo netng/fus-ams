@@ -29,7 +29,7 @@ en:
       personal_board: Personal board
       po_delivery_site: Delivery site
       site_default: Site default
-      asset: Asset
+      asset: Data asset
       asset_class: Asset class
       asset_component: Component detail
       asset_software: Asset software
@@ -468,6 +468,16 @@ en:
   
   custom:
     label:
+      storage_unit_type: Storage unit type
+      storage_unit_label: Storage unit label
+      storage_bin_label: Storage bin label
+      procurements_menu: Procurements
+      asset_management_menu: Asset management
+      inventory_management_menu: Inventory management
+      masters_menu: Master
+      settings_menu: Settings
+      access_management_menu: Access management
+      asset_locations: Asset locations
       select_storage_type: Select storage type
       floor: Floor
       export_error: Failed to export
@@ -498,7 +508,7 @@ en:
       home: Home
       authorizations: Authorizations
       logged_as: "You're logged as"
-      menu_group: Menu group
+      module: Module
       account: Account
       role: Role
       entry_menu: Entry

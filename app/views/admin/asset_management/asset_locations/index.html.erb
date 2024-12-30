@@ -1,0 +1,14 @@
+<h2 class="fus-form-header mb-4">
+  <%= t("custom.label.default_index_header", model: t("custom.label.asset_locations")).capitalize %>
+</h2>
+
+<%#= render "action_group" %>
+<div class="table-asset_location">
+  <div class="mb-2">
+    <%= render "table"%>
+  </div>
+
+  
+</div>
+
+<% content_for(:title, t("custom.label.default_index_header", model: t("custom.label.asset_locations")).capitalize) %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_23_081512) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_30_032044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -644,6 +644,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_081512) do
     t.integer "sort", default: 0
     t.boolean "index", default: false
     t.string "parent", limit: 100
+    t.boolean "active", default: true
     t.index ["function_access_id"], name: "index_route_paths_on_function_access_id"
     t.index ["path"], name: "index_route_paths_on_path", unique: true
   end

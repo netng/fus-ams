@@ -19,185 +19,60 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "home#index"
 
-    scope module: :entries, path: "entries" do
-      get "/", to: "entries#index", as: :entries
-
-      resources :brands do
+    scope module: :procurements, path: "procurements" do
+      resources :capital_proposals, path: "capital-proposals" do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
         end
       end
 
-      resources :vendors do
+      resources :request_for_purchases, path: "request-for-purchases" do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
+          post "process-import-details"
+          get "add-rfp-details"
         end
       end
 
-      resources :departments do
+      resources :purchase_orders, path: "purchase-orders" do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
+          get "load-rfp-details"
         end
       end
 
-      resources :site_stats do
+      resources :delivery_orders, path: "delivery-orders" do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
         end
       end
+    end
 
-      resources :projects do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :site_groups do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :sites do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :softwares do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :component_types do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :components do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :asset_types do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :asset_item_types do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :asset_models do
-        collection do
-          delete "destroy_many"
-          get "asset_item_types"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :user_assets do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-
-        member do
-          get "assets", to: "assets"
-        end
-      end
-
-      resources :capital_proposals do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :request_for_purchases do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-          post "process_import_details"
-          get "add_rfp_details"
-        end
-      end
-
-      resources :purchase_orders do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-          get :load_rfp_details
-        end
-      end
-
-      resources :delivery_orders do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
-      resources :site_defaults do
-        collection do
-          delete "destroy_many"
-          get "import"
-          post "process_import"
-        end
-      end
-
+    scope module: :asset_management, path: "asset-management" do
       resources :assets do
         collection do
-          delete "destroy_many"
-          delete "report_queues_destroy_many"
-          post "process_import"
-          get "import/download_template", to: "import_download_template", as: "import_download_template"
-          get "site_default"
-          get "export_confirm"
+          delete "destroy-many"
+          delete "report-queues-destroy-many"
+          post "process-import"
+          get "import/download-template", to: "import_download_template", as: "import_download_template"
+          get "site-default"
+          get "export-confirm"
           post "export"
-          get "report_queues"
-          get "report_queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
-          get "inventory_locations"
+          get "report-queues"
+          get "report-queues/download/:report_id", to: "report_queues_download", as: "report_queues_download"
+          get "inventory-locations"
 
           scope "/import" do
             get "/", to: "import", as: "import"
-            get "asset_registrations", to: "import_asset_registrations", as: "import_asset_registrations"
+            get "asset-registrations", to: "import_asset_registrations", as: "import_asset_registrations"
           end
         end
 
@@ -211,45 +86,184 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :user_assets, path: "user-assets" do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+
+        member do
+          get "assets", to: "assets"
+        end
+      end
+
+      resources :asset_locations, path: "asset-locations" do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+          patch "update-asset-location"
+          get "search-asset", to: "search_asset"
+        end
+      end
+    end
+
+    scope module: :inventory_management, path: "inventory-management" do
+      resources :inventory_locations, path: "inventory-locations" do
+        collection do
+          delete "destroy-many"
+          post "add-fields"
+          get "rooms"
+          get "rooms-storage-units"
+          get "rooms-storage-units-bins"
+        end
+      end
+    end
+
+    scope module: :settings, path: "settings" do
+      resources :site_groups, path: "site-groups" do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :sites do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :site_defaults, path: "site-defaults" do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :asset_item_types, path: "asset-item-types" do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :asset_models, path: "asset-models" do
+        collection do
+          delete "destroy-many"
+          get "asset-item-types"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :components do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+    end
+
+    scope module: :master, path: "master" do
+      resources :brands do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :vendors do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :departments do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :site_stats do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :projects do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :softwares do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :component_types do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
+      resources :asset_types do
+        collection do
+          delete "destroy-many"
+          get "import"
+          post "process-import"
+        end
+      end
+
       resources :asset_schedules do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
         end
       end
 
       resources :storage_units do
         collection do
-          delete "destroy_many"
-        end
-      end
-
-      resources :inventory_locations do
-        collection do
-          delete "destroy_many"
-          post "add_fields"
-          get "rooms"
-          get "rooms_storage_units"
-          get "rooms_storage_units_bins"
+          delete "destroy-many"
         end
       end
     end
 
-    scope module: :setups, path: "setups" do
-      get "/", to: "setups#index", as: :setups
-
+    scope module: :access_management, path: "access-management" do
       resources :accounts do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
         end
       end
 
       resources :roles do
         collection do
-          delete "destroy_many"
+          delete "destroy-many"
           get "import"
-          post "process_import"
+          post "process-import"
         end
       end
     end
@@ -265,11 +279,11 @@ Rails.application.routes.draw do
 
     resources :importers do
       collection do
-        post "site_stats_import"
-        post "asset_classes_import"
-        post "assets_import"
-        post "asset_components_import"
-        post "asset_softwares_import"
+        post "site-stats-import"
+        post "asset-classes-import"
+        post "assets-import"
+        post "asset-components-import"
+        post "asset-softwares-import"
       end
     end
   end

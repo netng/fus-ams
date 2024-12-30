@@ -33,27 +33,27 @@ export default class extends Controller {
   async loadRooms(event) {
     const inventoryLocationId = event.target.value
     if (inventoryLocationId) {
-      await get(`/admin/entries/inventory_locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/entries/inventory_locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
   }
 
   async loadStorageUnits(event) {
     const roomId = event.target.value
     if (roomId) {
-      await get(`/admin/entries/inventory_locations/rooms_storage_units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/entries/inventory_locations/rooms_storage_units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
   }
 
   async loadStorageUnitBins(event) {
     const storageUnitId = event.target.value
     if (storageUnitId) {
-      await get(`/admin/entries/inventory_locations/rooms_storage_units_bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units-bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/entries/inventory_locations/rooms_storage_units_bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units-bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
   }
 }
