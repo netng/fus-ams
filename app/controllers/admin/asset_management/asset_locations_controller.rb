@@ -11,7 +11,7 @@ module Admin::AssetManagement
 
     def update_asset_location
       authorize :authorization, :update?
-      site = nil
+      user_asset = nil
 
       tagging_ids = params[:tagging_ids]&.flatten&.reject(&:blank?)
       user_asset_id = params[:user_asset_id]
@@ -32,7 +32,7 @@ module Admin::AssetManagement
         end
       end
 
-      redirect_to admin_asset_locations_path, notice: t("custom.flash.notices.successfully.updated_asset_locations", tagging_ids: tagging_ids, site: site&.name )
+      redirect_to admin_asset_locations_path, notice: t("custom.flash.notices.successfully.updated_asset_locations", tagging_ids: tagging_ids, site: user_asset.site&.name )
 
     rescue ActiveRecord::RecordNotFound => e
       redirect_to admin_asset_locations_path, alert: e
