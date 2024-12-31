@@ -1,0 +1,12 @@
+<div class="mb-8" data-controller="asset-locations">
+  <%= label_tag :tagging_ids, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
+  <%= select_tag :tagging_ids, 
+    options_for_select([]),
+    include_blank: t("custom.label.search_tagging_id"),
+    multiple: true,
+    data: {
+      asset_locations_target: "select"
+    },
+    class: "fus-input"
+  %>
+</div>

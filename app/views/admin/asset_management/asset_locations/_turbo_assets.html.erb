@@ -1,0 +1,13 @@
+<div id="taggin_id">
+  <%= select_tag "tagging_ids[]",
+    options_for_select(
+      assets.map { |s| [s.id, s.tagging_id] }
+    ), 
+    include_blank: t("custom.label.select", model: t("activerecord.models.asset")).capitalize,
+    data: {
+      controller: "asset-locations",
+      action: "input->asset-locations#searchAssetByTaggingId",
+      asset_locations_target: "select",
+    }
+  %>
+</div>

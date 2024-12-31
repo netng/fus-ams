@@ -468,6 +468,7 @@ en:
   
   custom:
     label:
+      search_tagging_id: Search tagging id
       storage_unit_type: Storage unit type
       storage_unit_label: Storage unit label
       storage_bin_label: Storage bin label
@@ -593,6 +594,7 @@ en:
     
     flash:
       alerts:
+        record_not_found: "#{record} is not found"
         invalid_credential: Incorrect username or password
         require_authentication: The page you want to access was not found
         select_on_or_more: Silakan pilih setidaknya satu data
@@ -606,6 +608,7 @@ en:
         successfully:
           logged_in: Logged in successfully
           updated: "%{model} successfully updated"
+          updated_asset_locations: "%{tagging_ids} successfully updated to site: %{site}"
           created: "%{model} successfully created"
           imported: "%{model}'s successfully imported"
           destroyed: "Selected %{model} successfully deleted"

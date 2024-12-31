@@ -1,0 +1,36 @@
+  <%= search_form_for [:admin, @q], url: admin_asset_locations_path, data: { 
+    controller: "filters",
+    turbo_frame: :table,
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-asset_location"
+  }, class: "bg-slate-50 p-2 rounded-t" do |f| %>
+
+    <div class="md:grid grid-cols-4 gap-2"> 
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.user_asset.id_user_asset')}", class: "fus-label" %>
+        <%= f.search_field :id_user_asset_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
+        <%= f.search_field :username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.user_asset.email')}", class: "fus-label" %>
+        <%= f.search_field :email_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.asset.site_id')}", class: "fus-label" %>
+        <%= f.select :site_id,
+          Site.pluck(:id, :name).map { |id, name| [name, id]},
+          { include_blank: t("custom.label.all", model: t("activerecord.attributes.site.name")).capitalize },
+          data: { action: "filters#submit", controller: "slim" },
+          class: "fus-select"
+        %>
+      </div>
+
+    </div>
+  <% end %>

@@ -18,6 +18,8 @@ export default class extends Controller {
       this.submit = this.debounce(this.submit.bind(this), this.delayValue)
       this.search = this.debounce(this.search.bind(this), this.delayValue)
     }
+
+    console.log("filters connected")
   }
 
   debounce(fn, delay = 1000) {
