@@ -9,7 +9,15 @@ module Admin::InventoryManagement
     def index
       authorize :authorization, :index?
 
-      @q = InventoryLocation.ransack(params[:q])
+      if current_account.site.site_default.blank?
+        @q = InventoryLocation.joins(:site).where(sites: { id: current_account.site.id })
+          .or(InventoryLocation.joins(:site).where(sites: { parent_site: current_account.site }))
+          .ransack(params[:q])
+      else
+        @q = InventoryLocation.ransack(params[:q])
+      end
+
+
       @q.sorts = [ "floor asc" ] if @q.sorts.empty?
       scope = @q.result
       @pagy, @inventory_locations = pagy(scope)

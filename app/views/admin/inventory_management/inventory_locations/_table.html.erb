@@ -15,6 +15,11 @@
               <% end %>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :site_name, "#{t('activerecord.models.site')}",
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
                 <%= sort_link(@q, :floor, "#{t('activerecord.attributes.inventory_location.floor')}",
                   { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} }) %>
               </th>
