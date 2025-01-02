@@ -39,6 +39,7 @@ module Admin::AssetManagement
         :softwares,
         :user_asset,
         :asset_schedule,
+        :inventory_location,
         asset_model: :brand,
       )
 

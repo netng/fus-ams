@@ -550,6 +550,7 @@ en:
       new_form: Asset %{model} registration
       import_form: Import data %{model}
       select_to_delete: Select to delete
+      select_all: Select all
       default_new_form: "%{model} registration"
       show_detail: "%{model} details"
       filter: Filter
