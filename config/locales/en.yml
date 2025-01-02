@@ -478,7 +478,7 @@ en:
       masters_menu: Master
       settings_menu: Settings
       access_management_menu: Access management
-      asset_locations: Asset locations
+      asset_locations: Update asset locations
       select_storage_type: Select storage type
       floor: Floor
       export_error: Failed to export
