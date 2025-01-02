@@ -82,7 +82,7 @@ if site_group.blank?
 end
 
 # Default site
-site = Site.find_by_id_site("default")
+site = Site.find_by_name("default")
 if site.blank?
   site = Site.create(name: "default", site_stat: site_stat, site_group: site_group, id_site: "default")
 end
