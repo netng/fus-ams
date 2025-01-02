@@ -24,8 +24,8 @@
 
       <div class="w-full mb-2">
         <%= f.label "#{t('activerecord.attributes.asset.site_id')}", class: "fus-label" %>
-        <%= f.select :site_id,
-          Site.pluck(:id, :name).map { |id, name| [name, id]},
+        <%= f.select :site_id_eq,
+          @sites.map { |id, name| [name, id]},
           { include_blank: t("custom.label.all", model: t("activerecord.attributes.site.name")).capitalize },
           data: { action: "filters#submit", controller: "slim" },
           class: "fus-select"

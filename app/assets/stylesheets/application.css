@@ -109,3 +109,10 @@
   align-items: flex-start;
   position: relative;
 }
+
+.ts-wrapper.plugin-remove_button:not(.rtl) .item {
+  padding-left: 20px;
+  padding-right: 20px !important;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

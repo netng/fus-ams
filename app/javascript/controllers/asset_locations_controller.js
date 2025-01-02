@@ -13,7 +13,7 @@ export default class extends Controller {
       plugins: {
         remove_button:{
           title:'Remove this item',
-          className: "absolute top-0 right-0 p-2 hover:bg-red-300 hover:rounded-full"
+          className: "absolute top-0 right-0 p-2 hover:text-red-500 hover:font-bold"
         },
         clear_button:{
 			    title:'Remove all selected options'
@@ -41,29 +41,46 @@ export default class extends Controller {
       // custom rendering functions for options and items
       render: {
         option: function(item, escape) {
+          const url = `/admin/asset-management/assets/${escape(item.id)}`;
+
           return `
             <div class="rounded p-4">
               <div class="mb-1">
                   <span class="text-xl">${ escape(item.tagging_id) }</span>
               </div>
+              <div>
+                <a href="${url}" 
+                  class="text-fus-blue hover:underline mt-2"
+                  data-action="click->asset-locations#open"
+                  data-turbo-frame="modal"
+                  onclick="event.stopPropagation();">
+                  View details
+                </a>
+              </div>
+              
               <div class="flex flex-col">
-                <div><span class="font-semibold">Current site:</span> ${ escape(item.site) }</div>
-                <div><span class="font-semibold">Current user id:</span> ${ escape(item.user_asset_id)}</div>
-                <div><span class="font-semibold">Current username:</span> ${ escape(item.user_asset_username)}</div>
+                <div><span class="font-semibold">Site:</span> ${ escape(item.site) }</div>
+                <div><span class="font-semibold">User asset id:</span> ${ escape(item.user_asset_id)}</div>
               </div>
             </div>
           `;
         },
         item: function(item, escape) {
+          const url = `/admin/asset-management/assets/${escape(item.id)}`;
+
           return `
             <div class="rounded p-4">
               <div class="mb-1">
                   <span class="text-xl">${ escape(item.tagging_id) }</span>
               </div>
-              <div class="flex flex-col">
-                <div><span class="font-semibold">Current site:</span> ${ escape(item.site) }</div>
-                <div><span class="font-semibold">Current user id:</span> ${ escape(item.user_asset_id)}</div>
-                <div><span class="font-semibold">Current username:</span> ${ escape(item.user_asset_username)}</div>
+              <div>
+                <a href="${url}" 
+                  class="text-blue-500 hover:underline mt-2"
+                  data-action="click->asset-locations#open"
+                  data-turbo-frame="modal"
+                  onclick="event.stopPropagation();">
+                  View Details
+                </a>
               </div>
             </div>
           `;
@@ -115,4 +132,14 @@ export default class extends Controller {
     this.timeout = setTimeout(callback, delay); // Set timer baru
   }
 
+  open(event) {
+    event.preventDefault(); // Mencegah navigasi default
+    const url = event.currentTarget.href;
+
+    // Set Turbo Frame untuk memuat konten
+    const modalFrame = document.getElementById("modal");
+    if (modalFrame) {
+      modalFrame.src = url;
+    }
+  }
 }
