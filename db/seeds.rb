@@ -49,7 +49,7 @@ Current.account = Account.new(username: "system")
       { code: "FA_ASSMGMT_DATA_ASSET", description: "Function access for Data Asset menu", active: true },
       { code: "FA_ASSMGMT_USER_ASSET", description: "Function access for User Asset menu", active: true },
       { code: "FA_ASSMGMT_ASSET_LOCATION", description: "Function access for Asset Location menu", active: true },
-      { code: "FA_ASSMGMT_ASSET_SOFTWARE", description: "Function access for Asset Sofrware menu", active: true },
+      # { code: "FA_ASSMGMT_ASSET_SOFTWARE", description: "Function access for Asset Sofrware menu", active: true },
 
       # ACCESS MANAGEMENT
       { code: "FA_ACCMGMT_ROLE", description: "Function access for Role configuration menu", active: true },
@@ -360,17 +360,17 @@ RoutePath.create(
     },
 
     # ASSET MANAGEMENT
-    {
-      function_access: FunctionAccess.find_by_code("FA_ASSMGMT_ASSET_SOFTWARE"),
-      path: "admin_asset_softwares_path",
-      parent: "asset_management",
-      group: "",
-      index: true,
-      sort: 4,
-      label: "activerecord.models.asset_software",
-      description: "Route for asset software index",
-      active: true
-    },
+    # {
+    #   function_access: FunctionAccess.find_by_code("FA_ASSMGMT_ASSET_SOFTWARE"),
+    #   path: "admin_asset_softwares_path",
+    #   parent: "asset_management",
+    #   group: "",
+    #   index: true,
+    #   sort: 4,
+    #   label: "activerecord.models.asset_software",
+    #   description: "Route for asset software index",
+    #   active: true
+    # },
 
     {
       function_access: FunctionAccess.find_by_code("FA_ASSMGMT_ASSET_LOCATION"),

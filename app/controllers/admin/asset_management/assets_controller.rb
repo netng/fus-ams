@@ -39,7 +39,6 @@ module Admin::AssetManagement
         :softwares,
         :user_asset,
         :asset_schedule,
-        :inventory_location,
         asset_model: :brand,
       )
 
@@ -911,11 +910,11 @@ module Admin::AssetManagement
 
       asset = Asset.find(params[:asset_id]) unless params[:asset_id].blank?
 
-      # if purchase_order && purchase_order.persisted? && params[:id] == purchase_order.request_for_purchase.id
-      #   rfp_details = purchase_order.request_for_purchase_details
-      #   unused_rfp_details = RequestForPurchaseDetail.where(request_for_purchase: purchase_order.request_for_purchase, purchase_order: nil)
-      #   @request_for_purchase_details = rfp_details + unused_rfp_details
-      # else
+        # if purchase_order && purchase_order.persisted? && params[:id] == purchase_order.request_for_purchase.id
+        #   rfp_details = purchase_order.request_for_purchase_details
+        #   unused_rfp_details = RequestForPurchaseDetail.where(request_for_purchase: purchase_order.request_for_purchase, purchase_order: nil)
+        #   @request_for_purchase_details = rfp_details + unused_rfp_details
+        # else
         @inventory_locations = InventoryLocation.where(site_id: params[:id])
       # end
 
@@ -928,7 +927,7 @@ module Admin::AssetManagement
       render turbo_stream: turbo_stream.replace(
         "inventory_locations_table",
         partial: "admin/asset_management/assets/inventory_locations_table",
-        locals: { 
+        locals: {
           inventory_locations: @inventory_locations,
           selected_details: @selected_details,
           rooms: @rooms,
@@ -937,7 +936,7 @@ module Admin::AssetManagement
         })
     end
 
-    
+
 
     private
 
