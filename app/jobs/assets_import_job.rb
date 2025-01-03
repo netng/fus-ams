@@ -276,6 +276,10 @@ class AssetsImportJob < ApplicationJob
         partial: "admin/asset_management/assets/turbo_assets_import_logs",
         locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil, execution_time: (asset_import_queue.finished_at - asset_import_queue.scheduled_at).round(3) }
       )
+      if File.exist?(file_path)
+        File.delete(file_path)
+        puts "File berhasil dihapus: #{file_path}"
+      end
 
     rescue Roo::HeaderRowNotFoundError => e
       error_message = "Header template invalid: #{e}"
