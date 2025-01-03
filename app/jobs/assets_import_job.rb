@@ -54,6 +54,13 @@ class AssetsImportJob < ApplicationJob
       ActiveRecord::Base.transaction do
         sheet.parse(assets_attributes_headers).each_with_index do |row, index|
           index = index + 1
+          Turbo::StreamsChannel.broadcast_append_to(
+            "account_#{current_account.id}",
+            target: "asset_import_logs",
+            partial: "admin/asset_management/assets/turbo_assets_import_logs",
+            locals: { state: "preparing", error_message: nil, row_index: index + 1, tagging_id: row[:tagging_id] }
+          )
+
           project = Project.find_by_id_project(row[:project_id]&.strip)
           site = Site.find_by_id_site(row[:site_id]&.strip)
           asset_model = AssetModel.find_by_id_asset_model(row[:asset_model_id]&.strip)
@@ -69,15 +76,6 @@ class AssetsImportJob < ApplicationJob
           comp_others = Component.find_by_id_component(row[:others_id]&.strip)
           asset = Asset.find_by_tagging_id(row[:tagging_id]&.strip&.upcase)
           schedule = AssetSchedule.find_by_name(row[:schedule]&.strip&.upcase)
-
-          puts "tagging_id : #{row[:tagging_id]}"
-
-          Turbo::StreamsChannel.broadcast_append_to(
-            "account_#{current_account.id}",
-            target: "asset_import_logs",
-            partial: "admin/asset_management/assets/turbo_assets_import_logs",
-            locals: { state: "preparing", error_message: nil, row_index: index + 1, tagging_id: row[:tagging_id] }
-          )
 
           if row[:tagging_id].nil?
             error_message= "Tagging id must exists at row #{index + 1}"
