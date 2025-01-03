@@ -37,11 +37,12 @@
     </div>
   <% end %>
 
-  <div class="overflow-auto mb-4 mt-4 bg-slate-50 p-2 rounded-lg shadow relative">
-    <div class="min-w-full bg-cyan-900	 rounded-lg overflow-auto max-h-[500px]">
+  <div data-controller="auto-scroll" class="overflow-auto mb-4 mt-4 bg-slate-50 p-2 rounded-lg shadow relative">
+    <div class="min-w-full bg-cyan-900 rounded-lg overflow-auto max-h-[500px]" data-auto-scroll-target="frame">
       <%= turbo_frame_tag "asset_import_logs" %>
     </div>
   </div>
+
   
 
 </div>
