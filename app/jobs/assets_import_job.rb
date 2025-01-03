@@ -253,7 +253,7 @@ class AssetsImportJob < ApplicationJob
           locals: { state: "importing", error_message: error_message, row_index: nil, tagging_id: nil }
         )
 
-        Asset.import data, recursive: true, batch_size: 500
+        Asset.import data, recursive: true, batch_size: 1000
 
         # update counter cache di table user_assets untuk column assets_count
         sql_update_user_assets_count = <<-SQL
