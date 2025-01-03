@@ -3,6 +3,13 @@ class AssetsImportJob < ApplicationJob
 
   def perform(current_account, file_path)
     puts "processing import job id: #{self.job_id}"
+    Turbo::StreamsChannel.broadcast_append_to(
+      "account_#{current_account.id}",
+      target: "asset_import_logs",
+      partial: "admin/asset_management/assets/turbo_assets_import_logs",
+      locals: { state: "preparing_file", error_message: nil, row_index: nil, tagging_id: nil }
+    )
+
     error_message = nil
     data = []
 
@@ -60,7 +67,7 @@ class AssetsImportJob < ApplicationJob
           comp_cd_dvd_rom = Component.find_by_id_component(row[:cd_dvd_rom_id]&.strip)
           comp_nic = Component.find_by_id_component(row[:nic_id]&.strip)
           comp_others = Component.find_by_id_component(row[:others_id]&.strip)
-          asset = Asset.find_by_tagging_id(row[:tagging_id]&.strip)
+          asset = Asset.find_by_tagging_id(row[:tagging_id]&.strip&.upcase)
           schedule = AssetSchedule.find_by_name(row[:schedule]&.strip&.upcase)
 
           puts "tagging_id : #{row[:tagging_id]}"
@@ -74,119 +81,129 @@ class AssetsImportJob < ApplicationJob
 
           if row[:tagging_id].nil?
             error_message= "Tagging id must exists at row #{index + 1}"
-            raise ActiveRecord::Rollback
-            return
+            # raise ActiveRecord::Rollback
+            raise RollbackError, error_message
           end
 
           if asset.present?
             error_message = "Duplicate data found: 'Tagging id' with value '#{row[:tagging_id]}' already exists"
-            raise ActiveRecord::Rollback
-            return
+            # raise ActiveRecord::Rollback
+            raise RollbackError, error_message
           end
 
           if project.nil?
             error_message = "Project id `#{row[:project_id]}` is not found at row #{index + 1}"
-            raise ActiveRecord::Rollback
-            return
+            # raise ActiveRecord::Rollback
+            raise RollbackError, error_message
           end
 
           if site.nil?
             error_message = "Site id `#{row[:site_id]}` is not found at row #{index + 1}"
-            raise ActiveRecord::Rollback
-            return
+            # raise ActiveRecord::Rollback
+            raise RollbackError, error_message
           end
 
           if asset_model.nil?
             error_message = "Asset Model id `#{row[:asset_model_id]}` is not found at row #{index + 1}"
-            raise ActiveRecord::Rollback
-            return
+            # raise ActiveRecord::Rollback
+            raise RollbackError, error_message
           end
 
           if row[:asset_class_id].present?
             if asset_class.nil?
               error_message = "Asset Class id `#{row[:asset_class_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              raise RollbackError, error_message
             end
           end
 
           if row[:delivery_order_number].present?
             if delivery_order.nil?
               error_message = "Delivery Order id `#{row[:delivery_order_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:mouse_id].present?
             if comp_mouse.nil?
               error_message = "Asset Component id `#{row[:mouse_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:floopy_disk_id].present?
             if comp_floopy_disk.nil?
               error_message = "Asset Component id `#{row[:floopy_disk_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:processor_id].present?
             if comp_processor.nil?
               error_message = "Asset Component id `#{row[:processor_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:memory_id].present?
             if comp_memory.nil?
               error_message = "Asset Component id `#{row[:memory_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:hardisk_id].present?
             if comp_hardisk.nil?
               error_message = "Asset Component id `#{row[:hardisk_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:cd_dvd_rom_id].present?
             if comp_cd_dvd_rom.nil?
               error_message = "Asset Component id `#{row[:cd_dvd_rom_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:nic_id].present?
             if comp_nic.nil?
               error_message = "Asset Component id `#{row[:nic_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:others_id].present?
             if comp_others.nil?
               error_message = "Asset Component id `#{row[:others_id]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
           if row[:schedule].present?
             if schedule.nil?
               error_message = "Schedule id `#{row[:schedule]}` is not found at row #{index + 1}"
-              raise ActiveRecord::Rollback
-              return
+              # raise ActiveRecord::Rollback
+              # return
+              raise RollbackError, error_message
             end
           end
 
@@ -251,23 +268,13 @@ class AssetsImportJob < ApplicationJob
         ActiveRecord::Base.connection.execute(sql_update_user_assets_count)
       end
 
-      if error_message
-        AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: error_message)
-        Turbo::StreamsChannel.broadcast_append_to(
-          "account_#{current_account.id}",
-          target: "asset_import_logs",
-          partial: "admin/asset_management/assets/turbo_assets_import_logs",
-          locals: { state: "error", error_message: error_message, row_index: nil, tagging_id: nil }
-        )
-      else
-        AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: nil, finished_at: Time.now)
-        Turbo::StreamsChannel.broadcast_append_to(
-          "account_#{current_account.id}",
-          target: "asset_import_logs",
-          partial: "admin/asset_management/assets/turbo_assets_import_logs",
-          locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil }
-        )
-      end
+      AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: nil, finished_at: Time.now)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "account_#{current_account.id}",
+        target: "asset_import_logs",
+        partial: "admin/asset_management/assets/turbo_assets_import_logs",
+        locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil }
+      )
 
     rescue Roo::HeaderRowNotFoundError => e
       error_message = "Header template invalid: #{e}"
@@ -277,6 +284,16 @@ class AssetsImportJob < ApplicationJob
         target: "asset_import_logs",
         partial: "admin/asset_management/assets/turbo_assets_import_logs",
         locals: { state: "error", error_message: error_message, row_index: nil, tagging_id: nil }
+      )
+
+    rescue RollbackError => e
+      puts "Raise RollbackError => #{e}"
+      AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: e)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "account_#{current_account.id}",
+        target: "asset_import_logs",
+        partial: "admin/asset_management/assets/turbo_assets_import_logs",
+        locals: { state: "error", error_message: e, row_index: nil, tagging_id: nil }
       )
 
     rescue ActiveRecord::RecordNotUnique => e
@@ -328,3 +345,5 @@ class AssetsImportJob < ApplicationJob
       end
     end
 end
+
+class RollbackError < StandardError; end
