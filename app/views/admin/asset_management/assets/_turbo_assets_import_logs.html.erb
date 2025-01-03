@@ -7,7 +7,7 @@
     <% elsif state == "importing" %>
       <span class="font-semibold">[ 🚀 IMPORTING ]</span> - Importing the data to database with batch. Please wait...
     <% else %>
-      <span class="font-semibold text-green-300">[ 🎉 SUCCESS ]</span> - Import successfully.
+      <span class="font-semibold text-green-300">[ 🎉 SUCCESS ]- Import successfully. ⏱️ Total execution time: <%= execution_time %>s</span> 
     <% end %>
   <% else %>
     <span class="text-red-500">

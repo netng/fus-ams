@@ -268,12 +268,13 @@ class AssetsImportJob < ApplicationJob
         ActiveRecord::Base.connection.execute(sql_update_user_assets_count)
       end
 
-      AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: nil, finished_at: Time.now)
+      asset_import_queue = AssetImportQueue.find_by(job_id: self.job_id)
+      asset_import_queue.update(error_messages: nil, finished_at: Time.now)
       Turbo::StreamsChannel.broadcast_append_to(
         "account_#{current_account.id}",
         target: "asset_import_logs",
         partial: "admin/asset_management/assets/turbo_assets_import_logs",
-        locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil }
+        locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil, execution_time: (asset_import_queue.finished_at - asset_import_queue.scheduled_at).round(3) }
       )
 
     rescue Roo::HeaderRowNotFoundError => e
