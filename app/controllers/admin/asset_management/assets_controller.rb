@@ -441,15 +441,6 @@ module Admin::AssetManagement
       authorize :authorization, :create?
       allowed_extension = [ ".xlsx", ".csv" ]
       upload_file = params[:file]
-      data = []
-      maybe_error = false
-
-      start_time = Time.now
-
-      created_by = Current.account.username
-      request_id = Current.request_id
-      user_agent = Current.user_agent
-      ip_address = Current.ip_address
 
       if upload_file.present?
         if !allowed_extension.include?(File.extname(upload_file.original_filename))
@@ -471,7 +462,7 @@ module Admin::AssetManagement
           ip_address: Current.ip_address
         )
 
-        redirect_back_or_to import_admin_assets_path, alert: "Import is starting..."
+        redirect_back_or_to import_admin_assets_path, notice: t("custom.label.asset_importing")
 
 
 

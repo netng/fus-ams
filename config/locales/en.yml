@@ -468,6 +468,7 @@ en:
   
   custom:
     label:
+      asset_importing: "Import process is starting. Please check the import log below."
       import_generator: "%{model} import generator"
       data_asset: Data asset
       bulk_asset_registration: Bulk asset registration
