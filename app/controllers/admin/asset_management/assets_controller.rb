@@ -335,6 +335,7 @@ module Admin::AssetManagement
 
     def update_software
       authorize :authorization, :update?
+      @asset_softwares = @asset.asset_softwares
 
       params[:asset][:asset_softwares_attributes]&.each do |key, software_params|
         if software_params[:software_id].blank?
@@ -343,14 +344,21 @@ module Admin::AssetManagement
       end
 
       respond_to do |format|
-        if @asset.update(asset_params)
+        begin
+          if @asset.update(asset_params)
+            format.html {
+              redirect_to admin_assets_path,
+              notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
+            }
+          else
+            puts @asset.errors.messages
+            format.html { render :edit_software, status: :unprocessable_entity }
+          end
+        rescue ActiveRecord::RecordNotUnique => e
           format.html {
-            redirect_to admin_assets_path,
-            notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
-          }
-        else
-          puts @asset.errors.messages
-          format.html { render :edit_software, status: :unprocessable_entity }
+              redirect_to admin_assets_path,
+              alert: "Duplicate asset softwares"
+            }
         end
       end
     end

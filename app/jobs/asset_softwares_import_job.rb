@@ -48,6 +48,7 @@ class AssetSoftwaresImportJob < ApplicationJob
     begin
       ActiveRecord::Base.transaction do
         tagging_ids = []
+        asset_softwares = []
 
         sheet.parse(asset_softwares_attributes_headers).each_with_index do |row, index|
           index += 1
@@ -89,54 +90,75 @@ class AssetSoftwaresImportJob < ApplicationJob
           if row[:software_id_1].present? && validate_software(software1, row[:software_id_1], row[:tagging_id])
             asset_software1 = { asset_id: asset.id, software_id: software1&.id, license: row[:license_number_1], sequence_number: 1 }
             data << asset_software1
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_1] }
           end
 
           if row[:software_id_2].present? && validate_software(software2, row[:software_id_2], row[:tagging_id])
             asset_software2 = { asset_id: asset.id, software_id: software2&.id, license: row[:license_number_2], sequence_number: 2 }
             data << asset_software2
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_2] }
           end
 
           if row[:software_id_3].present? && validate_software(software3, row[:software_id_3], row[:tagging_id])
             asset_software3 = { asset_id: asset.id, software_id: software3&.id, license: row[:license_number_3], sequence_number: 3 }
             data << asset_software3
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_3] }
           end
 
           if row[:software_id_4].present? && validate_software(software4, row[:software_id_4], row[:tagging_id])
             asset_software4 = { asset_id: asset.id, software_id: software4&.id, license: row[:license_number_4], sequence_number: 4 }
             data << asset_software4
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_4] }
           end
 
           if row[:software_id_5].present? && validate_software(software5, row[:software_id_5], row[:tagging_id])
             asset_software5 = { asset_id: asset.id, software_id: software5&.id, license: row[:license_number_5], sequence_number: 5 }
             data << asset_software5
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_5] }
           end
 
           if row[:software_id_6].present? && validate_software(software6, row[:software_id_6], row[:tagging_id])
             asset_software6 = { asset_id: asset.id, software_id: software6&.id, license: row[:license_number_6], sequence_number: 6 }
             data << asset_software6
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_6] }
           end
 
           if row[:software_id_7].present? && validate_software(software7, row[:software_id_7], row[:tagging_id])
             asset_software7 = { asset_id: asset.id, software_id: software7&.id, license: row[:license_number_7], sequence_number: 7 }
             data << asset_software7
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_7] }
           end
 
           if row[:software_id_8].present? && validate_software(software8, row[:software_id_8], row[:tagging_id])
             asset_software8 = { asset_id: asset.id, software_id: software8&.id, license: row[:license_number_8], sequence_number: 8 }
             data << asset_software8
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_8] }
           end
 
           if row[:software_id_9].present? && validate_software(software9, row[:software_id_9], row[:tagging_id])
             asset_software9 = { asset_id: asset.id, software_id: software9&.id, license: row[:license_number_9], sequence_number: 9 }
             data << asset_software9
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_9] }
           end
 
           if row[:software_id_10].present? && validate_software(software10, row[:software_id_10], row[:tagging_id])
             asset_software10 = { asset_id: asset.id, software_id: software10&.id, license: row[:license_number_10], sequence_number: 10 }
             data << asset_software10
+            asset_softwares << { tagging_id: row[:tagging_id], software_id: row[:software_id_10] }
           end
 
           tagging_ids << row[:tagging_id]
+
+          # validasi jika ada duplicate software pada tagging_id yang sama
+          duplicates_asset_softwares = asset_softwares.group_by { |hash| [ hash[:tagging_id], hash[:software_id] ] }
+            .select { |_, group| group.size > 1 }
+          if duplicates_asset_softwares.any?
+            duplicates_asset_softwares.each do |(tagging_id, software_id), group|
+              error_message = "Duplicate found for Tagging ID: #{tagging_id}, Software ID: #{software_id} (#{group.size} times)"
+              raise RollbackError, error_message
+            end
+          end
+
         end
 
         puts "data: #{data.inspect}"
@@ -183,6 +205,18 @@ class AssetSoftwaresImportJob < ApplicationJob
         target: "asset_softwares_import_logs",
         partial: "admin/asset_management/assets/turbo_asset_softwares_import_logs",
         locals: { state: "error", error_message: e, row_index: nil, tagging_id: nil }
+      )
+
+    rescue ActiveRecord::RecordNotUnique => e
+      duplicate_field = e.message.match(/Key \((.*?)\)=/)[1] rescue "data"
+      duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
+      error_message = "Dulicate data found: '#{duplicate_field.humanize}' with value '#{duplicate_value}' already exists"
+      AssetImportQueue.find_by(job_id: self.job_id).update(error_messages: error_message)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "account_#{current_account.id}",
+        target: "asset_softwares_import_logs",
+        partial: "admin/asset_management/assets/turbo_asset_softwares_import_logs",
+        locals: { state: "error", error_message: error_message, row_index: nil, tagging_id: nil }
       )
 
     rescue ActiveRecord::NotNullViolation => e
