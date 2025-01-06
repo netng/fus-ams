@@ -95,7 +95,7 @@
             </tr>
           </thead>
           <tbody class="text-gray-600 text-sm font-light">
-            <%= render @assets %>
+            <%= render partial: "admin/asset_management/assets/asset", collection: @assets, cached: true %>
           </tbody>
         </table>
     </div>
