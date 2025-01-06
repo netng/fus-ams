@@ -1,19 +1,23 @@
 class AssetsImportJob < ApplicationJob
   queue_as :default
 
-  def perform(current_account, file_path)
+  def perform(current_account, file_signed_id)
     puts "processing import job id: #{self.job_id}"
-    Turbo::StreamsChannel.broadcast_append_to(
-      "account_#{current_account.id}",
-      target: "asset_import_logs",
-      partial: "admin/asset_management/assets/turbo_assets_import_logs",
-      locals: { state: "preparing_file", error_message: nil, row_index: nil, tagging_id: nil }
-    )
+
+    blob = ActiveStorage::Blob.find_signed(file_signed_id)
+    puts blob.inspect
+
+    
+
+    file_path = Rails.root.join("tmp", blob.filename.to_s)
+    File.open(file_path, "wb") do |file|
+      file.write(blob.download)
+    end
 
     error_message = nil
     data = []
 
-    xlsx = Roo::Spreadsheet.open(file_path)
+    xlsx = Roo::Spreadsheet.open(file_path.to_s)
 
     sheet = xlsx.sheet(0)
 
@@ -268,16 +272,13 @@ class AssetsImportJob < ApplicationJob
 
       asset_import_queue = AssetImportQueue.find_by(job_id: self.job_id)
       asset_import_queue.update(error_messages: nil, finished_at: Time.now)
+
       Turbo::StreamsChannel.broadcast_append_to(
         "account_#{current_account.id}",
         target: "asset_import_logs",
         partial: "admin/asset_management/assets/turbo_assets_import_logs",
         locals: { state: "success", error_message: nil, row_index: nil, tagging_id: nil, execution_time: (asset_import_queue.finished_at - asset_import_queue.scheduled_at).round(3) }
       )
-      if File.exist?(file_path)
-        File.delete(file_path)
-        puts "File berhasil dihapus: #{file_path}"
-      end
 
     rescue Roo::HeaderRowNotFoundError => e
       error_message = "Header template invalid: #{e}"
@@ -333,6 +334,14 @@ class AssetsImportJob < ApplicationJob
         partial: "admin/asset_management/assets/turbo_assets_import_logs",
         locals: { state: "error", error_message: "Internal server error. Please contact webmaster", row_index: nil, tagging_id: nil }
       )
+    ensure
+      if File.exist?(file_path)
+        File.delete(file_path)
+        puts "File berhasil dihapus: #{file_path}"
+        blob.purge_later
+      end
+
+
 
     end
   end

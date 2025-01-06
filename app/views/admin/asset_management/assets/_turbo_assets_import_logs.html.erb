@@ -1,8 +1,6 @@
 <div class="px-4 py-2 text-white">
   <% if error_message.blank? %>
-    <% if state == "preparing_file" %>
-      <span class="font-semibold">🛑 Please wait. Preparing files for import. It may take some time if the dataset is large.</span>
-    <% elsif state == "preparing" %>
+    <% if state == "preparing" %>
       <span class="font-semibold">[ 🌱 PREPARING ]</span> - Row: <%= row_index %> - Tagging id: <%= tagging_id %>
     <% elsif state == "importing" %>
       <span class="font-semibold">[ 🚀 IMPORTING ]</span> - Importing the data to database with batch. Please wait...

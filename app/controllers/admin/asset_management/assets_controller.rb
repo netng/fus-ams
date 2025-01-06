@@ -447,14 +447,19 @@ module Admin::AssetManagement
           return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.invalid_allowed_extension")
         end
 
-        file_path = Rails.root.join("tmp", upload_file.original_filename)
+        # file_path = Rails.root.join("tmp", upload_file.original_filename)
 
         # Simpan file sementara
-        File.open(file_path, "wb") do |file|
-          file.write(upload_file.read)
-        end
+        # File.open(file_path, "wb") do |file|
+        #   file.write(upload_file.read)
+        # end
+        attached_file = ActiveStorage::Blob.create_and_upload!(
+          io: upload_file.tempfile.open,
+          filename: upload_file.original_filename,
+          content_type: upload_file.content_type
+        )
 
-        import_asset_job = AssetsImportJob.perform_later(current_account, file_path.to_s)
+        import_asset_job = AssetsImportJob.perform_later(current_account, attached_file.signed_id)
         AssetImportQueue.create!(
           job_id: import_asset_job.job_id,
           scheduled_at: Time.now,
@@ -462,10 +467,11 @@ module Admin::AssetManagement
           ip_address: Current.ip_address
         )
 
-        redirect_back_or_to import_admin_assets_path, notice: t("custom.label.asset_importing")
-
-
-
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("asset_import_logs", partial: "admin/asset_management/assets/turbo_assets_pre_import_logs")
+          end
+        end
 
         # unless maybe_error
         #   logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
