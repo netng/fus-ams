@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_02_081941) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -168,8 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_02_081941) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "sequence_number", null: false
-    t.index ["asset_id"], name: "index_asset_softwares_on_asset_id"
-    t.index ["software_id"], name: "index_asset_softwares_on_software_id"
+    t.index ["asset_id", "software_id"], name: "index_asset_softwares_on_asset_id_and_software_id", unique: true
   end
 
   create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

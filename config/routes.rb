@@ -73,6 +73,9 @@ Rails.application.routes.draw do
           scope "/import" do
             get "/", to: "import", as: "import"
             get "asset-registrations", to: "import_asset_registrations", as: "import_asset_registrations"
+            get "asset-software-registrations", to: "import_asset_software_registrations", as: "import_asset_software_registrations"
+            post "asset-software-registrations", to: "process_import_asset_software_registrations", as: "process_import_asset_software_registrations"
+            get "download-template-asset-software-registrations", to: "import_download_template_asset_software_registrations", as: "import_download_template_asset_software_registrations"
           end
         end
 

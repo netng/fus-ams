@@ -1,11 +1,19 @@
 <div class="flex gap-4 mb-12">
   <%= link_to t("custom.label.bulk_asset_registration"),
     import_admin_assets_path,
-    class: "fus-secondary-btn"
+    data: {
+      turbo_frame: "import-form",
+      turbo_action: "advance"
+    },
+    class: "fus-secondary-btn focus:ring-fus-primary-green"
   %>
 
   <%= link_to t("custom.label.bulk_asset_software_registration"),
-    import_admin_assets_path,
-    class: "fus-secondary-btn"
+    import_asset_software_registrations_admin_assets_path,
+    data: {
+      turbo_frame: "import-form",
+      turbo_action: "advance"
+    },
+    class: "fus-secondary-btn focus:ring-fus-primary-green"
   %>
 </div>

@@ -4,16 +4,16 @@
   <div class="p-4 bg-slate-50 border rounded">
 
     <h2 class="mb-4 fus-form-sub-header">
-      Bulk insert Assets registration
+      Bulk insert Assets Softwares registration
     </h2>
 
     <%= link_to t("custom.label.download_template"),
-      import_download_template_admin_assets_path,
+      import_download_template_asset_software_registrations_admin_assets_path,
       class: "fus-green-btn text-white",
       data: { turbo: false } %>
 
 
-    <%= form_with url: process_import_admin_assets_path,
+    <%= form_with url: process_import_asset_software_registrations_admin_assets_path,
       multipart: true do |form| %>
 
       <div data-controller="file-upload" class="relative flex flex-col justify-center items-center mt-4 border-2 border-dashed border-gray-300 rounded-lg p-8 bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
@@ -40,7 +40,7 @@
 
     <div data-controller="auto-scroll" class="overflow-auto mb-4 mt-4 bg-slate-50 p-2 rounded-lg shadow relative">
       <div class="min-w-full bg-cyan-900 rounded-lg overflow-auto max-h-[500px]" data-auto-scroll-target="frame">
-        <%= turbo_frame_tag "asset_import_logs" %>
+        <%= turbo_frame_tag "asset_softwares_import_logs" %>
       </div>
     </div>
 

@@ -491,6 +491,44 @@ module Admin::AssetManagement
       end
     end
 
+    def import_asset_software_registrations
+      authorize :authorization, :create?
+    end
+
+    def process_import_asset_software_registrations
+      authorize :authorization, :create?
+      allowed_extension = [ ".xlsx", ".csv" ]
+      upload_file = params[:file]
+
+      if upload_file.present?
+        if !allowed_extension.include?(File.extname(upload_file.original_filename))
+          return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.invalid_allowed_extension")
+        end
+
+        attached_file = ActiveStorage::Blob.create_and_upload!(
+          io: upload_file.tempfile.open,
+          filename: upload_file.original_filename,
+          content_type: upload_file.content_type
+        )
+
+        import_asset_softwares_job = AssetSoftwaresImportJob.perform_later(current_account, attached_file.signed_id)
+        AssetImportQueue.create!(
+          job_id: import_asset_softwares_job.job_id,
+          scheduled_at: Time.now,
+          created_by: current_account.username,
+          ip_address: Current.ip_address
+        )
+
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("asset_softwares_import_logs", partial: "admin/asset_management/assets/turbo_asset_softwares_pre_import_logs")
+          end
+        end
+      else
+        redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
     def import_download_template
       authorize :authorization, :create?
 
@@ -629,10 +667,80 @@ module Admin::AssetManagement
           disposition: "attachment"
     end
 
-    def inventory_locations
+    def import_download_template_asset_software_registrations
       authorize :authorization, :create?
 
-      asset = Asset.find(params[:asset_id]) unless params[:asset_id].blank?
+      template_path = Rails.root.join("public", "templates", "asset-software-import.xlsx")
+
+      package = Axlsx::Package.new
+      wb = package.workbook
+
+      s = wb.styles
+      header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
+
+      wb.add_worksheet(name: "Upload") do |sheet|
+        sheet.add_row [
+          "Tagging id *",
+          "Software id 1",
+          "License number 1",
+          "Software id 2",
+          "License number 2",
+          "Software id 3",
+          "License number 3",
+          "Software id 4",
+          "License number 4",
+          "Software id 5",
+          "License number 5",
+          "Software id 6",
+          "License number 6",
+          "Software id 7",
+          "License number 7",
+          "Software id 8",
+          "License number 8",
+          "Software id 9",
+          "License number 9",
+          "Software id 10",
+          "License number 10"
+        ], style: header
+
+        sheet.sheet_view.pane do |pane|
+          pane.state = :frozen
+          pane.y_split = 1
+        end
+      end
+
+      wb.add_worksheet(name: "Panduan") do |sheet|
+        sheet.add_row [ "Panduan upload" ], style: header
+        sheet.add_row [ "1. Lengkapi semua data-data yang ada pada sheet Upload" ]
+        sheet.add_row [ "2. Kolom pada sheet Upload dengan simbol * wajib diisi" ]
+        sheet.add_row [ "3. Tagging id harus unik (tidak boleh sama)" ]
+        sheet.add_row [ "4. Kolom License id_xx tidak wajib diisi, namun jika kolom tersebut diisi, maka kolom Software id_xx wajib diisi, jika tidak maka data tidak akan masuk" ]
+        sheet.add_row [ "5. Kolom 'Software id_xx' diisi sesuai dengan Software ID yang ada pada sheet Softwares" ]
+      end
+
+      wb.add_worksheet(name: "Softwares") do |sheet|
+        sheet.add_row [ "Software ID", "Name", "Description" ], style: header
+
+        Software.all.each do |software|
+          sheet.add_row [
+            software.id_software,
+            software.name,
+            software.description
+          ]
+        end
+      end
+
+      package.serialize(template_path)
+
+
+      send_file template_path,
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          filename: "asset-software-registratirons-import.xlsx",
+          disposition: "attachment"
+    end
+
+    def inventory_locations
+      authorize :authorization, :create?
 
         # if purchase_order && purchase_order.persisted? && params[:id] == purchase_order.request_for_purchase.id
         #   rfp_details = purchase_order.request_for_purchase_details
