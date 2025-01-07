@@ -7,7 +7,7 @@ module Admin::AssetManagement
     ]
 
     before_action :set_function_access_code
-    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location, :export_confirm, :report_queues, :import ]
+    before_action :ensure_frame_response, only: [ :show, :new, :create, :edit, :update, :edit_location, :export_confirm, :report_queues ]
     before_action :set_previous_url
 
     def index
@@ -335,6 +335,7 @@ module Admin::AssetManagement
 
     def update_software
       authorize :authorization, :update?
+      @asset_softwares = @asset.asset_softwares
 
       params[:asset][:asset_softwares_attributes]&.each do |key, software_params|
         if software_params[:software_id].blank?
@@ -343,14 +344,21 @@ module Admin::AssetManagement
       end
 
       respond_to do |format|
-        if @asset.update(asset_params)
+        begin
+          if @asset.update(asset_params)
+            format.html {
+              redirect_to admin_assets_path,
+              notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
+            }
+          else
+            puts @asset.errors.messages
+            format.html { render :edit_software, status: :unprocessable_entity }
+          end
+        rescue ActiveRecord::RecordNotUnique => e
           format.html {
-            redirect_to admin_assets_path,
-            notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.asset"))
-          }
-        else
-          puts @asset.errors.messages
-          format.html { render :edit_software, status: :unprocessable_entity }
+              redirect_to admin_assets_path,
+              alert: "Duplicate asset softwares"
+            }
         end
       end
     end
@@ -440,328 +448,90 @@ module Admin::AssetManagement
     def process_import
       authorize :authorization, :create?
       allowed_extension = [ ".xlsx", ".csv" ]
-      file = params[:file]
-      data = []
-      maybe_error = false
+      upload_file = params[:file]
 
-      start_time = Time.now
-
-      created_by = Current.account.username
-      request_id = Current.request_id
-      user_agent = Current.user_agent
-      ip_address = Current.ip_address
-
-      if file.present?
-        if !allowed_extension.include?(File.extname(file.original_filename))
+      if upload_file.present?
+        if !allowed_extension.include?(File.extname(upload_file.original_filename))
           return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.invalid_allowed_extension")
         end
 
-        xlsx = Roo::Spreadsheet.open(file.path)
+        # file_path = Rails.root.join("tmp", upload_file.original_filename)
 
-        sheet = xlsx.sheet(0)
+        # Simpan file sementara
+        # File.open(file_path, "wb") do |file|
+        #   file.write(upload_file.read)
+        # end
+        attached_file = ActiveStorage::Blob.create_and_upload!(
+          io: upload_file.tempfile.open,
+          filename: upload_file.original_filename,
+          content_type: upload_file.content_type
+        )
 
-        assets_attributes_headers = {
-          tagging_id: "Tagging id *",
-          project_id: "Project id *",
-          site_id: "Site id *",
-          asset_model_id: "Asset model id *",
-          asset_class_id: "Asset class id",
-          delivery_order_number: "DO number",
-          schedule: "Schedule",
-          computer_name: "Computer name",
-          computer_ip: "Computer IP",
-          cpu_sn: "CPU sn",
-          monitor_sn: "Monitor sn",
-          keyboard_sn: "Keyboard sn",
-          shipping_date: "Shipping date",
-          description: "Description",
-          mouse_id: "Mouse id",
-          mouse_sn: "Mouse sn",
-          floopy_disk_id: "Floopy disk id",
-          floopy_disk_sn: "Floopy disk sn",
-          processor_id: "Processor id",
-          processor_sn: "Processor sn",
-          memory_id: "Memory id",
-          memory_sn: "Memory sn",
-          hardisk_id: "Hardisk id",
-          hardisk_sn: "Hardisk sn",
-          cd_dvd_rom_id: "CD / DVD rom id",
-          cd_dvd_rom_sn: "CD / DVD rom sn",
-          nic_id: "NIC id",
-          nic_sn: "NIC sn",
-          others_id: "Others id",
-          others_sn: "Others sn"
-        }
+        import_asset_job = AssetsImportJob.perform_later(current_account, attached_file.signed_id)
+        AssetImportQueue.create!(
+          job_id: import_asset_job.job_id,
+          scheduled_at: Time.now,
+          created_by: current_account.username,
+          ip_address: Current.ip_address
+        )
 
-        begin
-          ActiveRecord::Base.transaction do
-            sheet.parse(assets_attributes_headers).each_with_index do |row, index|
-              index = index + 1
-              project = Project.find_by_id_project(row[:project_id]&.strip)
-              site = Site.find_by_id_site(row[:site_id]&.strip)
-              asset_model = AssetModel.find_by_id_asset_model(row[:asset_model_id]&.strip)
-              asset_class = AssetClass.find_by_id_asset_class(row[:asset_class_id]&.strip)
-              delivery_order = DeliveryOrder.find_by_number(row[:delivery_order_number]&.strip)
-              comp_mouse = Component.find_by_id_component(row[:mouse_id]&.strip)
-              comp_floopy_disk = Component.find_by_id_component(row[:floopy_disk_id]&.strip)
-              comp_processor = Component.find_by_id_component(row[:processor_id]&.strip)
-              comp_memory = Component.find_by_id_component(row[:memory_id]&.strip)
-              comp_hardisk = Component.find_by_id_component(row[:hardisk_id]&.strip)
-              comp_cd_dvd_rom = Component.find_by_id_component(row[:cd_dvd_rom_id]&.strip)
-              comp_nic = Component.find_by_id_component(row[:nic_id]&.strip)
-              comp_others = Component.find_by_id_component(row[:others_id]&.strip)
-              asset = Asset.find_by_tagging_id(row[:tagging_id]&.strip)
-              schedule = AssetSchedule.find_by_name(row[:schedule]&.strip)
-
-              if row[:tagging_id].nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.record_required", record: "Tagging id", row_index: index + 1)
-                logger.debug "request_id: #{request.request_id} - row index: #{index + 1} - reason: tagging id is empty"
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if asset.present?
-                maybe_error = true
-                redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.duplicate_data", field: "Tagging id", value: row[:tagging_id])
-                logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: asset with tagging id `#{row[:tagging_id]}` already exists"
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if project.nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.project"), id: row[:project_id], row_index: index + 1)
-                logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: project id `#{row[:project_id]}` is not found"
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if site.nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.site"), id: row[:site_id], row_index: index + 1)
-                logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: site id `#{row[:site_id]}` is not found"
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if asset_model.nil?
-                maybe_error = true
-                redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_model"), id: row[:asset_model_id], row_index: index + 1)
-                logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: asset_model id `#{row[:asset_model_id]}` is not found"
-                raise ActiveRecord::Rollback
-                return
-              end
-
-              if row[:asset_class_id].present?
-                if asset_class.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_class"), id: row[:asset_class_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: asset class id `#{row[:asset_class_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:delivery_order_number].present?
-                if delivery_order.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.delivery_order"), id: row[:delivery_order_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: delivery order id `#{row[:delivery_order_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:mouse_id].present?
-                if comp_mouse.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:mouse_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component mouse id `#{row[:mouse_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:floopy_disk_id].present?
-                if comp_floopy_disk.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:floopy_disk_id]), row_index: index + 1
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component floopy disk id `#{row[:floopy_disk_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:processor_id].present?
-                if comp_processor.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:processor_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component processor id `#{row[:processor_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:memory_id].present?
-                if comp_memory.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:memory_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component memory id `#{row[:memory_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:hardisk_id].present?
-                if comp_hardisk.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:hardisk_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component hardisk id `#{row[:hardisk_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:cd_dvd_rom_id].present?
-                if comp_cd_dvd_rom.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:cd_dvd_rom_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component cd/dvd rom id `#{row[:cd_dvd_rom_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:nic_id].present?
-                if comp_nic.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:nic_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component nic id `#{row[:nic_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:others_id].present?
-                if comp_others.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_component"), id: row[:others_id], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: component others id `#{row[:others_id]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              if row[:schedule].present?
-                if schedule.nil?
-                  maybe_error = true
-                  redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.activerecord_object_not_found", model: t("activerecord.models.asset_schedule"), id: row[:schedule], row_index: index + 1)
-                  logger.debug "request_id: #{request.request_id} - data_id: #{row[:tagging_id]} - reason: asset schedule `#{row[:schedule]}` is not found"
-                  raise ActiveRecord::Rollback
-                  return
-                end
-              end
-
-              user_asset_default = UserAsset
-                .find_by_id_user_asset(
-                  SiteDefault.find_by_site_id(site.id).id_user_site_default
-                  ) unless site.nil?
-
-              asset = Asset.new(
-                tagging_date: Time.now,
-                user_asset_id: user_asset_default&.id,
-                tagging_id: row[:tagging_id].strip.upcase,
-                project_id: project&.id,
-                site_id: site&.id,
-                asset_model_id: asset_model&.id,
-                asset_class_id: asset_class&.id,
-                delivery_order_id: delivery_order&.id,
-                asset_schedule_id: schedule&.id,
-                computer_name: row[:computer_name],
-                computer_ip: row[:computer_ip],
-                cpu_sn: row[:cpu_sn],
-                monitor_sn: row[:monitor_sn],
-                keyboard_sn: row[:keyboard_sn],
-                shipping_date: row[:shipping_date],
-                description: row[:description],
-                created_by: created_by,
-                request_id: request_id,
-                user_agent: user_agent,
-                ip_address: ip_address
-              )
-
-              asset.asset_components.build([
-                { component_id: comp_mouse&.id, serial_number: row[:mouse_sn] },
-                { component_id: comp_floopy_disk&.id, serial_number: row[:floopy_disk_sn] },
-                { component_id: comp_processor&.id, serial_number: row[:processor_sn] },
-                { component_id: comp_memory&.id, serial_number: row[:memory_sn] },
-                { component_id: comp_hardisk&.id, serial_number: row[:hardisk_sn] },
-                { component_id: comp_cd_dvd_rom&.id, serial_number: row[:cd_dvd_rom_sn] },
-                { component_id: comp_nic&.id, serial_number: row[:nic_sn] },
-                { component_id: comp_others&.id, serial_number: row[:others_sn] }
-              ])
-
-              data << asset
-            end
-
-            Asset.import data, recursive: true, batch_size: 500
-
-            # update counter cache di table user_assets untuk column assets_count
-            sql_update_user_assets_count = <<-SQL
-              UPDATE user_assets
-              SET assets_count = (
-                SELECT COUNT(*)
-                FROM assets a
-                WHERE a.user_asset_id = user_assets.id
-              )
-            SQL
-
-            ActiveRecord::Base.connection.execute(sql_update_user_assets_count)
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("asset_import_logs", partial: "admin/asset_management/assets/turbo_assets_pre_import_logs")
           end
-
-        rescue Roo::HeaderRowNotFoundError => e
-          return redirect_to import_admin_assets_path, alert: t("custom.errors.invalid_import_template", errors: e)
-
-
-        # Penanganan untuk duplikat data
-        rescue ActiveRecord::RecordNotUnique => e
-          logger.error "#{Current.request_id} - Duplicate data: #{e.message}"
-          duplicate_field = e.message.match(/Key \((.*?)\)=/)[1] rescue "data"
-          duplicate_value = e.message.match(/\((.*?)\)=\((.*?)\)/)[2] rescue "unknown"
-          humanized_message = t("custom.errors.duplicate_data", field: duplicate_field.humanize, value: duplicate_value)
-          return redirect_back_or_to import_admin_assets_path, alert: "#{humanized_message}. #{t('custom.errors.resolve_duplicate')}."
-
-        # penangan error null violation
-        rescue ActiveRecord::NotNullViolation => e
-          logger.error "#{Current.request_id} - NotNullViolation error: #{e.message}"
-          error_column = e.message.match(/column "(.*?)"/)[1] # Menangkap nama kolom yang menyebabkan error
-          error_row = data.find { |r| r[error_column.to_sym].nil? }
-
-          error_message = "#{t('activerecord.attributes.asset.' + error_column)} " \
-            "#{I18n.t('errors.messages.blank')} (row: #{error_row.inspect})"
-          return redirect_back_or_to import_admin_assets_path, alert: "#{t('custom.errors.import_failed')}: #{error_message}"
-
-        # Penanganan umum untuk semua jenis error lainnya
-        rescue => e
-          logger.error "#{Current.request_id} - General error during import: #{e.message}"
-          return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.general_error")
-
         end
 
-        unless maybe_error
-          logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
-          respond_to do |format|
-            format.turbo_stream do
-              flash[:notice] = t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset"))
-              render turbo_stream: turbo_stream.replace("flash-message", partial: "shared/flash")
-            end
+        # unless maybe_error
+        #   logger.debug "#{Current.request_id} - IMPORT START TIME: #{start_time}, IMPORT END TIME: #{Time.now}"
+        #   respond_to do |format|
+        #     format.turbo_stream do
+        #       flash[:notice] = t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset"))
+        #       render turbo_stream: turbo_stream.replace("flash-message", partial: "shared/flash")
+        #     end
 
-            format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset")) }
-          end
-          nil
+        #     format.html { redirect_to admin_assets_path, notice: t("custom.flash.notices.successfully.imported", model: t("activerecord.models.asset")) }
+        #   end
+        #   nil
+        # end
+
+      else
+        redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
+      end
+    end
+
+    def import_asset_software_registrations
+      authorize :authorization, :create?
+    end
+
+    def process_import_asset_software_registrations
+      authorize :authorization, :create?
+      allowed_extension = [ ".xlsx", ".csv" ]
+      upload_file = params[:file]
+
+      if upload_file.present?
+        if !allowed_extension.include?(File.extname(upload_file.original_filename))
+          return redirect_back_or_to import_admin_assets_path, alert: t("custom.errors.invalid_allowed_extension")
         end
 
+        attached_file = ActiveStorage::Blob.create_and_upload!(
+          io: upload_file.tempfile.open,
+          filename: upload_file.original_filename,
+          content_type: upload_file.content_type
+        )
+
+        import_asset_softwares_job = AssetSoftwaresImportJob.perform_later(current_account, attached_file.signed_id)
+        AssetImportQueue.create!(
+          job_id: import_asset_softwares_job.job_id,
+          scheduled_at: Time.now,
+          created_by: current_account.username,
+          ip_address: Current.ip_address
+        )
+
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("asset_softwares_import_logs", partial: "admin/asset_management/assets/turbo_asset_softwares_pre_import_logs")
+          end
+        end
       else
         redirect_back_or_to import_admin_assets_path, alert: t("custom.flash.alerts.select_file")
       end
@@ -905,10 +675,80 @@ module Admin::AssetManagement
           disposition: "attachment"
     end
 
-    def inventory_locations
+    def import_download_template_asset_software_registrations
       authorize :authorization, :create?
 
-      asset = Asset.find(params[:asset_id]) unless params[:asset_id].blank?
+      template_path = Rails.root.join("public", "templates", "asset-software-import.xlsx")
+
+      package = Axlsx::Package.new
+      wb = package.workbook
+
+      s = wb.styles
+      header = s.add_style b: true, bg_color: "000080", fg_color: "ffffff", alignment: { vertical: :center }
+
+      wb.add_worksheet(name: "Upload") do |sheet|
+        sheet.add_row [
+          "Tagging id *",
+          "Software id 1",
+          "License number 1",
+          "Software id 2",
+          "License number 2",
+          "Software id 3",
+          "License number 3",
+          "Software id 4",
+          "License number 4",
+          "Software id 5",
+          "License number 5",
+          "Software id 6",
+          "License number 6",
+          "Software id 7",
+          "License number 7",
+          "Software id 8",
+          "License number 8",
+          "Software id 9",
+          "License number 9",
+          "Software id 10",
+          "License number 10"
+        ], style: header
+
+        sheet.sheet_view.pane do |pane|
+          pane.state = :frozen
+          pane.y_split = 1
+        end
+      end
+
+      wb.add_worksheet(name: "Panduan") do |sheet|
+        sheet.add_row [ "Panduan upload" ], style: header
+        sheet.add_row [ "1. Lengkapi semua data-data yang ada pada sheet Upload" ]
+        sheet.add_row [ "2. Kolom pada sheet Upload dengan simbol * wajib diisi" ]
+        sheet.add_row [ "3. Tagging id harus unik (tidak boleh sama)" ]
+        sheet.add_row [ "4. Kolom License id_xx tidak wajib diisi, namun jika kolom tersebut diisi, maka kolom Software id_xx wajib diisi, jika tidak maka data tidak akan masuk" ]
+        sheet.add_row [ "5. Kolom 'Software id_xx' diisi sesuai dengan Software ID yang ada pada sheet Softwares" ]
+      end
+
+      wb.add_worksheet(name: "Softwares") do |sheet|
+        sheet.add_row [ "Software ID", "Name", "Description" ], style: header
+
+        Software.all.each do |software|
+          sheet.add_row [
+            software.id_software,
+            software.name,
+            software.description
+          ]
+        end
+      end
+
+      package.serialize(template_path)
+
+
+      send_file template_path,
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          filename: "asset-software-registratirons-import.xlsx",
+          disposition: "attachment"
+    end
+
+    def inventory_locations
+      authorize :authorization, :create?
 
         # if purchase_order && purchase_order.persisted? && params[:id] == purchase_order.request_for_purchase.id
         #   rfp_details = purchase_order.request_for_purchase_details

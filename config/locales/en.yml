@@ -29,7 +29,7 @@ en:
       personal_board: Personal board
       po_delivery_site: Delivery site
       site_default: Site default
-      asset: Data asset
+      asset: Asset
       asset_class: Asset class
       asset_component: Component detail
       asset_software: Asset software
@@ -468,6 +468,10 @@ en:
   
   custom:
     label:
+      asset_importing: "Import process is starting. Please check the import log below."
+      import_generator: "%{model} import generator"
+      data_asset: Data asset
+      bulk_asset_registration: Bulk asset registration
       search_tagging_id: Search tagging id
       storage_unit_type: Storage unit type
       storage_unit_label: Storage unit label
@@ -548,7 +552,7 @@ en:
       show: Show
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
-      import_form: Import data %{model}
+      import_form: Import %{model}
       select_to_delete: Select to delete
       select_all: Select all
       default_new_form: "%{model} registration"

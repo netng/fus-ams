@@ -1,0 +1,2 @@
+class AssetImportQueue < ApplicationRecord
+end

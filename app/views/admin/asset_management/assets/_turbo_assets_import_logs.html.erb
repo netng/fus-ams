@@ -1,0 +1,17 @@
+<div class="px-4 py-2 text-white">
+  <% if error_message.blank? %>
+    <% if state == "preparing" %>
+      <span class="font-semibold">[ 🌱 PREPARING ]</span> - Row: <%= row_index %> - Tagging id: <%= tagging_id %>
+    <% elsif state == "importing" %>
+      <span class="font-semibold">[ 🚀 IMPORTING ]</span> - Importing the data to database with batch. Please wait...
+    <% else %>
+      <span class="font-semibold text-green-300">[ 🎉 SUCCESS ]- Import successfully. ⏱️ Total execution time: <%= execution_time %>s</span> 
+    <% end %>
+  <% else %>
+    <span class="text-red-500">
+      ❌ Import failed with error:
+      <span class="font-bold"><%= error_message %></span>.
+      Rolling back data.
+    </span>
+  <% end %>
+</div>
