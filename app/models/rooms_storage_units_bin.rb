@@ -18,6 +18,14 @@ class RoomsStorageUnitsBin < ApplicationRecord
 
   validates :description, length: { maximum: 500 }
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "created_by", "description", "id", "ip_address", "label", "request_id", "rooms_storage_unit_id", "updated_at", "user_agent"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["assets", "rooms_storage_unit", "rooms_storage_units_bin_photo_attachment", "rooms_storage_units_bin_photo_blob"]
+  end
+
 
   private
     def strip_and_upcase_label

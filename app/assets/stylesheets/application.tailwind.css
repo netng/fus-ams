@@ -21,6 +21,10 @@
     @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
   }
 
+  .fus-tom-select {
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-1 py-1 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
   .fus-label {
     @apply block text-sm font-medium text-gray-400;
   }

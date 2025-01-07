@@ -38,8 +38,14 @@ en:
       rooms_storage_units_bin: Storage bin
       room: Room
       rooms_storage_unit: Storage unit
+      inventory: Data inventory
 
     attributes:
+      inventory:
+        site_id: Site
+        asset_id: Asset
+        rooms_storage_units_bin_id: Bin
+        
       rooms_storage_unit:
         storage_unit_id: Type
         

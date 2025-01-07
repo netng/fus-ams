@@ -122,6 +122,15 @@ Rails.application.routes.draw do
           get "rooms-storage-units-bins"
         end
       end
+
+      resources :inventories do
+        collection do
+          get "inventory-locations"
+          get "rooms"
+          get "rooms-storage-units"
+          get "rooms-storage-unit-bins"
+        end
+      end
     end
 
     scope module: :settings, path: "settings" do

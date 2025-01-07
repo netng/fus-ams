@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_07_023014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -399,6 +399,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_function_accesses_on_code", unique: true
+  end
+
+  create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "site_id", null: false
+    t.uuid "asset_id", null: false
+    t.uuid "rooms_storage_units_bin_id", null: false
+    t.string "status", limit: 100, default: "AVAILABLE"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_inventories_on_asset_id"
+    t.index ["rooms_storage_units_bin_id"], name: "index_inventories_on_rooms_storage_units_bin_id"
+    t.index ["site_id", "asset_id"], name: "index_inventories_on_site_id_and_asset_id", unique: true
+    t.index ["site_id"], name: "index_inventories_on_site_id"
   end
 
   create_table "inventory_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -831,6 +844,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
   add_foreign_key "delivery_orders", "purchase_orders"
+  add_foreign_key "inventories", "assets"
+  add_foreign_key "inventories", "rooms_storage_units_bins"
+  add_foreign_key "inventories", "sites"
   add_foreign_key "inventory_locations", "sites"
   add_foreign_key "inventory_locations_details", "inventory_locations"
   add_foreign_key "inventory_locations_details", "storage_units"
