@@ -1,3 +1,7 @@
+<h2 class="fus-form-header mb-4">
+  <%= t("custom.label.import_form", model: t("custom.label.data_asset")).capitalize %>
+</h2>
+
 <%= render "asset_import_tab" %>
 
 <%= turbo_frame_tag "import-form" do %>
@@ -49,4 +53,4 @@
   </div>
 <% end %>
 
-<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset")).capitalize) %>
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset_software")).capitalize) %>
