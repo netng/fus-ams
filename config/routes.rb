@@ -129,6 +129,7 @@ Rails.application.routes.draw do
           get "rooms"
           get "rooms-storage-units"
           get "rooms-storage-unit-bins"
+          get "find-assets-not-in-inventory"
         end
       end
     end

@@ -9,6 +9,8 @@ class Asset < ApplicationRecord
   accepts_nested_attributes_for :asset_softwares, allow_destroy: true, reject_if: proc { |attributes| attributes["software_id"].blank? }
   has_many :softwares, through: :asset_softwares
 
+  has_many :inventories, dependent: :restrict_with_error
+
   belongs_to :project
   belongs_to :site
   belongs_to :asset_model

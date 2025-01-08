@@ -8,6 +8,7 @@ import { get } from "@rails/request.js"
 export default class extends Controller {
   static targets = ["storageUnit", "select"]
   static values = { endpoint: String }
+  static outlets = [ "inventory-location" ]
 
   connect() {
     this.selectTargets.forEach((selectTarget) => {
@@ -18,8 +19,6 @@ export default class extends Controller {
         });
       }
     });
-
-    console.log("Tom-Select initialized for dependent selects");
   }
 
   disconnect() {
@@ -28,7 +27,6 @@ export default class extends Controller {
         selectTarget.tomSelect.destroy(); // Hancurkan instance Tom-Select saat controller dilepas
       }
     });
-    console.log("Tom-Select destroyed");
   }
 
   async loadInventoryLocations(event) {
@@ -73,5 +71,11 @@ export default class extends Controller {
     } else {
       await get(`${endpoint}?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
+  }
+
+  // method outlet, memanggil fungsi pada stimulus controller inventory-location
+  updateSiteId(event) {
+    const siteId = event.target.value
+    this.inventoryLocationOutlet.updateSiteId(siteId)
   }
 }

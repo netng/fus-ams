@@ -52,7 +52,7 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :room_name,
+                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_room_name,
                   "#{t('activerecord.models.room')}",
                   {
                     data: {
@@ -64,7 +64,7 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_unit_storage_unit_name,
+                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_storage_unit_name,
                   "#{t('custom.label.storage_unit_type')}", 
                   {
                     data: {
@@ -76,7 +76,7 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_unit_label,
+                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_label,
                   "#{t('activerecord.models.rooms_storage_unit')}", 
                   {
                     data: {

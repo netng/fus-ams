@@ -1,7 +1,7 @@
 <div id="rooms-storage-units" class="w-full mb-2">
   <%= label_tag :storage_units, "#{t('activerecord.models.rooms_storage_unit')}", class: "fus-label" %>
   <%= select_tag "q[rooms_storage_units_bin_rooms_storage_unit_id_eq]",
-    options_for_select((rooms_storage_units || []).map { |label, id| [label, id] }),
+    options_for_select((rooms_storage_units || []).map { |id, label, name| ["#{name} / #{label}", id] }),
     include_blank: t("custom.label.select", model: t("activerecord.models.rooms_storage_unit")).capitalize,
     data: {
       controller: "turbo-dependent-select",
