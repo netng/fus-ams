@@ -349,7 +349,7 @@ RoutePath.create(
 
     {
       function_access: FunctionAccess.find_by_code("FA_INVMGMT_DATA_INVENTORY"),
-      path: "admin_data_inventories_path",
+      path: "admin_inventories_path",
       parent: "inventory_management",
       group: "",
       index: true,

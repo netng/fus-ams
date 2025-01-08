@@ -41,6 +41,15 @@ module Admin::InventoryManagement
       authorize :authorization, :read?
     end
 
+    def new
+      authorize :authorization, :create?
+      @inventory = Inventory.new
+    end
+
+    def create
+      authorize :authorization, :create?
+    end
+
     def edit
       authorize :authorization, :update?
     end

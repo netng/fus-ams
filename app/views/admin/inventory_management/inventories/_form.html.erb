@@ -1,0 +1,30 @@
+<%= form_with model: [:admin, inventory], data: { turbo_action: "advance" } do |form| %>
+
+  <div class="mb-2" data-controller="asset-locations">
+    <%= label_tag :tagging_ids, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
+    <%= select_tag :tagging_ids, 
+      options_for_select([]),
+      include_blank: t("custom.label.search_tagging_id"),
+      multiple: true,
+      data: {
+        asset_locations_target: "select"
+      },
+      class: "fus-input",
+      required: true
+    %>
+  </div>
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit "#{t('custom.label.save')}",
+      data: { turbo_frame: "main-content" },
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+    <%= link_to "#{t('custom.label.back')}",
+      admin_inventories_path,
+      data: {
+          turbo_action: "advance"
+      },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

@@ -7,7 +7,7 @@
       filters_table_outlet: ".table-inventory",
     } do |f| %>
   
-      <div class="md:grid grid-cols-6 gap-2">
+      <div class="md:grid grid-cols-3 gap-2 mb-2">
         <div class="w-full mb-2">
           <%= f.label :tagging_id, class: "fus-label" %>
           <%= f.search_field :asset_tagging_id_cont,
@@ -51,4 +51,5 @@
 
       </div>
     <% end %>
+    <%= link_to "Clear", admin_inventories_path, data: { turbo_frame: "_top" }, class: "fus-secondary-btn" %>
   </div>

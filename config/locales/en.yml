@@ -474,6 +474,7 @@ en:
   
   custom:
     label:
+      storage_unit_type: Storage type
       asset_importing: "Import process is starting. Please check the import log below."
       import_generator: "%{model} import generator"
       data_asset: Data asset
