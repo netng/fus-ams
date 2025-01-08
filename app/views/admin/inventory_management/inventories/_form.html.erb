@@ -47,6 +47,24 @@
     %>
   </div>
 
+  <div class="mb-2">
+    <%= f.label :status, "Status", class: "fus-label mb-2" %>
+    <%= f.select :status, 
+        options_for_select(
+          Inventory::STATUSES.map { |status| [status.humanize, status] }, 
+          f.object.status || "IN_STOCK"
+        ),
+        { include_blank: "Select a status" },
+        data: {
+          controller: "tom-select",
+          tom_select_target: "select"
+        },
+        class: "fus-input",
+        required: true
+    %>
+  </div>
+
+
   <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
     <%= f.submit "#{t('custom.label.save')}",
       data: { turbo_frame: "main-content" },

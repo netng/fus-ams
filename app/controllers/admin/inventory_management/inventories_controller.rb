@@ -93,7 +93,7 @@ module Admin::InventoryManagement
             local: { flash: flash }
           ) and return
         else
-          Inventory.create(asset_id: asset.id, site_id: site.id, rooms_storage_units_bin_id: rooms_storage_units_bin_id)
+          Inventory.create(asset_id: asset.id, site_id: site.id, rooms_storage_units_bin_id: rooms_storage_units_bin_id, status: "IN_STOCK")
         end
       end
       redirect_to admin_inventories_path, notice: "Successfully added assets to inventory"
@@ -277,7 +277,7 @@ module Admin::InventoryManagement
 
     private
       def inventory_params
-        params.expect(inventory: [ :site_id ])
+        params.expect(inventory: [ :site_id, :status ])
       end
 
       def set_function_access_code

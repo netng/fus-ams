@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_07_023014) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_08_093700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -405,7 +405,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_07_023014) do
     t.uuid "site_id", null: false
     t.uuid "asset_id", null: false
     t.uuid "rooms_storage_units_bin_id", null: false
-    t.string "status", limit: 100, default: "AVAILABLE"
+    t.string "status", default: "IN_STOCK"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_id"], name: "index_inventories_on_asset_id"
