@@ -2,7 +2,7 @@ module Admin::InventoryManagement
   class InventoriesController < ApplicationAdminController
     before_action :set_function_access_code
     before_action :set_inventory, only: [ :show, :edit, :update ]
-    before_action :set_parent_site, only: [ :new, :create, :edit ]
+    before_action :set_parent_site, only: [ :new, :create, :edit, :update ]
 
     def index
       authorize :authorization, :index?
@@ -116,6 +116,37 @@ module Admin::InventoryManagement
 
     def update
       authorize :authorization, :update?
+
+      status = params[:inventory][:status]
+      site_id = params[:inventory][:site_id]
+      inventory_location_id = params[:q][:rooms_storage_units_bin_rooms_storage_unit_room_inventory_location_id_eq]
+      room_id = params[:q][:rooms_storage_units_bin_rooms_storage_unit_room_id_eq]
+      rooms_storage_unit_id = params[:q][:rooms_storage_units_bin_rooms_storage_unit_id_eq]
+      rooms_storage_units_bin_id = params[:q][:rooms_storage_units_bin_id_eq]
+      tagging_ids = params[:tagging_ids]
+
+      validate_presence_of(site_id, "Please select site") and return
+      validate_presence_of(inventory_location_id, "Please select inventory location") and return
+      validate_presence_of(room_id, "Please select room") and return
+      validate_presence_of(rooms_storage_unit_id, "Please select storage unit") and return
+      validate_presence_of(rooms_storage_units_bin_id, "Please select storage bin") and return
+
+      respond_to do |format|
+        if @inventory.update(site_id: site_id, rooms_storage_units_bin_id: rooms_storage_units_bin_id, status: status)
+          format.html {
+            redirect_to admin_inventories_path, notice: t("custom.flash.notices.successfully.updated", model: t("activerecord.models.inventory"))
+          }
+        else
+          flash.now[:alert] = @inventory.errors.full_messages
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              "flash-message",
+              partial: "shared/flash",
+              local: { flash: flash }
+            )
+          end
+        end
+      end
     end
 
     def destroy_many

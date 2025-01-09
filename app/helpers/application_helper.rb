@@ -9,4 +9,33 @@ module ApplicationHelper
       0
     end
   end
+
+  def can_read?(function_access_code)
+    Pundit
+      .policy(
+        pundit_context(function_access_code),
+        [ :admin, :authorization ]).read?
+  end
+
+  def can_update?(function_access_code)
+    Pundit
+      .policy(
+        pundit_context(function_access_code),
+        [ :admin, :authorization ]).update?
+  end
+
+  def can_destroy?(function_access_code)
+    Pundit
+      .policy(
+        pundit_context(function_access_code),
+        [ :admin, :authorization ]).destroy?
+  end
+
+  private
+    def pundit_context(function_access_code)
+      {
+          account: Current.account,
+          function_access_code: function_access_code
+      }
+    end
 end

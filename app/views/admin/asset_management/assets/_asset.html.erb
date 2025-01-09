@@ -49,19 +49,6 @@
           <% end %>
         <% end %>
 
-        <%# if policy([:admin, :authorization]).update? %>
-          <%#= link_to location_admin_asset_path(asset),
-            data: {
-              turbo_action: "advance",
-              turbo_frame: :modal
-            } do %>
-              <%#= inline_svg_tag "location.svg",
-                class: "fus-icons",
-                title: t("custom.label.location")
-              %>
-          <%# end %>
-        <%# end %>
-
         <% if policy([:admin, :authorization]).update? %>
           <%= link_to software_admin_asset_path(asset),
             data: {

@@ -1,5 +1,12 @@
 <%= form_with model: [:admin, inventory], data: { turbo_action: "advance" } do |f| %>
 
+  <% if f.object.persisted? %>
+    <div class="w-full mb-2">
+      <%= f.label :tagging_id, "#{t('activerecord.attributes.asset.tagging_id')}", class: "fus-label" %>
+      <span class="fus-readonly"><%= inventory.asset.tagging_id %></span>
+    </div>
+  <% end %>
+
   <div class="w-full mb-2">
     <%= f.label :site, "#{t('activerecord.models.site')}", class: "fus-label" %>
     <%= f.select :site_id,
