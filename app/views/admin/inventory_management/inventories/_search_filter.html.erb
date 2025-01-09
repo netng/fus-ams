@@ -34,19 +34,34 @@
         </div>
 
         <%= turbo_frame_tag "inventory-locations" do %>
-          <%= render "admin/inventory_management/inventories/inventory_locations", inventory_locations: [], option_disabled: true %>
+          <%= render "admin/inventory_management/inventories/inventory_locations",
+            inventory_locations: [],
+            option_disabled: true,
+            selected_inventory_location_id: nil %>
         <% end %>
 
         <%= turbo_frame_tag "rooms" do %>
-          <%= render "admin/inventory_management/inventories/rooms", rooms: [], option_disabled: true %>
+          <%= render "admin/inventory_management/inventories/rooms",
+            rooms: [],
+            option_disabled: true,
+            selected_room_id: nil
+          %>
         <% end %>
 
         <%= turbo_frame_tag "rooms-storage-units" do %>
-          <%= render "admin/inventory_management/inventories/rooms_storage_units", rooms_storage_units: [], option_disabled: true %>
+          <%= render "admin/inventory_management/inventories/rooms_storage_units",
+            rooms_storage_units: [],
+            option_disabled: true,
+            selected_rooms_storage_unit_id: nil
+          %>
         <% end %>
 
-        <%= turbo_frame_tag "rooms-storage-unit-bins" do %>
-          <%= render "admin/inventory_management/inventories/rooms_storage_unit_bins", rooms_storage_unit_bins: [], option_disabled: true %>
+        <%= turbo_frame_tag "rooms-storage-units-bins" do %>
+          <%= render "admin/inventory_management/inventories/rooms_storage_units_bins",
+            rooms_storage_units_bins: [],
+            option_disabled: true,
+            selected_rooms_storage_units_bin_id: nil
+          %>
         <% end %>
 
       </div>

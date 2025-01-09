@@ -1,6 +1,8 @@
 module Admin::InventoryManagement
   class InventoriesController < ApplicationAdminController
     before_action :set_function_access_code
+    before_action :set_inventory, only: [ :show, :edit, :update ]
+    before_action :set_parent_site, only: [ :new, :create, :edit ]
 
     def index
       authorize :authorization, :index?
@@ -44,22 +46,10 @@ module Admin::InventoryManagement
     def new
       authorize :authorization, :create?
       @inventory = Inventory.new
-
-      if current_account.site.site_default.blank?
-        @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
-      else
-        @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
-      end
     end
 
     def create
       authorize :authorization, :create?
-
-      if current_account.site.site_default.blank?
-        @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
-      else
-        @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
-      end
 
       site_id = params[:inventory][:site_id]
       inventory_location_id = params[:q][:rooms_storage_units_bin_rooms_storage_unit_room_inventory_location_id_eq]
@@ -81,12 +71,10 @@ module Admin::InventoryManagement
 
       tagging_ids.each do |tagging_id|
         asset = Asset.find_by(tagging_id: tagging_id)
-        logger.debug "ASSET : #{asset.inspect}"
-        logger.debug "SITE ID: #{site_id}"
         asset_exist_in_inventory = Inventory.where(asset_id: asset.id, site_id: site_id)
+
         if asset_exist_in_inventory.present?
           flash.now[:alert] = "Asset with tagging id: #{tagging_id} already exist in data inventory at site: #{site&.name}"
-          logger.debug "FLASH: #{flash.inspect}"
           render turbo_stream: turbo_stream.replace(
             "flash-message",
             partial: "shared/flash",
@@ -101,6 +89,29 @@ module Admin::InventoryManagement
 
     def edit
       authorize :authorization, :update?
+
+      @inventory_locations = InventoryLocation
+        .where(site_id: @inventory.site_id)
+        &.pluck(:floor, :id)
+      @selected_inventory_location_id = @inventory.rooms_storage_units_bin.rooms_storage_unit.room.inventory_location.id
+
+      @rooms = Room
+        .where(inventory_location_id: @selected_inventory_location_id)
+        &.pluck(:name, :id)
+      @selected_room_id = @inventory.rooms_storage_units_bin.rooms_storage_unit.room.id
+
+      @rooms_storage_units = RoomsStorageUnit
+        .joins(:storage_unit)
+        .where(room_id: @selected_room_id)
+        .select("rooms_storage_units.id, rooms_storage_units.label, storage_units.name")
+        &.pluck(:id, :label, :name)
+      @selected_rooms_storage_unit_id = @inventory.rooms_storage_units_bin.rooms_storage_unit.id
+
+      @rooms_storage_units_bins = RoomsStorageUnitsBin
+        .where(rooms_storage_unit_id: @selected_rooms_storage_unit_id)
+        &.pluck(:label, :id)
+      @selected_rooms_storage_units_bin_id = @inventory.rooms_storage_units_bin.id
+
     end
 
     def update
@@ -123,19 +134,42 @@ module Admin::InventoryManagement
         turbo_stream.replace(
           "inventory-locations",
           partial: "admin/inventory_management/inventories/inventory_locations",
-          locals: { inventory_locations: @inventory_locations, option_disabled: query.blank? }
+          locals: {
+            inventory_locations: @inventory_locations,
+            option_disabled: query.blank?,
+            selected_inventory_location_id: nil,
+            selected_room_id: nil
+          }
         ),
 
         turbo_stream.replace(
           "rooms",
           partial: "admin/inventory_management/inventories/rooms",
-          locals: { rooms: [], option_disabled: true }
+          locals: {
+            rooms: [],
+            option_disabled: true,
+            selected_room_id: nil
+          }
         ),
 
         turbo_stream.replace(
         "rooms-storage-units",
-        partial: "admin/inventory_management/inventories/rooms_storage_units",
-        locals: { rooms_storage_units: [], option_disabled: true }
+          partial: "admin/inventory_management/inventories/rooms_storage_units",
+          locals: {
+            rooms_storage_units: [],
+            option_disabled: true,
+            selected_rooms_storage_unit_id: nil
+          }
+        ),
+
+        turbo_stream.replace(
+        "rooms-storage-units-bins",
+          partial: "admin/inventory_management/inventories/rooms_storage_units_bins",
+          locals: {
+            rooms_storage_units_bins: [],
+            option_disabled: true,
+            selected_rooms_storage_units_bin_id: nil
+          }
         )
       ]
     end
@@ -151,19 +185,31 @@ module Admin::InventoryManagement
         turbo_stream.replace(
           "rooms",
           partial: "admin/inventory_management/inventories/rooms",
-          locals: { rooms: @rooms, option_disabled: query.blank? }
+          locals: {
+            rooms: @rooms,
+            option_disabled: query.blank?,
+            selected_room_id: nil
+          }
         ),
 
         turbo_stream.replace(
-        "rooms-storage-units",
-        partial: "admin/inventory_management/inventories/rooms_storage_units",
-        locals: { rooms_storage_units: [], option_disabled: true }
+          "rooms-storage-units",
+          partial: "admin/inventory_management/inventories/rooms_storage_units",
+          locals: {
+            rooms_storage_units: [],
+            option_disabled: true,
+            selected_rooms_storage_unit_id: nil
+            }
         ),
 
         turbo_stream.replace(
-        "rooms-storage-unit-bins",
-        partial: "admin/inventory_management/inventories/rooms_storage_unit_bins",
-        locals: { rooms_storage_unit_bins: [], option_disabled: true }
+          "rooms-storage-units-bins",
+          partial: "admin/inventory_management/inventories/rooms_storage_units_bins",
+          locals: {
+            rooms_storage_units_bins: [],
+            option_disabled: true,
+            selected_rooms_storage_units_bin_id: nil
+          }
         )
       ]
     end
@@ -183,13 +229,21 @@ module Admin::InventoryManagement
         turbo_stream.replace(
           "rooms-storage-units",
           partial: "admin/inventory_management/inventories/rooms_storage_units",
-          locals: { rooms_storage_units: @rooms_storage_units, option_disabled: query.blank? }
+          locals: {
+            rooms_storage_units: @rooms_storage_units,
+            option_disabled: query.blank?,
+            selected_rooms_storage_unit_id: nil
+          }
         ),
 
         turbo_stream.replace(
-          "rooms-storage-unit-bins",
-          partial: "admin/inventory_management/inventories/rooms_storage_unit_bins",
-          locals: { rooms_storage_unit_bins: [], option_disabled: true }
+          "rooms-storage-units-bins",
+          partial: "admin/inventory_management/inventories/rooms_storage_units_bins",
+          locals: {
+            rooms_storage_units_bins: [],
+            option_disabled: true,
+            selected_rooms_storage_units_bin_id: nil
+          }
         )
       ]
     end
@@ -199,12 +253,16 @@ module Admin::InventoryManagement
 
       query = params[:query]
 
-      @rooms_storage_unit_bins = RoomsStorageUnitsBin.where(rooms_storage_unit_id: query)&.pluck(:label, :id)
+      @rooms_storage_units_bins = RoomsStorageUnitsBin.where(rooms_storage_unit_id: query)&.pluck(:label, :id)
 
       render turbo_stream: turbo_stream.replace(
-        "rooms-storage-unit-bins",
-        partial: "admin/inventory_management/inventories/rooms_storage_unit_bins",
-        locals: { rooms_storage_unit_bins: @rooms_storage_unit_bins, option_disabled: query.blank? }
+        "rooms-storage-units-bins",
+        partial: "admin/inventory_management/inventories/rooms_storage_units_bins",
+        locals: {
+          rooms_storage_units_bins: @rooms_storage_units_bins,
+          option_disabled: query.blank?,
+          selected_rooms_storage_units_bin_id: nil
+        }
       )
     end
 
@@ -280,8 +338,21 @@ module Admin::InventoryManagement
         params.expect(inventory: [ :site_id, :status ])
       end
 
+      def set_inventory
+        @inventory = Inventory.find(params[:id])
+      end
+
       def set_function_access_code
         @function_access_code = FunctionAccessConstant::FA_INVMGMT_DATA_INVENTORY
+      end
+
+
+      def set_parent_site
+        if current_account.site.site_default.blank?
+          @parent_sites = Site.where(id: current_account.site.id).pluck(:name, :id)
+        else
+          @parent_sites = Site.where(parent_site_id: nil).pluck(:name, :id)
+        end
       end
 
       def validate_presence_of(value, message)

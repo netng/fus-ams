@@ -18,34 +18,53 @@
   </div>
 
   <%= turbo_frame_tag "inventory-locations" do %>
-    <%= render "admin/inventory_management/inventories/inventory_locations", inventory_locations: [], option_disabled: true %>
+    <%= render "admin/inventory_management/inventories/inventory_locations",
+      inventory_locations: @inventory_locations,
+      option_disabled: !f.object.persisted?,
+      selected_inventory_location_id: @selected_inventory_location_id
+    %>
   <% end %>
 
   <%= turbo_frame_tag "rooms" do %>
-    <%= render "admin/inventory_management/inventories/rooms", rooms: [], option_disabled: true %>
+    <%= render "admin/inventory_management/inventories/rooms",
+      rooms: @rooms,
+      option_disabled: !f.object.persisted?,
+      selected_room_id: @selected_room_id
+    %>
   <% end %>
 
   <%= turbo_frame_tag "rooms-storage-units" do %>
-    <%= render "admin/inventory_management/inventories/rooms_storage_units", rooms_storage_units: [], option_disabled: true %>
-  <% end %>
-
-  <%= turbo_frame_tag "rooms-storage-unit-bins" do %>
-    <%= render "admin/inventory_management/inventories/rooms_storage_unit_bins", rooms_storage_unit_bins: [], option_disabled: true %>
-  <% end %>
-
-  <div class="mb-2 asset-id" data-controller="inventory-location">
-    <%= label_tag :tagging_ids, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
-    <%= select_tag :tagging_ids, 
-      options_for_select([]),
-      include_blank: t("custom.label.search_tagging_id"),
-      multiple: true,
-      data: {
-        inventory_location_target: "select"
-      },
-      class: "fus-input",
-      required: true
+    <%= render "admin/inventory_management/inventories/rooms_storage_units",
+      rooms_storage_units: @rooms_storage_units,
+      option_disabled: !f.object.persisted?,
+      selected_rooms_storage_unit_id: @selected_rooms_storage_unit_id
     %>
-  </div>
+  <% end %>
+
+  <%= turbo_frame_tag "rooms-storage-units-bins" do %>
+    <%= render "admin/inventory_management/inventories/rooms_storage_units_bins",
+      rooms_storage_units_bins: @rooms_storage_units_bins,
+      option_disabled: !f.object.persisted?,
+      selected_rooms_storage_units_bin_id: @selected_rooms_storage_units_bin_id 
+    %>
+  <% end %>
+
+  <% if !f.object.persisted? %>
+    <div class="mb-2 asset-id" data-controller="inventory-location">
+      <%= label_tag :tagging_ids, "#{t("activerecord.attributes.asset.tagging_id")} *", class: "fus-label mb-2" %>
+      <%= select_tag :tagging_ids, 
+        options_for_select([]),
+        include_blank: t("custom.label.search_tagging_id"),
+        multiple: true,
+        data: {
+          inventory_location_target: "select"
+        },
+        class: "fus-input",
+        required: true
+      %>
+    </div>
+  <% end %>
+
 
   <div class="mb-2">
     <%= f.label :status, "Status", class: "fus-label mb-2" %>
