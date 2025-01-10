@@ -132,6 +132,8 @@ Rails.application.routes.draw do
           get "find-assets-not-in-inventory"
         end
       end
+
+      resources :inventory_movements, path: "inventory-movements"
     end
 
     scope module: :settings, path: "settings" do

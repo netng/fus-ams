@@ -39,8 +39,19 @@ en:
       room: Room
       rooms_storage_unit: Storage unit
       inventory: Data inventory
+      inventory_movement: Inventory movement
 
     attributes:
+      inventory_movement:
+        id_inventory_movement: Movement ID
+        type: Movement type
+        source_site_id: Source site
+        destination_site_id: Destination site
+        user_asset_id: User asset
+        quantity: Quantity
+        status: Status
+        description: Description
+
       inventory:
         site_id: Site
         asset_id: Asset

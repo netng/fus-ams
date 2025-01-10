@@ -288,7 +288,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_DO"),
       path: "admin_delivery_orders_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 4,
@@ -300,7 +300,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_PO"),
       path: "admin_purchase_orders_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 3,
@@ -312,7 +312,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_RFP"),
       path: "admin_request_for_purchases_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 2,
@@ -324,7 +324,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_CP"),
       path: "admin_capital_proposals_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 1,

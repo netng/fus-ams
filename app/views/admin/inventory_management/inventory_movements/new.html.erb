@@ -1,0 +1,9 @@
+<h2 class="fus-form-header mb-2">
+  <%= t("custom.label.default_new_form", model: t("activerecord.models.inventory_movement")).capitalize %>
+</h2>
+
+<div data-action="turbo:submit-end->modal#submitEnd">
+  <%= render "form", inventory_movement: @inventory_movement %>
+</div>
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.inventory_movement")).capitalize) %>

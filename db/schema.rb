@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_08_093700) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_10_064549) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -441,6 +441,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_08_093700) do
     t.index ["storage_unit_id"], name: "index_inventory_locations_details_on_storage_unit_id"
   end
 
+  create_table "inventory_movement_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_movement_id", null: false
+    t.uuid "inventory_id", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_id"], name: "index_inventory_movement_details_on_inventory_id"
+    t.index ["inventory_movement_id"], name: "index_inventory_movement_details_on_inventory_movement_id"
+  end
+
+  create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_inventory_movement", limit: 100, null: false
+    t.string "type", limit: 100, null: false
+    t.uuid "source_site_id", null: false
+    t.uuid "destination_site_id"
+    t.uuid "user_asset_id"
+    t.integer "quantity", default: 0
+    t.string "status", default: "IN_PROGRESS"
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_site_id"], name: "index_inventory_movements_on_destination_site_id"
+    t.index ["id_inventory_movement"], name: "index_inventory_movements_on_id_inventory_movement", unique: true
+    t.index ["source_site_id"], name: "index_inventory_movements_on_source_site_id"
+    t.index ["user_asset_id"], name: "index_inventory_movements_on_user_asset_id"
+  end
+
   create_table "personal_boards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "id_personal_board", limit: 100, null: false
     t.string "username", limit: 100, null: false
@@ -850,6 +884,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_08_093700) do
   add_foreign_key "inventory_locations", "sites"
   add_foreign_key "inventory_locations_details", "inventory_locations"
   add_foreign_key "inventory_locations_details", "storage_units"
+  add_foreign_key "inventory_movement_details", "inventories"
+  add_foreign_key "inventory_movement_details", "inventory_movements"
+  add_foreign_key "inventory_movements", "sites", column: "destination_site_id"
+  add_foreign_key "inventory_movements", "sites", column: "source_site_id"
+  add_foreign_key "inventory_movements", "user_assets"
   add_foreign_key "purchase_orders", "currencies"
   add_foreign_key "purchase_orders", "personal_boards", column: "approved_by_id"
   add_foreign_key "purchase_orders", "po_delivery_sites", column: "ship_to_site_id"
