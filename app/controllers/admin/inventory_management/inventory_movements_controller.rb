@@ -58,6 +58,31 @@ module Admin::InventoryManagement
 
     end
 
+    def find_user_assets_by_site
+      authorize :authorization, :read?
+      query = params[:user_asset]
+
+      user_assets = UserAsset
+        .where(
+          "id_user_asset ILIKE ? OR aztec_code ILIKE ? OR username ILIKE ? OR email ILIKE ?",
+          "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%")
+        .where(site_id: params[:site_id])
+        .select(:id, :id_user_asset, :aztec_code, :username, :email)
+        .limit(100)
+      
+      items = user_assets.map do |user_asset|
+        {
+          user_asset_id: user_asset.id,
+          id_user_asset: user_asset.id_user_asset,
+          aztec_code: user_asset.aztec_code,
+          username: user_asset.username,
+          email: user_asset.email
+        }
+      end
+
+      render json: { items: items }
+    end
+
     private
       def inventory_movement_params
         params.expect(inventory_movement: [

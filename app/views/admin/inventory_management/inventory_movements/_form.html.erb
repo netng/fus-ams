@@ -1,65 +1,80 @@
 <%= form_with model: [:admin, inventory_movement], data: { turbo_action: "advance" } do |f| %>
 
-<div class="mb-2">
-  <%= f.label :id_inventory_movement, "#{t("activerecord.attributes.inventory_movement.id_inventory_movement")}", class: "fus-label mb-2" %>
-  <span class="block w-full p-2 outline-none border border-gray-300 rounded-lg bg-gray-200 text-gray-500">
-    <% if inventory_movement.persisted? %>
-      <strong><%= inventory_movement.id_inventory_movement %></strong>
-    <% else %>
-      <strong>&lt&ltAuto Generate&gt&gt</strong>
-    <% end %>
-  </span>
-</div>
+  <div class="mb-2">
+    <%= f.label :id_inventory_movement, "#{t("activerecord.attributes.inventory_movement.id_inventory_movement")}", class: "fus-label mb-2" %>
+    <span class="block w-full p-2 outline-none border border-gray-300 rounded-lg bg-gray-200 text-gray-500">
+      <% if inventory_movement.persisted? %>
+        <strong><%= inventory_movement.id_inventory_movement %></strong>
+      <% else %>
+        <strong>&lt&ltAuto Generate&gt&gt</strong>
+      <% end %>
+    </span>
+  </div>
+  
+  <div data-controller="inventory-movement" data-inventory-movement-user-assets-outlet=".site-id">
+    <div class="w-full mb-2">
+      <%= f.label :source, "#{t('activerecord.attributes.inventory_movement.source_site_id')}", class: "fus-label" %>
+      <%= f.select :source_site_id,
+        @parent_sites.map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.all", model: t("activerecord.attributes.inventory_movement.source_site_id")).capitalize},
+        data: {
+          controller: "tom-select",
+          tom_select_target: "select",
+          inventory_movement_target: "siteSelect",
+          action: "change->inventory-movement#updateSelectedSite"
+        },
+        class: "fus-tom-select",
+        required: true
+      %>
+    </div>
 
-<div class="mb-2">
-    <%= f.label :movement_type, class: "fus-label mb-2" %>
-    <%= f.select :movement_type, 
-        options_for_select(
-          InventoryMovement::MOVEMENT_TYPES.map { |movement_type| [movement_type.humanize, movement_type] }
-        ),
-        { include_blank: "Select a movement type" },
+    <div class="mb-2">
+      <%= f.label :movement_type, class: "fus-label mb-2" %>
+      <%= f.select :movement_type, 
+          options_for_select(
+            InventoryMovement::MOVEMENT_TYPES.map { |movement_type| [movement_type.humanize, movement_type] }
+          ),
+          { include_blank: "Select a movement type" },
+          data: {
+            controller: "tom-select",
+            tom_select_target: "select",
+            inventory_movement_target: "movementType",
+            action: "change->inventory-movement#toggleUserOrSite",
+          },
+          class: "fus-input",
+          required: true
+      %>
+    </div>
+
+    <div class="mb-2 hidden" data-inventory-movement-target="userAsset">
+      <%= f.label :user_asset, "#{t("activerecord.models.user_asset")}", class: "fus-label mb-2" %>
+      <%= f.select :user_asset_id,
+        options_for_select([]),
+        {include_blank: "Type user asset id, username, aztec code, or user asset email"},
+        data: {
+          controller: "user-assets",
+          user_assets_target: "select"
+        },
+        class: "fus-tom-select site-id"
+      %>
+    </div>
+
+    <div class="w-full mb-2 hidden" data-inventory-movement-target="site">
+      <%= f.label :destination, "#{t('activerecord.attributes.inventory_movement.destination_site_id')}", class: "fus-label" %>
+      <%= f.select :destination_site_id,
+        @parent_sites.map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.all", model: t("activerecord.attributes.inventory_movement.destination_site_id")).capitalize},
         data: {
           controller: "tom-select",
           tom_select_target: "select"
         },
-        class: "fus-input",
+        class: "fus-tom-select",
         required: true
-    %>
+      %>
+    </div>
   </div>
 
-  <div class="w-full mb-2">
-    <%= f.label :source, "#{t('activerecord.attributes.inventory_movement.source_site_id')}", class: "fus-label" %>
-    <%= f.select :source_site_id,
-      @parent_sites.map { |name, id| [name.capitalize, id]},
-      {include_blank: t("custom.label.all", model: t("activerecord.attributes.inventory_movement.source_site_id")).capitalize},
-      data: {
-        controller: "turbo-dependent-select",
-        turbo_dependent_select_target: "select",
-        action: "filters#submit change->turbo-dependent-select#loadInventoryLocations change->turbo-dependent-select#updateSiteId",
-        turbo_dependent_select_endpoint_value: inventory_locations_admin_inventories_path,
-        turbo_dependent_select_inventory_location_outlet: ".asset-id"
-      },
-      class: "fus-tom-select",
-      required: true
-    %>
-  </div>
 
-  <div class="w-full mb-2">
-    <%= f.label :destination, "#{t('activerecord.attributes.inventory_movement.destination_site_id')}", class: "fus-label" %>
-    <%= f.select :destination_site_id,
-      @parent_sites.map { |name, id| [name.capitalize, id]},
-      {include_blank: t("custom.label.all", model: t("activerecord.attributes.inventory_movement.destination_site_id")).capitalize},
-      data: {
-        controller: "turbo-dependent-select",
-        turbo_dependent_select_target: "select",
-        action: "filters#submit change->turbo-dependent-select#loadInventoryLocations change->turbo-dependent-select#updateSiteId",
-        turbo_dependent_select_endpoint_value: inventory_locations_admin_inventories_path,
-        turbo_dependent_select_inventory_location_outlet: ".asset-id"
-      },
-      class: "fus-tom-select",
-      required: true
-    %>
-  </div>
 
   <div class="mb-2">
     <%= f.label :status, "Status", class: "fus-label mb-2" %>

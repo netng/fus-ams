@@ -133,7 +133,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :inventory_movements, path: "inventory-movements"
+      resources :inventory_movements, path: "inventory-movements" do
+        collection do
+          get "find-user-assets-by-site"
+        end
+      end
     end
 
     scope module: :settings, path: "settings" do
