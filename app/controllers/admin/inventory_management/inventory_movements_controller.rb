@@ -63,10 +63,12 @@ module Admin::InventoryManagement
       query = params[:user_asset]
 
       user_assets = UserAsset
+        .joins(:site)
         .where(
           "id_user_asset ILIKE ? OR aztec_code ILIKE ? OR username ILIKE ? OR email ILIKE ?",
           "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%")
         .where(site_id: params[:site_id])
+        .or(UserAsset.where(sites: { parent_site_id: params[:site_id] } ))
         .select(:id, :id_user_asset, :aztec_code, :username, :email)
         .limit(100)
       
