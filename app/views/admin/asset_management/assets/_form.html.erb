@@ -29,7 +29,7 @@
     </div>
 
 
-    <div class="mb-2" data-controller="asset-inventory-locations">
+    <div class="mb-2">
       <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
       <% if form.object.persisted? %>
         <span class="fus-input bg-slate-300">
@@ -41,11 +41,8 @@
           {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
           { 
             data: {
-              action: "asset-inventory-locations#updateTable",
               default_option: t("custom.label.select", model: t("activerecord.models.site")).capitalize,
-              slim_dependent_select_insert_target: "child",
-              asset_inventory_locations_target: "select",
-              asset_inventory_locations_asset_id_value: params[:id]
+              slim_dependent_select_insert_target: "child"
             },
             class: "fus-select"
           }
@@ -59,15 +56,6 @@
 
   </div>
 
-  <div id="inventory_locations_table">
-    <%= render "inventory_locations_table",
-      inventory_locations: @inventory_locations,
-      rooms: @rooms,
-      storage_units: @storage_units,
-      bins: @bins,
-      selected_details: @selected_details
-    %>
-  </div>
 
   <div class="md:grid grid-cols-2 gap-2">
     <div class="mb-2">

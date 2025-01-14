@@ -1,4 +1,4 @@
-<%= tag.tr id: dom_id(inventory), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+<%= tag.tr id: dom_id(inventory_movement), class: "border-b border-gray-200 hover:bg-gray-100" do %>
 
   <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
 
@@ -7,13 +7,13 @@
 
         <% if policy([:admin, :authorization]).destroy? %>
 
-          <%= check_box_tag "inventory_ids[]",
-            inventory.id,
+          <%= check_box_tag "inventory_movement_ids[]",
+            inventory_movement.id,
             nil,
             {
               class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
               multiple: true,
-              form: :inventory_table,
+              form: :inventory_movement_table,
               data: {
                 table_target: "childCheckbox",
                 action: "change->table#toggleParentCheckbox"
@@ -26,7 +26,7 @@
 
         <% if policy([:admin, :authorization]).read? %>
 
-          <%= link_to admin_inventory_path(inventory),
+          <%= link_to admin_inventory_movement_path(inventory_movement),
             data: {
               turbo_frame: "main-content",
               turbo_action: "advance"
@@ -41,7 +41,7 @@
         
         <% if policy([:admin, :authorization]).update? %>
 
-          <%= link_to edit_admin_inventory_path(inventory),
+          <%= link_to edit_admin_inventory_movement_path(inventory_movement),
             data: {
               turbo_frame: "main-content",
               turbo_action: "advance"
@@ -59,12 +59,11 @@
 
   <% end %>
 
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.asset.tagging_id %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.site.name %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.rooms_storage_units_bin.rooms_storage_unit.room.inventory_location.floor %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.rooms_storage_units_bin.rooms_storage_unit.room.name %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.rooms_storage_units_bin.rooms_storage_unit.storage_unit.name %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.rooms_storage_units_bin.rooms_storage_unit.label %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.rooms_storage_units_bin.label %></td>
-  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory.status %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.id_inventory_movement %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.movement_type %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.source_site&.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.destination_site&.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.user_asset&.id_user_asset %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.quantity %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_movement.status %></td>
 <% end %>

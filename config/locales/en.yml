@@ -44,7 +44,7 @@ en:
     attributes:
       inventory_movement:
         id_inventory_movement: Movement ID
-        type: Movement type
+        movement_type: Movement type
         source_site_id: Source site
         destination_site_id: Destination site
         user_asset_id: User asset
@@ -56,6 +56,7 @@ en:
         site_id: Site
         asset_id: Asset
         rooms_storage_units_bin_id: Bin
+        status: Status
         
       rooms_storage_unit:
         storage_unit_id: Type

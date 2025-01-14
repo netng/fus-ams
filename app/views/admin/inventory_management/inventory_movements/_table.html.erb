@@ -16,8 +16,8 @@
               <% end %>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :asset_tagging_id,
-                  "#{t('activerecord.models.asset')}",
+                <%= sort_link(@q, :id_inventory_movement,
+                  "#{t('activerecord.attributes.inventory_movement.id_inventory_movement')}",
                   {
                     data: {
                       turbo_action: :advance,
@@ -28,8 +28,8 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :inventory_site_name,
-                  "#{t('activerecord.models.site')}",
+                <%= sort_link(@q, :movement_type,
+                  "#{t('activerecord.attributes.inventory_movement.movement_type')}",
                   {
                     data: {
                       turbo_action: :advance,
@@ -40,8 +40,8 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_room_inventory_location_floor,
-                  "#{t('activerecord.attributes.inventory_location.floor')}",
+                <%= sort_link(@q, :source_site_id,
+                  "#{t('activerecord.attributes.inventory_movement.source_site_id')}",
                   {
                     data: {
                       turbo_action: :advance,
@@ -52,8 +52,8 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_room_name,
-                  "#{t('activerecord.models.room')}",
+                <%= sort_link(@q, :destination_site_id,
+                  "#{t('activerecord.attributes.inventory_movement.destination_site_id')}",
                   {
                     data: {
                       turbo_action: :advance,
@@ -64,8 +64,8 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_storage_unit_name,
-                  "#{t('custom.label.storage_unit_type')}", 
+                <%= sort_link(@q, :user_asset_id,
+                  "#{t('activerecord.attributes.inventory_movement.user_asset_id')}", 
                   {
                     data: {
                       turbo_action: :advance,
@@ -76,8 +76,8 @@
               </th>
 
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_units_bin_rooms_storage_unit_label,
-                  "#{t('activerecord.models.rooms_storage_unit')}", 
+                <%= sort_link(@q, :quantity,
+                  "#{t('activerecord.attributes.inventory_movement.quantity')}", 
                   {
                     data: {
                       turbo_action: :advance,
@@ -88,8 +88,8 @@
               </th>
               
               <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :rooms_storage_units_bin_label,
-                  "#{t('activerecord.models.rooms_storage_units_bin')}", 
+                <%= sort_link(@q, :status,
+                  "#{t('activerecord.attributes.inventory_movement.status')}", 
                   {
                     data: {
                       turbo_action: :advance,
@@ -99,21 +99,10 @@
                 ) %>
               </th>
 
-              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
-                <%= sort_link(@q, :status,
-                  "#{t('activerecord.attributes.inventory.status')}", 
-                  {
-                    data: {
-                      turbo_action: :advance,
-                      action: "click->table#resetDeleteButton"
-                    }
-                  }
-                ) %>
-              </th>
             </tr>
           </thead>
           <tbody class="text-gray-600 text-sm font-light">
-            <%= render partial: "admin/inventory_management/inventories/inventory", collection: @inventories, cached: true %>
+            <%= render @inventory_movements %>
           </tbody>
         </table>
     </div>

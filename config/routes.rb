@@ -136,6 +136,7 @@ Rails.application.routes.draw do
       resources :inventory_movements, path: "inventory-movements" do
         collection do
           get "find-user-assets-by-site"
+          get "find-assets-by-site-inventory"
         end
       end
     end
