@@ -4,6 +4,7 @@ class Room < ApplicationRecord
   belongs_to :inventory_location, counter_cache: true
 
   has_one_attached :room_photo
+  after_destroy :purge_room_photo
 
   has_many :rooms_storage_units, inverse_of: :room, dependent: :destroy
   accepts_nested_attributes_for :rooms_storage_units, allow_destroy: true, reject_if: :all_blank
@@ -31,10 +32,15 @@ class Room < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     ["inventory_location", "room_photo_attachment", "room_photo_blob", "rooms_storage_units"]
   end
+
   private
     def strip_and_upcase_name
       if name.present?
         self.name = name.strip.gsub(/\s+/, " ").upcase
       end
+    end
+
+    def purge_room_photo
+      room_photo.purge if room_photo.attached?
     end
 end
