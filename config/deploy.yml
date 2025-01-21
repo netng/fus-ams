@@ -62,6 +62,9 @@ env:
     POSTGRES_HOST: 192.168.200.93
     POSTGRES_DB: fus_ams_production
     POSTGRES_PORT: 5432
+    MINIO_BUCKET: ams-prod
+    MINIO_ENDPOINT: http://192.168.200.78
+
     
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
