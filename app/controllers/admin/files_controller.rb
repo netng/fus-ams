@@ -14,7 +14,7 @@ module Admin
         # Gunakan streaming file dengan `send_file`
         headers['Content-Type'] = blob.content_type
         headers['Content-Disposition'] = 'inline; filename="' + blob.filename.to_s + '"'
-        headers['Cache-Control'] = 'public, max-age=3600'
+        headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
 
         # Proxy file dari URL MinIO ke pengguna
         stream_file(service_url)
