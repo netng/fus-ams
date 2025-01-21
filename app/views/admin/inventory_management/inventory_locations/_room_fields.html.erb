@@ -42,7 +42,7 @@
         <!-- Image Preview -->
         <% if f.object.persisted? && f.object.room_photo.attached? %>
           <img 
-            src="<%= url_for(f.object.room_photo) %>" 
+            src="<%= admin_file_url(f.object.room_photo.blob.signed_id) %>" 
             data-image-preview-target="preview" 
             class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
             alt="Image Preview"

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "home#index"
 
+    resources :files, only: [:show]
+
     scope module: :procurements, path: "procurements" do
       resources :capital_proposals, path: "capital-proposals" do
         collection do

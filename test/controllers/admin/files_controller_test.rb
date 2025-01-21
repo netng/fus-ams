@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::AssetsControllerTest < ActionDispatch::IntegrationTest
+class Admin::FilesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end
