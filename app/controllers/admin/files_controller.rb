@@ -9,9 +9,7 @@ module Admin
         headers['Content-Type'] = blob.content_type
         headers['Content-Disposition'] = "inline; filename=\"#{blob.filename}\""
         headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
-
-        # Jangan tetapkan Content-Length untuk menghindari mismatch
-        headers.delete('Content-Length')
+        headers['Content-Length'] = blob.byte_size.to_s
 
         stream_file(blob.url)
       else
