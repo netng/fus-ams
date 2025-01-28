@@ -110,7 +110,7 @@ ssh:
 accessories:
   postgres:
     image: postgres:15
-    #host: 158.101.37.21
+    host: 158.101.37.21
     port: "127.0.0.1:5432:5432"
     #port: 5432
     env:
