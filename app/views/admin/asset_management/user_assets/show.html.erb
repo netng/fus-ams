@@ -1,0 +1,62 @@
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-10 bg-fus-blue text-white shadow-md ">
+    <%= t("custom.label.show_detail", model: t("activerecord.models.user_asset")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd" class="px-8 py-2">
+    <div class="bg-slate-50 rounded-md">
+      <div class="grid grid-cols-2 gap-2 p-4">
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.user_asset.id_user_asset") %>
+          </label>
+          <span class="fus-readonly"><%= @user_asset.id_user_asset %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.user_asset.username") %>
+          </label>
+          <span class="fus-readonly"><%= @user_asset.username.blank? ? "-" : @user_asset.username %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.user_asset.email") %>
+          </label>
+          <span class="fus-readonly"><%= @user_asset.email.blank? ? "-" : @user_asset.email  %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.models.site") %>
+          </label>
+          <span class="fus-readonly"><%= @user_asset.site.name %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.models.department") %>
+          </label>
+          <span class="fus-readonly"><%= @user_asset.department.blank? ? "-" : @user_asset.department.name %></span>
+        </div>
+
+      </div>
+
+      <div class="mb-2 p-4">
+        <label class="fus-label">
+          <%= t("activerecord.attributes.user_asset.description") %>
+        </label>
+        <span class="fus-readonly"><%= @user_asset.description.blank? ? "-" : @user_asset.description %></span>
+      </div>
+    </div>
+
+    <%= button_tag t("custom.label.cancel"),
+      data: { action: "modal#hideModal" },
+      class: "fus-secondary-btn md:w-[100px] mt-2"
+    %>
+    
+	</div>
+<% end %>
+
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.user_asset")).capitalize) %>

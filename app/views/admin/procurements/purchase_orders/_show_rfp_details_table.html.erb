@@ -1,0 +1,102 @@
+<% if rfp_details.present? %>
+<div class="overflow-x-auto rounded-lg my-2" id="rfp_details_table">
+  <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+      <table class="min-w-full bg-white table-auto">
+        <thead class="rounded-lg">
+          <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.qty") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.tentative_date") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.confirm_date") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.specs") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.currency") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.rate") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.price") %>
+            </th>
+
+            <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+              <%= t("activerecord.attributes.request_for_purchase_detail.total") %>
+            </th>
+          </tr>
+        </thead>
+        
+        <tbody class="text-gray-600 text-sm font-light">
+          <% (rfp_details || []).each do |detail| %>
+            <%= tag.tr class: "request-for-purchase-detail border-b border-gray-200 hover:bg-gray-100" do %>
+              <td class="py-2 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[60px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <%= detail.qty %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[105px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <%= detail.tentative_date.strftime("%Y-%m-%d") %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+              <span class="block text-xs w-[105px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <%= detail.confirm_date.strftime("%Y-%m-%d") %>
+              </span>
+            </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <%= detail.specs %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[80px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <%= detail.currency&.id_currency %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[80px] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <%= detail.rate.to_i %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[120px] p-2 border bg-gray-300 border-gray-300 rounded-lg">
+                  <%= detail.price.to_i %>
+                </span>
+              </td>
+
+              <td class="py-3 px-2 text-left whitespace-nowrap">
+                <span class="block text-xs w-[120px] p-2 border bg-gray-300 border-gray-300 rounded-lg">
+                  <%= detail.sub_total.to_i %>
+                </span>
+              </td>
+            <% end %>
+          <% end %>
+
+        </tbody>
+      </table>
+  </div>
+
+</div>
+<% else %>
+  <div id="rfp_details_table"></div>
+<% end %>

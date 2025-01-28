@@ -1,27 +1,65 @@
 <!-- Navbar -->
-<nav class="bg-blue-500 text-white fixed top-0 w-full z-50 px-4 shadow-lg">
-  <div class="container mx-auto flex justify-between items-center py-4">
-    <div class="text-xl font-bold">Asset Management System</div>
-    <div class="md:hidden">
-      <button id="menu-button" class="text-white focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
-      </button>
-    </div>
-    <ul class="hidden md:flex space-x-8 md:items-center">
-      <li><a href="#" class="hover:text-gray-200">Home</a></li>
-      <li><a href="#" class="hover:text-gray-200">View</a></li>
-      <li><a href="#" class="hover:text-gray-200">Report</a></li>
-      <li><a href="#" class="hover:text-gray-200">Entry</a></li>
-      <li><a href="#" class="hover:text-gray-200">Search</a></li>
-      <li><a href="#" class="hover:text-gray-200">Setup</a></li>
-      <li><a href="#" class="hover:text-gray-200">Non</a></li>
-      <li>
-        <%= button_to "Sign out", auth_sign_out_path, class: "bg-orange-400 p-2 rounded text-white focus:outline-none", method: :delete %>
+<nav 
+  class="bg-fus-blue text-white fixed top-0 w-full z-50 px-8 py-2 shadow-lg flex justify-between items-center"
+  data-controller="active-menu">
+
+  <!-- brand title (pojok kanan) -->
+  <div class="flex-shrink-0">
+    <%= link_to "Asset Management System", admin_path, class: "text-xl font-bold" %>
+  </div>
+    
+
+  <!-- main menu (tengah) -->
+  <div class="flex-grow flex justify-center">
+    <ul class="flex space-x-8 items-center">
+      <li
+        data-menu=<%= admin_path %>
+        data-active-menu-target="item"
+        data-action="click->active-menu#activate"
+        class="px-2 py-2">
+        <%= link_to "#{t('custom.label.home')}",
+          admin_path,
+          class: "hover:text-gray-200"
+        %>
       </li>
+
+      <%= render "shared/menus/procurements_menu" %>
+      <%= render "shared/menus/asset_management_menu" %>
+      <%= render "shared/menus/inventory_management_menu" %>
+      <%= render "shared/menus/settings_menu" %>
+      <%= render "shared/menus/masters_menu" %>
+      <%= render "shared/menus/access_management_menu" %>
+
     </ul>
   </div>
-</nav>
 
- 
+  <!-- user profile (pojok kanan) -->
+  <div 
+    class="relative flex-shrink-0"
+    data-controller="dropdown-menu"
+    data-action="mouseenter->dropdown-menu#show mouseleave->dropdown-menu#hide">
+
+    <!-- Profile Icon -->
+    <button 
+      class="w-10 h-10 bg-gray-200 text-gray-800 rounded-full flex items-center justify-center focus:outline-none hover:bg-gray-300"
+      id="profile-menu-button">
+      <span class="sr-only">Open user menu</span>
+      <i class="fas fa-user"></i>
+    </button>
+
+    <!-- Dropdown Menu -->
+    
+    <ul
+      class="absolute mt-2 hidden bg-white shadow-lg rounded py-2 px-2 whitespace-nowrap w-64 right-0"
+      data-dropdown-menu-target="menu">
+        <li class="py-2 px-2 text-gray-600">
+          Hi, <%= current_account.username %>
+        </li>
+        <li class="py-2 px-2 text-gray-600 hover:underline">
+          <%= link_to "Logout", auth_sign_out_path, data: { turbo_method: :delete }, class: "w-full text-left" %>
+        </li>
+    </ul>
+  </div>
+
+    
+</nav>

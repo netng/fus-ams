@@ -1,0 +1,44 @@
+<div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+  <%= search_form_for [:admin, @q], url: admin_vendors_path, data: { 
+    controller: "filters",
+    turbo_frame: :table,
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-vendor"
+  } do |f| %>
+
+    <div class="md:flex gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.id_vendor')}", class: "fus-label" %>
+        <%= f.search_field :id_vendor_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+      
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.name')}", class: "fus-label" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.phone_number')}", class: "fus-label" %>
+        <%= f.search_field :phone_number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.fax_number')}", class: "fus-label" %>
+        <%= f.search_field :fax_number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.contact_person')}", class: "fus-label" %>
+        <%= f.search_field :contact_person_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.vendor.email')}", class: "fus-label" %>
+        <%= f.search_field :email_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+    </div>
+    
+  <% end %>
+</div>

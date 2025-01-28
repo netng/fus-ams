@@ -1,0 +1,26 @@
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-20 bg-fus-blue text-white shadow-md">
+    <%= t("custom.label.export_file_name") %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd" class="px-8 py-2">
+    <%= form_with url: export_admin_assets_path(q: @ransack_params.to_h) do |form| %>
+      <div class="mb-2">
+        <%= form.label t("custom.label.file_name"), class: "fus-label mb-2" %>
+        <%= text_field_tag "file_name","", class: "fus-input" %>
+      </div>
+
+      <div class="mb-2">
+        <%= form.label "#{t("custom.label.sheet_protection")} (It will make sheet Read-Only. Leave blank if you don't want to protect the sheet with password.)", class: "fus-label mb-2" %>
+        <%= password_field_tag "sheet_password","", class: "fus-input" %>
+      </div>
+
+    <%= form.submit "#{t('custom.label.submit')}",
+        data: { 
+          turbo_action: "advance",
+          turbo_frame: "main-content"
+        },
+        class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+      %>
+    <% end %>
+	</div>
+<% end %>

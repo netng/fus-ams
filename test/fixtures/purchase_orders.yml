@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: MyString
+  date: 2024-10-25 10:50:04
+  vendor: one
+  request_for_purchase: one
+  delivery_date: 2024-10-25 10:50:04
+  site: one
+  payment_remarks: MyString
+  description: MyString
+  status: MyString
+  currency: one
+  amount_by_currency: 9.99
+  rate: 9.99
+  amount_by_rate: 9.99
+
+two:
+  number: MyString
+  date: 2024-10-25 10:50:04
+  vendor: two
+  request_for_purchase: two
+  delivery_date: 2024-10-25 10:50:04
+  site: two
+  payment_remarks: MyString
+  description: MyString
+  status: MyString
+  currency: two
+  amount_by_currency: 9.99
+  rate: 9.99
+  amount_by_rate: 9.99

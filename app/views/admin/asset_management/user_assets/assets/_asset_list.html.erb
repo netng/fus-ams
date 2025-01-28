@@ -1,0 +1,44 @@
+<% assets.map do |asset| %>
+  <%= tag.tr id: dom_id(asset), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+    <% if policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
+
+      <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+        <div class="flex items-center space-x-4">
+          <% if Admin::AuthorizationPolicy.new(@pundit_user, asset).read? %>
+            <%= link_to admin_asset_path(asset),
+              data: {
+                turbo_frame: :second_modal,
+              } do %>
+              <%= inline_svg_tag "show.svg",
+                class: "fus-icons",
+                title: t("custom.label.show")
+              %>
+            <% end %>
+          <% end %>
+
+          <% if Admin::AuthorizationPolicy.new(@pundit_user, asset).update? %>
+            <%= link_to admin_assets_path(q: { name_cont: "keyword", tagging_id_eq: asset.tagging_id }),
+              data: {
+                turbo_frame: "_top"
+              },
+              target: "_blank" do %>
+                <%= inline_svg_tag "edit.svg",
+                  class: "fus-icons",
+                  title: t("custom.label.edit")
+                %>
+            <% end %>
+          <% end %>
+
+        </div>
+      </td>
+    
+    <% end %>
+
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.tagging_id %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.cpu_sn %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.asset_model.name %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.user_asset.username %></td>
+    <td class="py-3 px-6 text-left whitespace-nowrap"><%= asset.site.name %></td>
+  <% end %>
+<% end %>

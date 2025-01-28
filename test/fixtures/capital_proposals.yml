@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: MyString
+  real_number: MyString
+  capital_proposal_type: one
+  capital_proposal_group: one
+  site: one
+  department: one
+  date: 2024-10-21 16:17:34
+  description: MyString
+  equiv_amount: MyString
+  rate: MyString
+  amount: MyString
+  status: MyString
+  budget_ref_number: MyString
+  budget_amount: MyString
+
+two:
+  number: MyString
+  real_number: MyString
+  capital_proposal_type: two
+  capital_proposal_group: two
+  site: two
+  department: two
+  date: 2024-10-21 16:17:34
+  description: MyString
+  equiv_amount: MyString
+  rate: MyString
+  amount: MyString
+  status: MyString
+  budget_ref_number: MyString
+  budget_amount: MyString

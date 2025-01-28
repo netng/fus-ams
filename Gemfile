@@ -40,7 +40,7 @@ gem "kamal", ">= 2.0.0.rc2", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -70,4 +70,23 @@ gem "pagy", "~> 9.0"
 
 gem "ransack", "~> 4.2"
 
+
+gem "pundit", "~> 2.4"
+
+gem "roo", "~> 2.10"
+
+gem "inline_svg", "~> 1.10"
+
 gem "dotenv", "~> 3.1"
+
+# Gem for export to excel format
+gem "caxlsx"
+gem "caxlsx_rails"
+
+gem "activerecord-import", "~> 2.0"
+
+gem "chartkick", "~> 5.1"
+
+gem "groupdate", "~> 6.5"
+
+gem "aws-sdk-s3", "~> 1.178"

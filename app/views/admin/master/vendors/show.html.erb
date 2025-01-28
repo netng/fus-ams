@@ -1,0 +1,96 @@
+<%= render "layouts/turbo_modal" do %>
+  <h2 class="fus-form-header mb-2 sticky top-0 p-3 z-10 bg-fus-blue text-white shadow-md ">
+    <%= t("custom.label.show_detail", model: t("activerecord.models.vendor")).capitalize %>
+  </h2>
+	<div data-action="turbo:submit-end->modal#submitEnd" class="px-8 py-2">
+    <div class="bg-slate-50 rounded-md">
+      <div class="grid grid-cols-2 gap-2 p-4">
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.id_vendor") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.id_vendor %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.name") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.name %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.address1") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.address1.blank? ? "-" : @vendor.address1  %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.address2") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.address2.blank? ? "-" : @vendor.address2 %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.city") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.city.blank? ? "-" : @vendor.city %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.postal_code") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.postal_code.blank? ? "-" : @vendor.postal_code %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.phone_number") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.phone_number.blank? ? "-" : @vendor.phone_number %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.fax_number") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.fax_number.blank? ? "-" : @vendor.fax_number %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.contact_person") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.contact_person.blank? ? "-" : @vendor.contact_person %></span>
+        </div>
+
+        <div class="mb-2">
+          <label class="fus-label">
+            <%= t("activerecord.attributes.vendor.email") %>
+          </label>
+          <span class="fus-readonly"><%= @vendor.email.blank? ? "-" : @vendor.email %></span>
+        </div>
+
+      </div>
+      <div class="mb-2 p-4">
+        <label class="fus-label">
+          <%= t("activerecord.attributes.vendor.description") %>
+        </label>
+        <span class="fus-readonly"><%= @vendor.description.blank? ? "-" : @vendor.description %></span>
+      </div>
+    </div>
+
+    <%= button_tag t("custom.label.cancel"),
+      data: { action: "modal#hideModal" },
+      class: "fus-secondary-btn md:w-[100px] mt-2"
+    %>
+    
+	</div>
+<% end %>
+
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.vendor")).capitalize) %>

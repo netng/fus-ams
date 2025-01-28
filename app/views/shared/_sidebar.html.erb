@@ -1,51 +1,37 @@
-<div id="desktop-sidebar" class="hidden bg-blue-500 shadow-lg md:block sidebar-fixed">
+<div 
+  id="desktop-sidebar"
+  class="hidden bg-fus-blue shadow-lg md:block sidebar-fixed fus-scroller pb-2 border-double border-blue-300 border-4"
+  data-controller="active-menu">
+  
   <div class="p-0"> <!-- Menghapus padding dari sidebar -->
-    <h2 class="font-bold text-lg text-white px-8 py-4 bg-blue-500 sticky-header">Entry</h2>
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Asset</h3>
-      <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Capital proposal</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Request for purchase</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Purchase order</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Delivery order</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Register asset</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Update asset</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Register user asset</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Close berita acara</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Change tagging id</a></li>
-      </ul>
-    </div>
+    <% if has_entry_menu? && controller_path.include?("entries") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Entry</h2>
+      <%= render "shared/menus/entry_menu" %>
 
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Asset and Component</h3>
-      <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Asset type</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Asset item type</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Asset model</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Component</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Software</a></li>
-      </ul>
-    </div>
+    <% elsif has_setup_menu? && controller_path.include?("setups") %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Setup</h2>
+      <%= render "shared/menus/setup_menu" %>
+    <% else %>
+	    <h2 class="font-bold text-lg text-white px-8 py-4 bg-fus-blue sticky-header">Welcome</h2>
+      <div class="px-4 text-white text-sm">
+        <p class="my-2 text-base font-semibold">
+          <%= t("custom.label.logged_as") %> :
+        </p>
 
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Location</h3>
-      <ul>
-        <li><a href="#" class="px-2 text-white hover:underline">Project</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Site</a></li>
-        <li><a href="#" class="px-2 text-white hover:underline">Departement</a></li>
-      </ul>
-    </div>
+        <p class="leading-relaxed">
+          <%= t("custom.label.name") %> : <%= current_account.username %>
+        </p>
+        
+        <p class="leading-relaxed">
+          <%= t("custom.label.ip_address") %> : <%= Current.ip_address %>
+        </p class="leading-relaxed">
 
-    <div class="mt-4 px-4">
-      <h3 class="font-semibold text-white">Master</h3>
-      <ul>
-        <li>
-          <%= link_to t("activerecord.models.brand"), admin_brands_path, class: "px-2 text-white hover:underline" %>
-        </li>
-        <li><a href="#" class="px-2 text-white hover:underline">Vendor</a></li>
-      </ul>
-    </div>
+        <p class="leading-relaxed">
+          <%= t("custom.label.email") %> : <%= current_account.email %>
+        </p>
 
-    <!-- Tambahkan lebih banyak grup jika perlu -->
+
+      </div>
+    <% end %>
   </div>
 </div>

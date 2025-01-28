@@ -1,0 +1,38 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: admin_request_for_purchases_path, data: { 
+      controller: "filters",
+      turbo_frame: :table,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-request_for_purchase",
+    } do |f| %>
+  
+      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2"> 
+        <div class="w-full mb-2">
+          <%= f.label "#{t('custom.label.from_department')}", class: "fus-label" %>
+          <%= f.select :from_department_id_eq,
+            Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('custom.label.to_department')}", class: "fus-label" %>
+          <%= f.select :to_department_id_eq,
+            Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.request_for_purchase.number')}", class: "fus-label" %>
+          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>

@@ -1,0 +1,202 @@
+<%= form_with model: [:admin, request_for_purchase], data: { turbo_action: "advance" } do |form| %>
+
+  <div class="md:grid grid-cols-2 gap-2">
+    <div class="mb-2">
+      <%= form.label :number, "#{t("activerecord.attributes.request_for_purchase.number")} *", class: "fus-label mb-2" %>
+      <%= form.text_field :number, class: "fus-input", required: true %>
+      <% @request_for_purchase.errors.full_messages_for(:number).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :capital_proposal, "#{t("custom.label.cost_log_number")}", class: "fus-label mb-2" %>
+      <%= form.select :capital_proposal_id,
+        CapitalProposal.pluck(:number, :id).map { |number, id| [number.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.capital_proposal")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @request_for_purchase.errors.full_messages_for(:capital_proposal).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  
+    <div class="mb-2">
+      <%= form.label :from_department, "#{t("custom.label.from_department")} *", class: "fus-label mb-2", required: true %>
+      <%= form.select :from_department_id,
+        Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @request_for_purchase.errors.full_messages_for(:from_department).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :to_department, "#{t("custom.label.to_department")} *", class: "fus-label mb-2", required: true %>
+      <%= form.select :to_department_id,
+        Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+        {include_blank: t("custom.label.select", model: t("activerecord.models.department")).capitalize},
+        { data: { controller: "slim" }, class: "fus-select" }
+      %>
+      <% @request_for_purchase.errors.full_messages_for(:to_department).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+    
+    <div class="mb-2">
+      <%= form.label :date, "#{t("activerecord.attributes.request_for_purchase.date")} *", class: "fus-label mb-2", required: true %>
+      <%= form.date_field :date, class: "fus-input", required: true %>
+      <% @request_for_purchase.errors.full_messages_for(:date).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+  
+    <div class="mb-2">
+      <%= form.label :material_code, "#{t("activerecord.attributes.request_for_purchase.material_code")} *", class: "fus-label mb-2", required: true %>
+      <%= form.text_field :material_code, class: "fus-input", required: true %>
+      <% @request_for_purchase.errors.full_messages_for(:material_code).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :remarks, "#{t("activerecord.attributes.request_for_purchase.remarks")}", class: "fus-label mb-2" %>
+      <%= form.text_field :remarks, class: "fus-input" %>
+      <% @request_for_purchase.errors.full_messages_for(:remarks).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :issued_by, "#{t("activerecord.attributes.request_for_purchase.issued_by")}", class: "fus-label mb-2" %>
+      <%= form.text_field :issued_by, class: "fus-input" %>
+      <% @request_for_purchase.errors.full_messages_for(:issued_by).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :authorized_by, "#{t("activerecord.attributes.request_for_purchase.authorized_by")}", class: "fus-label mb-2" %>
+      <%= form.text_field :authorized_by, class: "fus-input" %>
+      <% @request_for_purchase.errors.full_messages_for(:authorized_by).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+    <div class="mb-2">
+      <%= form.label :status, "#{t("activerecord.attributes.request_for_purchase.status")}", class: "fus-label mb-2" %>
+      <%= form.select :status,
+        [["Open", "Open"], ["Closed", "Closed"]],
+        {},
+        { data: { controller: "slim-no-search" }, class: "fus-select" }
+      %>
+      <% @request_for_purchase.errors.full_messages_for(:status).each do |message| %>
+        <p class="text-red-500 text-sm mt-1"><%= message %></p>
+      <% end %>
+    </div>
+
+  </div>
+
+  <hr class="my-4 mx-6" />
+  <div class="mb-4 flex justify-between items-center">
+    <h3 class="fus-form-header">
+      <%= t("custom.label.request_for_purchase_details") %>
+    </h3>
+    <div>
+      <%= link_to "Add details",
+        new_admin_request_for_purchase_path(add_rfp_details: :add_rfp_details),
+        data: { turbo_frame: "add_rfp_details" },
+        class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+      %>
+    </div>
+  </div>
+
+  <% error_messages = [] %>
+
+  <% @request_for_purchase.request_for_purchase_details.each_with_index do |detail| %>
+    <% if detail.errors.any? %>
+      <% error_messages << detail.errors.full_messages.uniq %>
+    <% end %>
+  <% end %>
+
+  <% if error_messages.any? %>
+    <div data-controller="flash" data-flash-target="flash" class="fade-in-out font-semibold text-red-500 text-center mb-8 w-full p-4 bg-red-200 rounded">
+      <span class="text-xs text-red-500"><%= error_messages.flatten.uniq.join(", ") %></li>
+    </div>
+  <% end %>
+
+  <div class="bg-slate-50 p-2 overflow-x-auto rounded-lg">
+    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+        <table class="min-w-full bg-white table-auto" data-controller="dynamic-remove">
+          <thead class="rounded-lg">
+            <tr class="bg-gray-200 text-xs text-gray-600 uppercase text-sm text-left leading-normal">
+              <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
+                <div class="flex items-center space-x-2">
+                </div>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.qty") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.tentative_date") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.confirm_date") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.specs") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.currency") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.rate") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.price") %>
+              </th>
+  
+              <th class="sticky top-0 py-3 px-2 bg-gray-200 z-10 whitespace-nowrap">
+                <%= t("activerecord.attributes.request_for_purchase_detail.total") %>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light" id="rfp_details">
+            <%= turbo_frame_tag :add_rfp_details do %>
+              <%= turbo_stream.append :rfp_details do %>
+                <%= form.fields_for :request_for_purchase_details, child_index: -> { Process.clock_gettime(Process::CLOCK_REALTIME, :microsecond) } do |rfp_detail_form| %>
+                  <%= render "request_for_purchase_details", rfp_detail_form: rfp_detail_form %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+    </div>
+
+  </div>
+  
+  <hr class="my-4" />
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit "#{t('custom.label.save')}",
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+
+    <%= link_to "#{t('custom.label.cancel')}",
+      admin_request_for_purchases_path,
+      data: {
+        turbo_action: "advance"
+      },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_inventory_movement: MyString
+  type: 
+  site: one
+  site: one
+  user_asset: one
+  quantity: 1
+  status: MyString
+  descriptions: MyString
+
+two:
+  id_inventory_movement: MyString
+  type: 
+  site: two
+  site: two
+  user_asset: two
+  quantity: 1
+  status: MyString
+  descriptions: MyString

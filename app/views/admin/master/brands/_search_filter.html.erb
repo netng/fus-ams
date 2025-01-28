@@ -1,0 +1,23 @@
+<div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+  <%= search_form_for [:admin, @q], url: admin_brands_path, data: { 
+    controller: "filters",
+    turbo_frame: :table,
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-brand"
+  } do |f| %>
+
+    <div class="md:flex gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.brand.id_brand')}", class: "fus-label" %>
+        <%= f.search_field :id_brand_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.brand.name')}", class: "fus-label" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+    </div>
+    
+  <% end %>
+</div>

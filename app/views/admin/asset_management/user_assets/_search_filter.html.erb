@@ -1,0 +1,53 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: admin_user_assets_path, data: { 
+      controller: "filters",
+      turbo_frame: :table,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-user_asset",
+    } do |f| %>
+  
+      <div class="md:grid grid-cols-3 gap-2" data-controller="slim">
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.id_user_asset')}", class: "fus-label" %>
+          <%= f.search_field :id_user_asset_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.username')}", class: "fus-label" %>
+          <%= f.search_field :username_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.email')}", class: "fus-label" %>
+          <%= f.search_field :email_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+  
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.user_asset.aztec_code')}", class: "fus-label" %>
+          <%= f.search_field :aztec_code_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.department')}", class: "fus-label" %>
+          <%= f.select :department_id_eq,
+            Department.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.department")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.site')}", class: "fus-label" %>
+          <%= f.select :site_id_eq,
+            Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.site")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>

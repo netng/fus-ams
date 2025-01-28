@@ -1,0 +1,70 @@
+<%= tag.tr id: dom_id(user_asset), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+  <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
+
+    <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+      <div class="flex items-center space-x-4">
+
+        <% if policy([:admin, :authorization]).destroy? %>
+          <%= check_box_tag "user_asset_ids[]",
+            user_asset.id,
+            nil,
+            {
+              class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+              multiple: true,
+              form: :user_asset_table,
+              data: {
+                table_target: "childCheckbox",
+                action: "change->table#toggleParentCheckbox"
+              },
+              title: t("custom.label.select_to_delete")
+            }
+          %>
+        <% end %>
+
+        <% if policy([:admin, :authorization]).read? %>
+          <%= link_to admin_user_asset_path(user_asset),
+            data: {
+              turbo_frame: :modal,
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "show.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.show")
+              %>
+          <% end %>
+        <% end %>
+
+        <% if policy([:admin, :authorization]).update? %>
+          <%= link_to edit_admin_user_asset_path(user_asset),
+            data: {
+              turbo_frame: :modal,
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "edit.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.edit")
+              %>
+          <% end %>
+        <% end %>
+
+      </div>
+    </td>
+  
+  <% end %>
+
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.id_user_asset %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.username %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.email %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.site.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left"><%= user_asset.department&.name %></td>
+  <td class="py-3 px-6 whitespace-nowrap text-left">
+    <%= link_to assets_admin_user_asset_path(user_asset),
+      data: {
+        turbo_frame: :modal,
+        turbo_action: "advance"
+      } do %>
+        <span class="p-2 bg-fus-blue text-white rounded-md hover:bg-blue-400 font-semibold"><%= user_asset.assets_count %></span>
+    <% end %>
+  </td>
+<% end %>

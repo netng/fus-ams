@@ -1,0 +1,66 @@
+<%= tag.tr id: dom_id(inventory_location), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+  <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
+
+    <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+      <div class="flex items-center space-x-4">
+
+        <% if policy([:admin, :authorization]).destroy? %>
+
+          <%= check_box_tag "inventory_location_ids[]",
+            inventory_location.id,
+            nil,
+            {
+              class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+              multiple: true,
+              form: :inventory_location_table,
+              data: {
+                table_target: "childCheckbox",
+                action: "change->table#toggleParentCheckbox"
+              },
+              title: t("custom.label.select_to_delete")
+            }
+          %>
+          
+        <% end %>
+
+        <% if policy([:admin, :authorization]).read? %>
+
+          <%= link_to admin_inventory_location_path(inventory_location),
+            data: {
+              turbo_frame: "main-content",
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "show.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.show")
+              %>
+          <% end %>
+
+        <% end %>
+        
+        <% if policy([:admin, :authorization]).update? %>
+
+          <%= link_to edit_admin_inventory_location_path(inventory_location),
+            data: {
+              turbo_frame: "main-content",
+              turbo_action: "advance"
+            } do %>
+              <%= inline_svg_tag "edit.svg",
+                class: "w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer",
+                title: t("custom.label.edit")
+              %>
+          <% end %>
+
+        <% end %>
+        
+      </div>
+    </td>
+
+  <% end %>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.site.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.floor %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.rooms_count %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.rooms.map { |room| room.rooms_storage_units_count }.sum %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.description.blank? ? "-" : inventory_location.description %></td>
+<% end %>

@@ -1,0 +1,73 @@
+<%= form_with model: [:admin, account], data: { turbo_action: "advance"} do |form| %>
+  <div class="mb-2">
+    <%= form.label :username, "#{t("activerecord.attributes.account.username")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :username, class: "fus-input", required: true %>
+    <% @account.errors.full_messages_for(:username).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :email, "#{t("activerecord.attributes.account.email")} *", class: "fus-label mb-2" %>
+    <%= form.text_field :email, class: "fus-input", required: true %>
+    <% @account.errors.full_messages_for(:email).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :password, "#{form.object.persisted? ? t("activerecord.attributes.account.password") + " (#{t('custom.label.leave_blank')})" : t("activerecord.attributes.account.password") + '*'}", class: "fus-label mb-2" %>
+    <%= form.password_field :password, class: "fus-input", required: !form.object.persisted? %>
+    <% @account.errors.full_messages_for(:password).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :role, "#{t("activerecord.models.role")} *", class: "fus-label mb-2" %>
+    <%= form.select :role_id,
+      Role.where(active: true).pluck(:name, :id).map { |name, id| [name, id] },
+      {include_blank: t("custom.label.select", model: t("activerecord.models.role")).capitalize},
+      {data: { controller: 'slim' }, class: "fus-select" }
+    %>
+    <% @account.errors.full_messages_for(:role).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :site, "#{t("activerecord.models.site")} *", class: "fus-label mb-2" %>
+    <%= form.select :site_id,
+      Site.where(parent_site: nil).pluck(:name, :id).map { |name, id| [name, id] },
+      {include_blank: t("custom.label.select", model: t("activerecord.models.site")).capitalize},
+      {data: { controller: 'slim' }, class: "fus-select" }
+    %>
+    <% @account.errors.full_messages_for(:site).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :active, "#{t('activerecord.attributes.account.active')}", class: "fus-label mb-2" %>
+    <%= form.check_box :active, class: "fus-checkbox" %>
+    <% @account.errors.full_messages_for(:active).each do |message| %>
+      <p class="text-red-500 text-sm mt-1"><%= message %></p>
+    <% end %>
+  </div>
+
+  
+
+  <div class="flex flex-col md:flex-row items-center md:gap-2 mt-4">
+    <%= form.submit "#{form.object.persisted? ? t('custom.label.update') : t('custom.label.save')}",
+      data: { turbo_frame: "main-content" },
+      class: "bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4 md:mb-0 md:w-auto"
+    %>
+    <%= link_to "#{t('custom.label.cancel')}",
+      admin_accounts_path,
+      data: {
+          turbo_action: "advance",
+      },
+      class: "text-center bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300 mb-4 md:mb-0 md:w-auto"
+    %>
+  </div>
+<% end %>

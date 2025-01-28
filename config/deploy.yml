@@ -1,29 +1,36 @@
+<% require "dotenv"; Dotenv.load(".env.production.local") %>
 # Name of your application. Used to uniquely configure containers.
 service: fus_ams
 
 # Name of the container image.
-image: your-user/fus_ams
+image: superfus/fus_ams
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
-  # job:
-  #   hosts:
-  #     - 192.168.0.1
-  #   cmd: bin/jobs
+    - 158.101.37.21
+  job:
+    hosts:
+      - 158.101.37.21
+    cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
 proxy:
-  ssl: true
-  host: app.example.com
+  host: asset.prototype.nandang.web.id
+  ssl: false
+  #response_timeout: 600
+#   ssl: true
+#   hosts: 
+#     - dev.fus-online.co.id
+    
+
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: your-user
+  username: superfus
 
   # Always use an access token rather than real password when possible.
   password:
@@ -33,6 +40,7 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -49,6 +57,15 @@ env:
 
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
+    POSTGRES_USER: fus_ams
+    # POSTGRES_HOST: fus_ams-postgres
+    POSTGRES_HOST: 158.101.37.21
+    POSTGRES_DB: fus_ams_production
+    POSTGRES_PORT: 5432
+    MINIO_BUCKET: ams-prod
+    MINIO_ENDPOINT: http://192.168.200.78
+
+    
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
@@ -63,7 +80,9 @@ aliases:
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
   - "fus_ams_storage:/rails/storage"
-
+  - "fus_ams_tmp:/rails/tmp"
+  - "fus_ams_public_reports:/rails/public/reports"
+  - "fus_ams_public_templates:/rails/public/templates"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
@@ -85,25 +104,28 @@ builder:
   #   - RAILS_MASTER_KEY
 
 # Use a different ssh user than root
-# ssh:
-#   user: app
+ssh:
+  #user: root
+  user: ubuntu
 
 # Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     port: 3306
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
+accessories:
+  postgres:
+    image: postgres:15
+    host: 158.101.37.21
+    # port: "127.0.0.1:5432:5432"
+    port: 5432
+    env:
+      clear:
+        POSTGRES_USER: fus_ams
+        POSTGRES_DB: fus_ams_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+    files:
+      - db/production_setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    # restart: always
 #   redis:
 #     image: redis:7.0
 #     host: 192.168.0.2

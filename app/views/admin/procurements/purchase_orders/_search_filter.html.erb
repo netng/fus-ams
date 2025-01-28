@@ -1,0 +1,49 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: admin_purchase_orders_path, data: { 
+      controller: "filters",
+      turbo_frame: :table,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-purchase_order",
+    } do |f| %>
+  
+      <div class="flex flex-wrap md:flex md:flex-nowrap gap-2"> 
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.attributes.purchase_order.number')}", class: "fus-label" %>
+          <%= f.search_field :number_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.vendor')}", class: "fus-label" %>
+          <%= f.select :vendor_id_eq,
+            Vendor.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.vendor")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('custom.label.delivery_to')}", class: "fus-label" %>
+          <%= f.select :ship_to_site_id_eq,
+            Site.pluck(:name, :id).map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.site")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('custom.label.approved_by')}", class: "fus-label" %>
+          <%= f.select :approved_by_id_eq,
+            PersonalBoard.pluck(:username, :id).map { |username, id| [username.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.personal_board")).capitalize},
+            data: { action: "filters#submit", controller: "slim" },
+            class: "fus-select"
+          %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>

@@ -1,15 +1,52 @@
-<%= form_with url: auth_sign_in_path do |form| %>
-  <div class="mb-4">
-    <%= label_tag :username, "#{t('custom.label.username')}", class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= text_field_tag :username, params[:username], class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+<div class="md:flex md:h-screen shadow-lg">
+  <!-- Left Section: Illustration -->
+  <div class="w-full hidden md:w-1/2 md:flex items-center justify-center">
+    <%= image_tag "login-form-banner.png", class: "w-full h-screen", alt: "login form fus ams banner" %>
   </div>
 
-  <div class="mb-4">
-    <%= label_tag :password, "#{t('custom.label.password')}", class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= password_field_tag :password, params[:password], class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
-  </div>
+  <!-- Right Section: Login Form -->
+  <div class="w-full md:w-1/2 flex items-center justify-center bg-white">
+    <div class="w-3/4 max-w-md">
+      <div class="my-4 flex justify-center">
+        <a href="https://www.faasri-net.co.id/id/" target="_blank" title="Faasri">
+          <%= image_tag "faasri-logo.png", alt: "faasri logo"%>
+        </a>
+      </div>
+      <div class="flex items-center gap-2 mb-4">
 
-  <div class="mb-4">
-    <%= submit_tag "#{t('custom.label.sign_in_anchor')}", class: "w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <h1 class="text-3xl font-bold text-gray-600">
+          <%= t('custom.label.sign_in') %>
+        </h1>
+        <span class="text-fus-blue">|</span>
+        <span class="text-xl text-gray-600">Faasri Asset Management System</span>
+      </div>
+      <p class="text-sm text-gray-500 mb-6">
+        Welcome to the asset management system platform.
+        Please sign in to continue.
+      </p>
+
+      <%= form_with url: auth_sign_in_path, local: false do |form| %>
+        <div class="mb-4">
+          <%= label_tag :username, "#{t('custom.label.username')}", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= text_field_tag :username, params[:username], class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+        </div>
+
+        <div class="mb-4">
+          <%= label_tag :password, "#{t('custom.label.password')}", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= password_field_tag :password, params[:password], class: "block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+        </div>
+        <%= submit_tag "#{t('custom.label.sign_in_anchor')}", class: "w-full bg-fus-blue text-white py-3 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      <% end %>
+
+      <div class="mt-4">
+        <%= turbo_frame_tag "flash-message" do %>
+          <%= render "shared/flash" %>
+        <% end %>
+      </div>
+
+      <p class="mt-6 text-center text-sm text-gray-600">
+        <!-- forgot password -->
+      </p>
+    </div>
   </div>
-<% end %>
+</div>

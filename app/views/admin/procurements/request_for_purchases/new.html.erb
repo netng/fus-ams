@@ -1,0 +1,7 @@
+<h2 class="fus-form-header mb-8">
+  <%= t("custom.label.default_new_form", model: t("activerecord.models.request_for_purchase")).capitalize %>
+</h2>
+
+<%= render "form", request_for_purchase: @request_for_purchase %>
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.request_for_purchase")).capitalize) %>

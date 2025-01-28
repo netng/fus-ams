@@ -1,139 +1,46 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Fus Ams Admin Page" %></title>
+    <title><%= content_for(:title) || "Asset Management System" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
 
     <%# Includes all stylesheet files in app/views/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <style>
-    
-    .sidebar-fixed {
-      position: fixed;
-      top: 100px;
-      left: 10px;
-      width: 16rem;
-      height: 80vh;
-
-      overflow-y: auto;
-      border-radius: 0.5rem;
-      z-index: 100;
-    }
-
-
-    /* Chrome, Safari and Opera */
-    .sidebar-fixed::-webkit-scrollbar {
-      width: 8px; /* Width of the scrollbar */
-    }
-
-    .sidebar-fixed::-webkit-scrollbar-track {
-      background: #f1f1f1; /* Background of the scrollbar track */
-    }
-
-    .sidebar-fixed::-webkit-scrollbar-thumb {
-      background: blue; /* Color of the scrollbar thumb */
-      border-radius: 10px; /* Round edges */
-    }
-
-    .sidebar-fixed::-webkit-scrollbar-thumb:hover {
-      background: darkblue; /* Color when hovered */
-    }
-
-    /* IE and Edge */
-    .sidebar-fixed {
-      -ms-overflow-style: scrollbar; /* Show scrollbar in IE and Edge */
-    }
-
-    /* Firefox */
-    .sidebar-fixed {
-      scrollbar-width: thin; /* Make scrollbar thinner */
-      scrollbar-color: #88bafb #3b82f6; /* thumb color and track color */
-    }
-
-    .sidebar-mobile {
-      display: none;
-      position: fixed;
-      left: 0;
-      top: 64px;
-      width: 16rem;
-      height: calc(100% - 64px);
-      background-color: #1E3A8A;
-      z-index: 50;
-      transition: transform 0.3s ease;
-      transform: translateY(-100%);
-    }
-
-    .sidebar-mobile-active {
-      display: block;
-      transform: translateY(0);
-    }
-
-    @media (min-width: 768px) {
-      .main-content {
-        margin-left: 18rem;
-        margin-right: 1.5rem;
-      }
-    }
-
-
-    .sticky-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      margin-left: -1rem;
-      width: calc(100% + 1rem);
-      border-bottom: 1px solid #88bafb;
-    }
-
-    </style>
-
   </head>
 
   <body>
     <%= render "shared/navbar" %>
-    <main class="mx-auto mt-8 flex pt-16 bg-slate-50 min-h-screen">
-      <%= render "shared/sidebar" %>
-      <div class="main-content w-full px-8 py-4 bg-white shadow-lg rounded-lg mb-12">
-        <%= render "shared/flash" %>
+    <main class="mt-5 flex pt-16 bg-slate-50 min-h-screen relative w-full">
+      <%= turbo_stream_from dom_id(current_account) %>
+
+      <%= turbo_frame_tag "main-content", class: "mx-8 px-8 py-4 bg-white shadow-lg rounded-lg mb-12 w-full overflow-x-auto" do %>
+
+        <div id="flash-message">
+          <%= render "shared/flash" %>
+        </div>
         <%= yield %>
-      </div>
+      <% end %>
+      <%= render "shared/data_loader" %>
       <%= render "shared/mobile_sidebar" %>
     </main>
-
-    <script>
-    // Toggle mobile sidebar visibility
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-
-    menuButton.addEventListener('click', () => {
-      mobileSidebar.classList.toggle('sidebar-mobile-active');
-    });
-
-    // Close mobile sidebar when clicking outside
-    document.addEventListener('click', (event) => {
-      const isClickInsideSidebar = mobileSidebar.contains(event.target);
-      const isClickOnButton = menuButton.contains(event.target);
-
-      if (!isClickInsideSidebar && !isClickOnButton) {
-        mobileSidebar.classList.remove('sidebar-mobile-active');
-      }
-    });
-  </script>
+    <%= turbo_frame_tag :modal %>
+    <%= turbo_frame_tag :second_modal %>
+    <%= render "shared/loader" %>
   </body>
 </html>

@@ -1,0 +1,54 @@
+<%= tag.tr id: dom_id(report_queue), class: "border-b border-gray-200 hover:bg-gray-100" do %>
+
+    <td class="sticky left-0 py-3 px-4 border-r border-gray-300 bg-gray-100">
+      <div class="flex items-center space-x-4">
+        <% if report_queue.finished_at.blank? && report_queue.status.nil? %>
+          <%= inline_svg_tag "loading.svg",
+            class: "fus-icons-loader",
+            title: t("custom.label.processing")
+          %>
+        <% else %>
+          <% if policy([:admin, :authorization]).destroy? %>
+            <%= check_box_tag "report_queue_ids[]",
+              report_queue.id,
+              nil,
+              {
+                class: "form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400",
+                multiple: true,
+                form: :report_queue_table,
+                data: {
+                  table_target: "childCheckbox",
+                  action: "change->table#toggleParentCheckbox"
+                },
+                title: t("custom.label.select_to_delete")
+              }
+            %>
+          <% end %>
+
+          <% if report_queue.status %>
+            <%= link_to report_queues_download_admin_assets_path(report_queue),
+                data: {
+                  turbo: false
+                } do %>
+                <%= inline_svg_tag "download.svg",
+                  class: "fus-icons",
+                  title: t("custom.label.download")
+                %>
+            <% end %>
+          <% else %>
+            <%= inline_svg_tag "error.svg",
+              class: "fus-icons-error",
+              title: t("custom.label.export_error")
+            %>
+          <% end %>
+
+        <% end %>
+      </div>
+    </td>
+  
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.name %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.data_count %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= human_readable_size(report_queue.file_path) %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.scheduled_at&.strftime("%Y-%m-%d %H:%M") %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= report_queue.finished_at&.strftime("%Y-%m-%d %H:%M") %></td>
+<% end %>

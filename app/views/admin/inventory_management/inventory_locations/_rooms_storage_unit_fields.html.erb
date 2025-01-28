@@ -1,0 +1,107 @@
+<div 
+  data-controller="dynamic-remove"
+  data-dynamic-remove-target="container"
+  class="relative border border-solid shadow-md rounded-md p-2 mb-4">
+
+  <%= f.hidden_field :_destroy, 
+    class: 'destroy-field',
+    data: { dynamic_remove_target: "destroyField" }
+  %>
+
+  <button 
+    type="button" 
+    data-action="click->dynamic-remove#removeDetail"
+    class="absolute right-2 font-bold top-1 text-white size-8 hover:text-red-900 bg-red-500 rounded-lg"
+    title=<%= t("custom.label.destroy")%>>
+    &times;
+  </button>
+
+  <div class="grid grid-cols-4 gap-4 pt-4">
+    <div class="col-span-3">
+      <div class="mb-2">
+        <%= f.label :storage_unit_id, "#{t('activerecord.attributes.rooms_storage_unit.storage_unit_id')} <span class='text-red-500'>*</span>".html_safe, class: "fus-label mb-2" %>
+        <%= f.select :storage_unit_id,
+          StorageUnit.pluck(:name, :id).map { |name, id| [name, id]},
+          { include_blank: t("custom.label.select_storage_type") },
+          { data: { controller: "slim-no-search" }, class: "fus-select font-bold" }
+        %>
+        <% f.object.errors.full_messages_for(:storage_unit).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <%= f.label :label, class: "fus-label mb-2" %>
+        <%= f.text_field :label, class: "fus-input", required: true %>
+        <% f.object.errors.full_messages_for(:label).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <%= f.label :capacity, class: "fus-label mb-2" %>
+        <%= f.text_field :capacity, class: "fus-input" %>
+        <% f.object.errors.full_messages_for(:capacity).each do |message| %>
+          <p class="text-red-500 text-sm mt-1"><%= message %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-2">
+        <%= f.label :description, "#{t('activerecord.attributes.inventory_location.description')}" , class: "fus-label mb-2" %>
+        <%= f.text_field :description, class: "fus-input" %>
+      </div>
+      
+    </div>
+
+    <!-- Kolom Kanan: File Field -->
+    <div data-controller="image-preview">
+      <%= f.label :storage_unit_photo, class: "fus-label mb-2" %>
+      <div 
+        class="relative flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 max-h-48">
+        
+        <!-- Image Preview -->
+        <% if f.object.persisted? && f.object.rooms_storage_unit_photo.attached? %>
+          <img 
+            src="<%= admin_file_url(f.object.rooms_storage_unit_photo.blob.signed_id) %>" 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% else %>
+          <img 
+            data-image-preview-target="preview" 
+            class="mt-4 w-40 h-40 object-cover rounded-lg hidden pointer-events-auto cursor-pointer" 
+            alt="Image Preview"
+            onclick="this.previousElementSibling.click()" />
+        <% end %>
+
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2 text-xs" data-image-preview-target="defaultText">Attach photo</p>
+          <p id="file-name" class="text-xs text-gray-700 font-medium mt-2 hidden" data-image-preview-target="fileName"></p>
+        </div>
+
+        <%= f.file_field :rooms_storage_unit_photo, 
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer", 
+          accept: "image/*", 
+          data: { image_preview_target: "fileInput", action: "change->image-preview#preview" } %>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="my-2 flex items-center">
+    <div>
+      <%= link_to "Add storage bin",
+        add_fields_admin_inventory_locations_path(name: f.field_name(:rooms_storage_units_bins, index: nil)),
+        data: { turbo_method: :post },
+        class: "bg-orange-400 w-full text-white px-4 py-2 rounded hover:bg-orange-300 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 mb-4 md:mb-0 md:w-auto"
+      %>
+    </div>
+  </div>
+
+  <%= tag.div id: f.field_id(:rooms_storage_units_bins, index: nil), class: "mt-4 max-h-96 overflow-auto" do %>
+    <%= f.fields_for :rooms_storage_units_bins do |ff| %>
+      <%= render "rooms_storage_units_bin_fields", f: ff %>
+    <% end %>
+  <% end %>
+</div>

@@ -1,21 +1,273 @@
 en:
   activerecord:
     models:
+      asset_schedule: Asset schedule
       role: Role
       account: Account
-      project: Project
       brand: Brand
+      vendor: Vendor
+      department: Department
+      site_stat: Asset status
+      project: Project
+      site_group: Site group
+      site: Site
+      software: Software
+      component_type: Component type
+      component: Component
+      asset_type: Asset type
+      asset_item_type: Asset item type
+      asset_model: Asset model
+      user_asset: User asset
+      capital_proposal: Capital proposal
+      capital_proposal_type: Type
+      capital_proposal_group: Groups
+      currency: Currency
+      request_for_purchase: Request for purchase
+      request_for_purchase_detail: Request for purchase detail
+      purchase_order: Purchase order
+      delivery_order: Delivery order
+      personal_board: Personal board
+      po_delivery_site: Delivery site
+      site_default: Site default
+      asset: Asset
+      asset_class: Asset class
+      asset_component: Component detail
+      asset_software: Asset software
+      storage_unit: Storage unit
+      inventory_location: Inventory location
+      rooms_storage_units_bin: Storage bin
+      room: Room
+      rooms_storage_unit: Storage unit
+      inventory: Data inventory
+      inventory_movement: Inventory movement
+
     attributes:
-      role:
+      inventory_movement:
+        id_inventory_movement: Movement ID
+        movement_type: Movement type
+        source_site_id: Source site
+        destination_site_id: Destination site
+        user_asset_id: User asset
+        quantity: Quantity
+        status: Status
+        description: Description
+
+      inventory:
+        site_id: Site
+        asset_id: Asset
+        rooms_storage_units_bin_id: Bin
+        status: Status
+        
+      rooms_storage_unit:
+        storage_unit_id: Type
+        
+      room:
         name: Name
-      brand:
+        description: Description
+        photo: Photo
+        rooms_storage_units_count: Number of storage units
+
+      rooms_storage_units_bin:
+        label: Label
+        description: Description
+
+      inventory_location:
+        floor: Floor
+        description: Description
+        rooms_count: Number of rooms
+
+      storage_unit:
+        name: Name
+        description: Description
+        
+      asset_schedule:
         name: Name
         description: Description
 
+      asset_software:
+        asset_id: Asset
+        software_id: Software
+        license: License number
+
+      asset:
+        tagging_id: Tagging id
+        project_id: For project
+        site_id: Site
+        asset_model_id: Model
+        asset_class_id: Asset class
+        computer_name: Computer name
+        computer_ip: IP computer
+        cpu_sn: CPU SN
+        monitor_sn: Monitor SN
+        keyboard_sn: Keyboard SN
+        delivery_order_id: DO ref
+        shipping_date: Shipping date
+        description: Description
+        asset_schedule_id: Schedule
+
+      site_default:
+        site_id: Site
+        id_user_site_default: User asset ID
+        description: Description
+
+      role:
+        name: Name
+        description: Description
+        active: Active
+
+      brand:
+        id_brand: ID
+        name: Name
+        description: Description
+        
+      vendor:
+        id_vendor: ID
+        name: Name
+        address1: Address 1
+        address2: Address 2
+        city: City
+        postal_code: Postal code
+        phone_number: Phone
+        fax_number: Fax
+        contact_person: Contact person
+        email: Email
+        description: Description
+
+      department:
+        id_department: ID
+        name: Name
+        floor: Floor
+        description: Description
+
+      site_stat:
+        id_site_stat: ID
+        name: Name
+        description: Description
+
+      project:
+        id_project: ID
+        name: Name
+        description: Description
+
+      site_group:
+        id_site_group: ID
+        name: Name
+        description: Description
+      
+      site:
+        id_site: ID
+        name: Name
+        description: Description
+        parent_site_id: Site parent
+
+      software:
+        id_software: ID
+        name: Name
+        description: Description
+      
+      component_type:
+        id_component_type: ID
+        name: Name
+        description: Description
+
+      component:
+        id_component: ID
+        name: Name
+        description: Description
+
+      asset_type:
+        id_asset_type: ID
+        name: Name
+        description: Description
+
+      asset_item_type:
+        id_asset_item_type: ID
+        name: Name
+        description: Description
+
+      asset_model:
+        id_asset_model: ID
+        name: Name
+        description: Description
+      
+      user_asset:
+        id_user_asset: ID
+        username: Username
+        aztec_code: Aztec code
+        email: Email
+        location: Location
+        floor: Floor
+      
+      capital_proposal:
+        number: Number
+        real_number: Real No
+        date: Date
+        description: Description
+        equiv_amount: Equiv amount
+        rate: Exchange rate
+        status: Status
+        budget_ref_number: Budget ref. number
+        budget_amount: Budget amount
+      
+      purchase_order:
+        number: Number
+        date: Date
+        vendor_id: Supplier name
+        request_for_purchase_id: RFP no
+        delivery_date: Delivery date
+        ship_to_site_id: Delivery to
+        payment_remarks: Payment remarks
+        approved_by_id: Approved by
+        description: Description
+        status: Status
+
+      currency:
+        id_currency: ID
+        name: Name
+      
+      request_for_purchase:
+        number: Number
+        date: Date
+        material_code: Material code
+        remarks: Remarks
+        issued_by: Issued by
+        authorized_by: Authorized by
+        status: Status
+
+      request_for_purchase_detail:
+        qty: Qty
+        tentative_date: Tentative date
+        confirm_date: Confirm date
+        specs: Specification & Remarks
+        rate: Rate
+        price: Quote price
+        sub_total: Total
+
+      delivery_order:
+        number: DO number
+        purchase_order_id: PO number
+        date: Date
+        warranty_expired: Warranty expired date
+        description: Description
+      
+      personal_board:
+        id_personal_board: ID
+        username: Username
+
       account:
+        username: Username
         email: Email
         password: Password
         password_confirmation: Password confirmation
+        active: Active
+      
+      report_queue:
+        name: Name
+        file_path: File path
+        schedulet_at: Schedulet at
+        finished_at: Finished at
+        execution_time: Execution time (minute)
+        created_at: Created at
 
     errors:
       messages:
@@ -234,53 +486,158 @@ en:
   
   custom:
     label:
+      storage_unit_type: Storage type
+      asset_importing: "Import process is starting. Please check the import log below."
+      import_generator: "%{model} import generator"
+      data_asset: Data asset
+      bulk_asset_registration: Bulk asset registration
+      search_tagging_id: Search tagging id
+      storage_unit_type: Storage unit type
+      storage_unit_label: Storage unit label
+      storage_bin_label: Storage bin label
+      procurements_menu: Procurements
+      asset_management_menu: Asset management
+      inventory_management_menu: Inventory management
+      masters_menu: Master
+      settings_menu: Settings
+      access_management_menu: Access management
+      asset_locations: Update asset locations
+      select_storage_type: Select storage type
+      floor: Floor
+      export_error: Failed to export
+      total_data: Total data
+      sheet_protection: Sheet protection
+      file_size: File size (MB)
+      default: Default
+      download_template: Download template
+      export_file_name: Export file name
+      file_name: "File name (If the name is empty, it will be filled with the default format `asset-report-[day-month-year-hour-minutes-seconds-millis]`)"
+      
+      submit: Submit
+      processor: Processor
+      total_asset: Total asset
+      asset_description: Asset description
+      report_queues: Report queues download
+      download: Download
+      processing: Processing...
+      allow_read: Allow read
+      allow_create: Allow create
+      allow_update: Allow update
+      allow_delete: Allow delete
+      allow_confirm: Allow confirm
+      active: Active
+      inactive: Inactive
+      ip_address: IP
+      last_logged_in: Last login
+      home: Home
+      authorizations: Authorizations
+      logged_as: "You're logged as"
+      module: Module
+      account: Account
+      role: Role
+      entry_menu: Entry
+      setup_menu: Setup
+      choose_user_asset: Choose user asset
+      component_detail: Component details
+      component_type: Component type
+      component: Component
+      serial_number: Serial Number
+      location: Location
+      software: Software
+      delivery_to: Delivery to
+      approved_by: Approved by
+      request_for_purchase_details: Requst for purchase details
+      clear_filter: Clear
       sign_in: Sign in
       sign_in_anchor: Sign in
       is_registered: Already have an account?
       username: Username
       email: Email
-      name: Nama
+      importing: Importing data. Please wait...
+      name: Name
       description: Deskripsi
       password: Password
       forgot_password: Forgot password?
       back: Back
+      upload: Submit
       save: Save
-      cancel: Cancel
+      cancel: Back
       search: Cari
       reset: Reset
       number_of_rt: Jumlah RT
       destroy: Delete
       edit: Edit
-      update: Perbaharui
+      update: Update
+      show: Show
       edit_form: Update data %{model}
       new_form: Asset %{model} registration
+      import_form: Import %{model}
+      select_to_delete: Select to delete
+      select_all: Select all
+      default_new_form: "%{model} registration"
+      show_detail: "%{model} details"
       filter: Filter
+      register: Register
       confirm:
         to_destroy_many: Are you sure you want to delete all selected data? Deleted data cannot be restored!
+        to_save: Are you sure to save this data?
+        to_import: Are your sure to import this data?
       brand_registration: Asset brand registration
-      index_header: Asset %{model}
+      asset_index_header: Asset %{model}
+      default_index_header: "%{model}"
+      all: All # awalnya All %{model}, namun diubah cukup all saja
+      select: "Select %{model}"
+      from_department: From department
+      to_department: To department
+      total_po: Total PO
+      total_do: Total DO
+      cost_log_number: Cost log number
+      site_id: Site ID
+      site_name: Site name
+      edit_location_form: Update asset location
+      edit_software_form: Asset software registration
+      software_details: Software details
+      leave_blank: Leave blank if you don't want to change it
 
     format: "%{attribute} %{message}"
     errors:
+      uniqueness_scope: "already exists"
+      nested_uniqueness_scope: "must be unique"
+      uniqueness_scope_with_floor: "Combination of %{field}, %{floor}, and %{related_model} must be unique"
+      record_required: "%{record} must exists at %{row_index}"
+      import_failed: Import failed
       invalid_code_format: hanya boleh huruf dan angka tanpa spasi
       delete_restriction_error: Gagal menghapus karena data digunakan pada tabel %{model}
+      invalid_import_template: "Header template invalid: %{errors}"
+      invalid_allowed_extension: "File extension is not valid"
+      activerecord_object_not_found: "%{model} id %{id} is not found at row %{row_index}"
+      resolve_duplicate: Please check and make sure there are no duplicates
+      duplicate_data: "Dulicate data found: '%{field}' with value '%{value}' already exists"
+      general_error: Something wrong. Please contact admin
+      not_null_violation:
     
     flash:
       alerts:
+        record_not_found: "#{record} is not found"
         invalid_credential: Incorrect username or password
         require_authentication: The page you want to access was not found
         select_on_or_more: Silakan pilih setidaknya satu data
+        select_file: Please select file
+        user_asset_is_not_found: User asset is not found
         failed:
           to_destroy: Gagal menghapus data
           to_destroy_with_restriction: Gagal menghapus data
       notices:
+        report_queues: "Please click the `Report queues` button to download the file. If the amount of data is large, it may take some time for the file ready to download. Please check periodically."
         successfully:
-          logged_in: Berhasil login
+          logged_in: Logged in successfully
           updated: "%{model} successfully updated"
+          updated_asset_locations: "%{tagging_ids} successfully updated to site: %{site}"
           created: "%{model} successfully created"
+          imported: "%{model}'s successfully imported"
           destroyed: "Selected %{model} successfully deleted"
   
   pundit:
-    default: Anda tidak berhak untuk melakukan aksi ini
-    admin/dashboard_policy:
-      index?: Halaman yang anda akses tidak ditemukan
+    default: You don't have permission to perform this action
+    admin/authorization_policy:
+      index?: Page not found

@@ -1,0 +1,16 @@
+<td id="rooms" class="py-2 px-2 text-left whitespace-nowrap">
+  <%= select_tag "room_id",
+    options_for_select(
+      rooms.map { |s| [s.name, s.id] },
+      params[:room_id]
+
+    ), 
+    include_blank: t("custom.label.select", model: t("activerecord.models.room")).capitalize,
+    data: {
+      controller: "turbo-dependent-select",
+      turbo_dependent_select_target: "select",
+      action: "change->turbo-dependent-select#loadStorageUnits",
+    },
+    required: true
+  %>
+</td>

@@ -2,19 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
+
 
 @layer components {
-  .btn-primary {
+  /* .btn-primary {
     @apply py-2 px-4 bg-blue-200;
+  } */
+
+  .fus-input {
+    @apply block w-full text-slate-600 font-light p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-select {
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-new-select {
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-tom-select {
+    @apply w-full border text-slate-600 font-light border-gray-300 rounded rounded-lg px-1 py-1 focus:outline-none focus:ring-1 focus:ring-blue-100 focus:border-blue-100 hover:bg-slate-50;
+  }
+
+  .fus-label {
+    @apply block text-sm font-medium text-gray-400;
+  }
+
+  .fus-primary-btn {
+    @apply bg-fus-blue w-full text-white px-4 py-2 rounded hover:bg-blue-600 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 ;
+  }
+
+  .fus-secondary-btn {
+    @apply text-center text-slate-500 font-light bg-slate-100 w-full px-4 py-2 rounded hover:bg-slate-200 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300;
+  }
+
+  .fus-green-btn {
+    @apply text-center bg-fus-primary-green w-full px-4 py-2 rounded hover:bg-fus-hover-green hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-300;
+  }
+
+  .fus-form-header {
+    @apply text-2xl font-bold text-gray-500;
+  }
+
+  .fus-form-sub-header {
+    @apply text-xl font-bold text-gray-500;
+  }
+
+  .fus-form-title {
+    @apply text-lg font-bold text-gray-500;
+  }
+
+  .fus-icons {
+    @apply w-5 h-5 text-slate-300 hover:text-slate-400 cursor-pointer;
+  }
+
+  .fus-icons-error {
+    @apply w-5 h-5 text-red-500 hover:text-red-600;
+  }
+
+  .fus-icons-loader {
+    @apply w-5 h-5 text-blue-300 hover:text-blue-400;
+  }
+
+  .fus-readonly {
+    @apply border-b p-2 block w-full border-gray-300 text-slate-600 font-light;
+  }
+
+  .fus-checkbox {
+    @apply form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-300 hover:bg-slate-400;
   }
 }
 
-*/
 
 /* flash css */
 .fade-in-out {
-  animation: appear-then-fade 5s both;
+  animation: appear-then-fade 30s both;
 }
 
 @keyframes appear-then-fade {

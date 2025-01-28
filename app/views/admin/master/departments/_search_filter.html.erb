@@ -1,0 +1,29 @@
+<div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+  <%= search_form_for [:admin, @q], url: admin_departments_path, data: { 
+    controller: "filters",
+    turbo_frame: :table,
+    turbo_action: "advance",
+    filters_delay_value: 200,
+    filters_table_outlet: ".table-department"
+  } do |f| %>
+
+    <div class="md:flex gap-2">
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.department.id_department')}", class: "fus-label" %>
+        <%= f.search_field :id_department_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.department.name')}", class: "fus-label" %>
+        <%= f.search_field :name_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+      <div class="w-full mb-2">
+        <%= f.label "#{t('activerecord.attributes.department.floor')}", class: "fus-label" %>
+        <%= f.search_field :floor_cont, data: { action: "filters#submit" }, class: "fus-input" %>
+      </div>
+
+    </div>
+    
+  <% end %>
+</div>

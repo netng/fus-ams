@@ -1,0 +1,18 @@
+<h2 class="text-2xl font-bold text-gray-600 mb-8"><%= t("custom.label.import_form", model: t("activerecord.models.capital_proposal")).capitalize %></h2>
+<%= form_with(url: process_import_admin_capital_proposals_path, method: :post, local: true, multipart: true) do |form| %>
+  <div class="flex justify-center items-center mt-8 border border-2 border-dashed  rounded-md p-8">
+    <%= form.file_field :file %>
+  </div>
+
+  <div class="mt-4">
+    <%= form.submit "#{t('custom.label.upload')}",
+      class: "bg-fus-blue p-2 rounded text-white",
+      data: {
+        turbo_action: "advance",
+        turbo_submits_with: t("custom.label.importing")
+      }
+    %>
+  </div>
+<% end %>
+
+<% content_for(:title, t("custom.label.import_form", model: t("activerecord.models.capital_proposal")).capitalize) %>

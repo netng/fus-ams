@@ -16,4 +16,8 @@ export default class extends Controller {
   removeElement() {
     this.element.remove()
   }
+
+  hide() {
+    this.removeElement()
+  }
 }

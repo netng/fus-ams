@@ -1,0 +1,56 @@
+<h2 class="fus-form-header mb-4">
+  <%= t("custom.label.import_form", model: t("custom.label.data_asset")).capitalize %>
+</h2>
+
+<%= render "asset_import_tab" %>
+
+<%= turbo_frame_tag "import-form" do %>
+  <div class="p-4 bg-slate-50 border rounded">
+
+    <h2 class="mb-4 fus-form-sub-header">
+      Bulk insert Assets registration
+    </h2>
+
+    <%= link_to t("custom.label.download_template"),
+      import_download_template_admin_assets_path,
+      class: "fus-green-btn text-white",
+      data: { turbo: false } %>
+
+
+    <%= form_with url: process_import_admin_assets_path,
+      multipart: true do |form| %>
+
+      <div data-controller="file-upload" class="relative flex flex-col justify-center items-center mt-4 border-2 border-dashed border-gray-300 rounded-lg p-8 bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
+        <div class="text-center pointer-events-none">
+          <p class="text-gray-600 font-medium mb-2">Drag and drop your file here</p>
+          <p class="text-sm text-gray-500">or click to browse</p>
+          <p id="file-name" class="text-sm text-gray-700 font-medium mt-2 hidden"></p>
+        </div>
+        <%= form.file_field :file,
+          class: "absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10",
+          data: { action: "change->file-upload#updateFileName" }
+        %>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit "#{t('custom.label.upload')}",
+          class: "bg-fus-blue p-2 rounded text-white mb-2",
+          data: {
+            turbo_submits_with: t("custom.label.importing")
+          }
+        %>
+      </div>
+    <% end %>
+
+    <div data-controller="auto-scroll" class="overflow-auto mb-4 mt-4 bg-slate-50 p-2 rounded-lg shadow relative">
+      <div class="min-w-full bg-cyan-900 rounded-lg overflow-auto max-h-[500px]" data-auto-scroll-target="frame">
+        <%= turbo_frame_tag "asset_import_logs" %>
+      </div>
+    </div>
+
+    
+
+  </div>
+<% end %>
+
+<% content_for(:title, t("custom.label.new_form", model: t("activerecord.models.asset")).capitalize) %>

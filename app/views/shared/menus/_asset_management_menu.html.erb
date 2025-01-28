@@ -1,0 +1,40 @@
+<% asset_management_menus_path ||= asset_management_menus.flat_map(&:route_paths) %>
+<% if asset_management_menus_path.present? %>
+
+  <li
+    class="relative group"
+    data-controller="dropdown-menu"
+    data-action="mouseenter->dropdown-menu#show mouseleave->dropdown-menu#hide">
+
+    <div class="hover:text-gray-200 focus:outline-none flex items-center" aria-expanded="false">
+      <%= t("custom.label.asset_management_menu") %>
+      <%= inline_svg_tag "dropdown.svg", class: "size-5 transform transition-transform duration-200 group-hover:rotate-180" %>
+    </div>
+
+    <ul
+      class="absolute left-0 mt-2 hidden bg-white shadow-lg rounded py-2 px-2 whitespace-nowrap w-64"
+      data-dropdown-menu-target="menu">
+
+      <% asset_management_menus_path.sort_by(&:sort).each do |menu| %>
+        <li
+          class="py-2 px-2 text-gray-600 hover:underline"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
+          <%= link_to t(menu.label), send(menu.path),
+            class: "inline-block w-full h-full",
+            data: {
+              turbo_frame: "main-content",
+              turbo_action: "advance"
+            }
+          %>
+
+        </li>
+      <% end %>
+
+    </ul>
+  </li>
+
+<% end %>
+

@@ -1,0 +1,71 @@
+<div class="overflow-x-auto mb-4 bg-slate-50 p-2 rounded-lg shadow relative">
+  <%= turbo_frame_tag "table" do %>
+    <div class="min-w-full bg-white rounded-lg overflow-x-auto max-h-[500px]">
+        <table class="min-w-full bg-white table-auto" data-table-target="table">
+          <thead class="rounded-lg">
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+
+              <% if policy([:admin, :authorization]).destroy? || policy([:admin, :authorization]).update? || policy([:admin, :authorization]).read?  %>
+                <th class="sticky top-0 left-0 py-3 px-4 w-5 bg-gray-200 z-10">
+                  <div class="flex items-center space-x-2">
+                    <% if policy([:admin, :authorization]).destroy? %>
+                      <input type="checkbox" data-table-target="parentCheckbox" data-action="change->table#toggleChildCheckbox" class="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 rounded border-none bg-slate-400">
+                    <% end %>
+                  </div>
+                </th>
+              <% end %>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :number, "#{t('activerecord.attributes.purchase_order.number')}",
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :date, "#{t('activerecord.attributes.purchase_order.date')}",
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :vendor_name, "#{t('activerecord.models.vendor')}", 
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :ship_to_site_name, "#{t('activerecord.attributes.purchase_order.ship_to_site_id')}", 
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :delivery_date, "#{t('activerecord.attributes.purchase_order.delivery_date')}", 
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+              
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= sort_link(@q, :approved_by_username, "#{t('custom.label.approved_by')}", 
+                  { data: {turbo_action: :advance, action: "click->table#resetDeleteButton"} })
+                %>
+              </th>
+              
+              <th class="sticky top-0 py-3 px-6 text-left bg-gray-200 whitespace-nowrap">
+                <%= t("custom.label.total_do") %>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light">
+            <%= render @purchase_orders %>
+          </tbody>
+        </table>
+    </div>
+    <div class="flex justify-between items-center my-4 mx-4">
+      <%== pagy_info(@pagy) %>
+      <%== pagy_nav(@pagy, anchor_string: 'data-turbo-action="advance" data-action="click->table#resetDeleteButton"') %>
+    </div>
+  <% end %>
+  <%= render "shared/data_loader" %>
+
+</div>

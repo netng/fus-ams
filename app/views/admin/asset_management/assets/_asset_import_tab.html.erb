@@ -1,0 +1,17 @@
+<div class="flex gap-4 mb-12">
+  <%= link_to t("custom.label.bulk_asset_registration"),
+    import_admin_assets_path,
+    data: {
+      turbo_frame: "_top",
+    },
+    class: "fus-secondary-btn focus:ring-fus-primary-green #{'bg-fus-primary-green text-white hover:bg-fus-hover-green' if request.path.split("/").last == 'import'}"
+  %>
+
+  <%= link_to t("custom.label.bulk_asset_software_registration"),
+    import_asset_software_registrations_admin_assets_path,
+    data: {
+      turbo_frame: "_top",
+    },
+    class: "fus-secondary-btn focus:ring-fus-primary-green #{'bg-fus-primary-green text-white hover:bg-fus-hover-green' if request.path.split("/").last == 'asset-software-registrations'}"
+  %>
+</div>

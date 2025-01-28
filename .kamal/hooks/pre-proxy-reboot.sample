@@ -1,3 +1,19 @@
 #!/bin/sh
 
 echo "Rebooting kamal-proxy on $KAMAL_HOSTS..."
+
+
+# set -euo pipefail
+
+# # KAMAL_PROXY_TLS_CERT=$(op read "op://Private/Kamal Demo/cert.pem")
+# # KAMAL_PROXY_TLS_PRIVATE_KEY=$(op read "op://Private/Kamal Demo/key.pem")
+
+# for ip in ${KAMAL_HOSTS//,/ }; do
+#   ssh -q -T -o BatchMode=yes ubuntu@"${ip}" bash --noprofile <<-EOF
+#     docker run --rm --volume kamal-proxy-config:/home/kamal-proxy/.config/kamal-proxy ubuntu:noble-20240801 sh -c "
+#       mkdir -p /home/kamal-proxy/.config/kamal-proxy/certs
+#       echo '/etc/ssl/fus-ams/dev.fus-online.co.id.bundle.pem' > /home/kamal-proxy/.config/kamal-proxy/certs/cert.pem
+#       echo '/etc/ssl/fus-ams/dev.fus-online.co.id.pem' > /home/kamal-proxy/.config/kamal-proxy/certs/key.pem
+#     "
+# EOF
+# done

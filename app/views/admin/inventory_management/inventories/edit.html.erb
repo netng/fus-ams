@@ -1,0 +1,8 @@
+<h2 class="fus-form-header mb-8">
+  <%= t("custom.label.edit_form", model: t("activerecord.models.inventory")).capitalize %>
+</h2>
+
+<%= render "form", inventory: @inventory %>
+
+
+<% content_for(:title, t("custom.label.edit_form", model: t("activerecord.models.inventory")).capitalize) %>

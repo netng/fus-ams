@@ -1,0 +1,96 @@
+<!-- assets -->
+<% menu_assets_path ||= menu_assets.flat_map(&:route_paths) %>
+<% if menu_assets_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Asset</h3>
+    <ul>
+      <% menu_assets_path.sort_by(&:sort).each do |menu| %>
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<!-- asset and components -->
+<% menu_asset_components_path ||= menu_asset_components.flat_map(&:route_paths) %>
+<% if menu_asset_components_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Asset and component</h3>
+    <ul>
+      <% menu_asset_components_path.sort_by(&:sort).each do |menu| %>
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<!-- locations -->
+<% menu_locations_path ||= menu_locations.flat_map(&:route_paths) %>
+<% if menu_locations_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Location</h3>
+    <ul>
+      <% menu_locations_path.sort_by(&:sort).each do |menu| %>
+        <li 
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+          
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<!-- masters -->
+<% menu_masters_path ||= menu_masters.flat_map(&:route_paths) %>
+<% if menu_masters_path.present? %>
+  <div class="mt-4 px-4">
+    <h3 class="font-semibold text-white">Master</h3>
+    <ul>
+      <% menu_masters_path.sort_by(&:sort).each do |menu| %>
+        <li
+          class="flex items-center"
+          data-menu=<%= send(menu.path) %>
+          data-active-menu-target="item"
+          data-action="click->active-menu#activate">
+          
+          <%= inline_svg_tag "menu.svg", class: "w-5 h-5 text-white hover:text-slate-100" %>
+          <%= link_to t(menu.label), 
+						send(menu.path),
+						class: "px-2 text-white hover:underline",
+						data: { turbo_frame: "main-content", turbo_action: "advance" } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
