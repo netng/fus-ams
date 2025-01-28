@@ -17,12 +17,10 @@ servers:
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
 proxy:
-  host: asset.prototype.nandang.web.id
+  host: asset-prototype.nandang.web.id
   ssl: false
   #response_timeout: 600
 #   ssl: true
-#   hosts: 
-#     - dev.fus-online.co.id
     
 
 
