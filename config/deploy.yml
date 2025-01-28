@@ -1,9 +1,9 @@
 <% require "dotenv"; Dotenv.load(".env.production.local") %>
 # Name of your application. Used to uniquely configure containers.
-service: fus_ams
+service: ams
 
 # Name of the container image.
-image: superfus/fus_ams
+image: netnan/ams
 
 # Deploy to these servers.
 servers:
@@ -28,7 +28,7 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: superfus
+  username: netnan
 
   # Always use an access token rather than real password when possible.
   password:
@@ -56,7 +56,7 @@ env:
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
     POSTGRES_USER: fus_ams
-    POSTGRES_HOST: fus_ams-postgres
+    POSTGRES_HOST: ams-postgres
     #POSTGRES_HOST: 158.101.44.254
     POSTGRES_DB: fus_ams_production
     POSTGRES_PORT: 5432
