@@ -44,6 +44,7 @@ Current.account = Account.new(username: "system")
       # INVENTORY MANAGEMENT
       { code: "FA_INVMGMT_DATA_INVENTORY", description: "Function access for Data Inventory menu", active: true },
       { code: "FA_INVMGMT_INVENTORY_LOCACTION", description: "Function access for Inventory Location menu", active: true },
+      { code: "FA_INVMGMT_INVENTORY_MOVEMENT", description: "Function access for Inventory Movement menu", active: true },
 
       # ASSET MANAGEMENT
       { code: "FA_ASSMGMT_DATA_ASSET", description: "Function access for Data Asset menu", active: true },
@@ -288,7 +289,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_DO"),
       path: "admin_delivery_orders_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 4,
@@ -300,7 +301,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_PO"),
       path: "admin_purchase_orders_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 3,
@@ -312,7 +313,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_RFP"),
       path: "admin_request_for_purchases_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 2,
@@ -324,7 +325,7 @@ RoutePath.create(
     {
       function_access: FunctionAccess.find_by_code("FA_PROC_CP"),
       path: "admin_capital_proposals_path",
-      parent: "`procurements`",
+      parent: "procurements",
       group: "",
       index: true,
       sort: 1,
@@ -335,6 +336,17 @@ RoutePath.create(
 
 
     # INVENTORY MANAGEMENT
+    {
+      function_access: FunctionAccess.find_by_code("FA_INVMGMT_INVENTORY_MOVEMENT"),
+      path: "admin_inventory_movements_path",
+      parent: "inventory_management",
+      group: "",
+      index: true,
+      sort: 3,
+      label: "activerecord.models.inventory_movement",
+      description: "Route for register inventory movement index",
+      active: true
+    },
     {
       function_access: FunctionAccess.find_by_code("FA_INVMGMT_INVENTORY_LOCACTION"),
       path: "admin_inventory_locations_path",
@@ -349,7 +361,7 @@ RoutePath.create(
 
     {
       function_access: FunctionAccess.find_by_code("FA_INVMGMT_DATA_INVENTORY"),
-      path: "admin_data_inventories_path",
+      path: "admin_inventories_path",
       parent: "inventory_management",
       group: "",
       index: true,

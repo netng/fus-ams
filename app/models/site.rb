@@ -14,6 +14,7 @@ class Site < ApplicationRecord
   has_many :assets, dependent: :restrict_with_error
   has_many :accounts, dependent: :restrict_with_error
   has_many :inventory_locations, dependent: :restrict_with_error
+  has_many :inventory_movements, foreign_key: "source_site_id", dependent: :restrict_with_error
 
   # self join
   has_many :child_sites, class_name: "Site", foreign_key: "parent_site_id"

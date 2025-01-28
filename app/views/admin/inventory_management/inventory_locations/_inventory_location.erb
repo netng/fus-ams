@@ -61,5 +61,6 @@
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.site.name %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.floor %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.rooms_count %></td>
+  <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.rooms.map { |room| room.rooms_storage_units_count }.sum %></td>
   <td class="py-3 px-6 text-left whitespace-nowrap"><%= inventory_location.description.blank? ? "-" : inventory_location.description %></td>
 <% end %>

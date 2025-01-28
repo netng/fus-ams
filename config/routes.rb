@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "home#index"
 
+    resources :files, only: [:show]
+
     scope module: :procurements, path: "procurements" do
       resources :capital_proposals, path: "capital-proposals" do
         collection do
@@ -120,6 +122,23 @@ Rails.application.routes.draw do
           get "rooms"
           get "rooms-storage-units"
           get "rooms-storage-units-bins"
+        end
+      end
+
+      resources :inventories do
+        collection do
+          get "inventory-locations"
+          get "rooms"
+          get "rooms-storage-units"
+          get "rooms-storage-unit-bins"
+          get "find-assets-not-in-inventory"
+        end
+      end
+
+      resources :inventory_movements, path: "inventory-movements" do
+        collection do
+          get "find-user-assets-by-site"
+          get "find-assets-by-site-inventory"
         end
       end
     end

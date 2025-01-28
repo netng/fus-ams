@@ -7,6 +7,8 @@ import { get } from "@rails/request.js"
 // Connects to data-controller="turbo-dependent-select"
 export default class extends Controller {
   static targets = ["storageUnit", "select"]
+  static values = { endpoint: String }
+  static outlets = [ "inventory-location" ]
 
   connect() {
     this.selectTargets.forEach((selectTarget) => {
@@ -17,8 +19,6 @@ export default class extends Controller {
         });
       }
     });
-
-    console.log("Tom-Select initialized for dependent selects");
   }
 
   disconnect() {
@@ -27,33 +27,55 @@ export default class extends Controller {
         selectTarget.tomSelect.destroy(); // Hancurkan instance Tom-Select saat controller dilepas
       }
     });
-    console.log("Tom-Select destroyed");
+  }
+
+  async loadInventoryLocations(event) {
+    const siteId = event.target.value
+    const endpoint = this.endpointValue
+
+    if (siteId) {
+      await get(`${endpoint}?query=${siteId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+    } else {
+      await get(`${endpoint}?query=${siteId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+    }
   }
 
   async loadRooms(event) {
     const inventoryLocationId = event.target.value
+    const endpoint = this.endpointValue
+
     if (inventoryLocationId) {
-      await get(`/admin/inventory-management/inventory-locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/inventory-management/inventory-locations/rooms?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${inventoryLocationId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
   }
 
   async loadStorageUnits(event) {
     const roomId = event.target.value
+    const endpoint = this.endpointValue
+
     if (roomId) {
-      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${roomId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
   }
 
   async loadStorageUnitBins(event) {
     const storageUnitId = event.target.value
+    const endpoint = this.endpointValue
+
     if (storageUnitId) {
-      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units-bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     } else {
-      await get(`/admin/inventory-management/inventory-locations/rooms-storage-units-bins?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
+      await get(`${endpoint}?query=${storageUnitId}`, { headers: { Accept: "text/vnd.turbo-stream.html" } })
     }
+  }
+
+  // method outlet, memanggil fungsi pada stimulus controller inventory-location
+  updateSiteId(event) {
+    const siteId = event.target.value
+    this.inventoryLocationOutlet.updateSiteId(siteId)
   }
 }

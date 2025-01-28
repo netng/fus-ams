@@ -38,8 +38,26 @@ en:
       rooms_storage_units_bin: Storage bin
       room: Room
       rooms_storage_unit: Storage unit
+      inventory: Data inventory
+      inventory_movement: Inventory movement
 
     attributes:
+      inventory_movement:
+        id_inventory_movement: Movement ID
+        movement_type: Movement type
+        source_site_id: Source site
+        destination_site_id: Destination site
+        user_asset_id: User asset
+        quantity: Quantity
+        status: Status
+        description: Description
+
+      inventory:
+        site_id: Site
+        asset_id: Asset
+        rooms_storage_units_bin_id: Bin
+        status: Status
+        
       rooms_storage_unit:
         storage_unit_id: Type
         
@@ -468,6 +486,7 @@ en:
   
   custom:
     label:
+      storage_unit_type: Storage type
       asset_importing: "Import process is starting. Please check the import log below."
       import_generator: "%{model} import generator"
       data_asset: Data asset

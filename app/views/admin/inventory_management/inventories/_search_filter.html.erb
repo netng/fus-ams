@@ -1,0 +1,70 @@
+  <div class="bg-slate-50 rounded-lg mt-4 mb-4 p-4" data-toggle-target="toggle">
+    <%= search_form_for [:admin, @q], url: admin_inventories_path, data: { 
+      controller: "filters",
+      turbo_frame: :table,
+      turbo_action: "advance",
+      filters_delay_value: 200,
+      filters_table_outlet: ".table-inventory",
+    } do |f| %>
+  
+      <div class="md:grid grid-cols-3 gap-2 mb-2">
+        <div class="w-full mb-2">
+          <%= f.label :tagging_id, class: "fus-label" %>
+          <%= f.search_field :asset_tagging_id_cont,
+            data: {
+              action: "filters#submit"
+            },
+            class: "fus-input"
+          %>
+        </div>
+
+        <div class="w-full mb-2">
+          <%= f.label "#{t('activerecord.models.site')}", class: "fus-label" %>
+          <%= f.select :site_id_eq,
+            @parent_sites.map { |name, id| [name.capitalize, id]},
+            {include_blank: t("custom.label.all", model: t("activerecord.models.site")).capitalize},
+            data: {
+              controller: "turbo-dependent-select",
+              turbo_dependent_select_target: "select",
+              action: "filters#submit change->turbo-dependent-select#loadInventoryLocations",
+              turbo_dependent_select_endpoint_value: inventory_locations_admin_inventories_path,
+            },
+            class: "fus-tom-select"
+          %>
+        </div>
+
+        <%= turbo_frame_tag "inventory-locations" do %>
+          <%= render "admin/inventory_management/inventories/inventory_locations",
+            inventory_locations: [],
+            option_disabled: true,
+            selected_inventory_location_id: nil %>
+        <% end %>
+
+        <%= turbo_frame_tag "rooms" do %>
+          <%= render "admin/inventory_management/inventories/rooms",
+            rooms: [],
+            option_disabled: true,
+            selected_room_id: nil
+          %>
+        <% end %>
+
+        <%= turbo_frame_tag "rooms-storage-units" do %>
+          <%= render "admin/inventory_management/inventories/rooms_storage_units",
+            rooms_storage_units: [],
+            option_disabled: true,
+            selected_rooms_storage_unit_id: nil
+          %>
+        <% end %>
+
+        <%= turbo_frame_tag "rooms-storage-units-bins" do %>
+          <%= render "admin/inventory_management/inventories/rooms_storage_units_bins",
+            rooms_storage_units_bins: [],
+            option_disabled: true,
+            selected_rooms_storage_units_bin_id: nil
+          %>
+        <% end %>
+
+      </div>
+    <% end %>
+    <%= link_to "Clear", admin_inventories_path, data: { turbo_frame: "_top" }, class: "fus-secondary-btn" %>
+  </div>

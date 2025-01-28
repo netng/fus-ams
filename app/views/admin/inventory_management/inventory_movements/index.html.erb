@@ -1,0 +1,15 @@
+  <h2 class="fus-form-header mb-4">
+    <%= t("custom.label.default_index_header", model: t("activerecord.models.inventory_movement")).capitalize %>
+  </h2>
+
+  <%#= render "action_group" %>
+  <div class="table-inventory_movement" data-controller="table">
+    <%= render "table" %>
+    
+    <% if policy([:admin, :authorization]).destroy? %>
+      <%#= render "destroy_button" %>
+    <% end %>
+
+  </div>
+
+<% content_for(:title, t("custom.label.default_index_header", model: t("activerecord.models.inventory_movement")).capitalize) %>

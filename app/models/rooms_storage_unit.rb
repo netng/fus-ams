@@ -21,6 +21,14 @@ class RoomsStorageUnit < ApplicationRecord
     end
   }
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["capacity", "created_at", "created_by", "description", "id", "ip_address", "label", "request_id", "room_id", "storage_unit_id", "updated_at", "user_agent"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["room", "rooms_storage_unit_photo_attachment", "rooms_storage_unit_photo_blob", "rooms_storage_units_bins", "storage_unit"]
+  end
+  
   private
     def strip_and_upcase_label
       if label.present?

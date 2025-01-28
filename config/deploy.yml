@@ -8,18 +8,18 @@ image: superfus/fus_ams
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.200.92
+    - 158.101.37.21
   job:
     hosts:
-      - 192.168.200.92
+      - 158.101.37.21
     cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # Set ssl: false if using something like Cloudflare to terminate SSL (but keep host!).
 proxy:
-  host: dev.fus-online.co.id
+  host: asset.prototype.nandang.web.id
   ssl: false
-  response_timeout: 600
+  #response_timeout: 600
 #   ssl: true
 #   hosts: 
 #     - dev.fus-online.co.id
@@ -59,9 +59,12 @@ env:
     # RAILS_LOG_LEVEL: debug
     POSTGRES_USER: fus_ams
     # POSTGRES_HOST: fus_ams-postgres
-    POSTGRES_HOST: 192.168.200.93
+    POSTGRES_HOST: 158.101.37.21
     POSTGRES_DB: fus_ams_production
     POSTGRES_PORT: 5432
+    MINIO_BUCKET: ams-prod
+    MINIO_ENDPOINT: http://192.168.200.78
+
     
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
@@ -102,13 +105,14 @@ builder:
 
 # Use a different ssh user than root
 ssh:
-  user: root
+  #user: root
+  user: ubuntu
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
   postgres:
     image: postgres:15
-    host: 192.168.200.93
+    host: 158.101.37.21
     # port: "127.0.0.1:5432:5432"
     port: 5432
     env:

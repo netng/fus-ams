@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_031944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -401,6 +401,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
     t.index ["code"], name: "index_function_accesses_on_code", unique: true
   end
 
+  create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "site_id", null: false
+    t.uuid "asset_id", null: false
+    t.uuid "rooms_storage_units_bin_id", null: false
+    t.string "status", default: "IN_STOCK"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_inventories_on_asset_id"
+    t.index ["rooms_storage_units_bin_id"], name: "index_inventories_on_rooms_storage_units_bin_id"
+    t.index ["site_id", "asset_id"], name: "index_inventories_on_site_id_and_asset_id", unique: true
+    t.index ["site_id"], name: "index_inventories_on_site_id"
+  end
+
   create_table "inventory_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "floor", limit: 100, null: false
     t.uuid "site_id", null: false
@@ -426,6 +439,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
     t.index ["inventory_location_id"], name: "index_inventory_locations_details_on_inventory_location_id"
     t.index ["storage_unit_id", "label"], name: "index_inventory_locations_details_on_storage_unit_id_and_label", unique: true
     t.index ["storage_unit_id"], name: "index_inventory_locations_details_on_storage_unit_id"
+  end
+
+  create_table "inventory_movement_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_movement_id", null: false
+    t.uuid "inventory_id", null: false
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_id"], name: "index_inventory_movement_details_on_inventory_id"
+    t.index ["inventory_movement_id"], name: "index_inventory_movement_details_on_inventory_movement_id"
+  end
+
+  create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "id_inventory_movement", limit: 100, null: false
+    t.string "movement_type", limit: 100, null: false
+    t.uuid "source_site_id", null: false
+    t.uuid "destination_site_id"
+    t.uuid "user_asset_id"
+    t.integer "quantity", default: 0
+    t.string "status", default: "IN_PROGRESS"
+    t.string "description", limit: 500
+    t.string "created_by"
+    t.string "request_id"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_site_id"], name: "index_inventory_movements_on_destination_site_id"
+    t.index ["id_inventory_movement"], name: "index_inventory_movements_on_id_inventory_movement", unique: true
+    t.index ["source_site_id"], name: "index_inventory_movements_on_source_site_id"
+    t.index ["user_asset_id"], name: "index_inventory_movements_on_user_asset_id"
   end
 
   create_table "personal_boards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -831,9 +878,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_06_080133) do
   add_foreign_key "capital_proposals", "sites"
   add_foreign_key "components", "component_types"
   add_foreign_key "delivery_orders", "purchase_orders"
+  add_foreign_key "inventories", "assets"
+  add_foreign_key "inventories", "rooms_storage_units_bins"
+  add_foreign_key "inventories", "sites"
   add_foreign_key "inventory_locations", "sites"
   add_foreign_key "inventory_locations_details", "inventory_locations"
   add_foreign_key "inventory_locations_details", "storage_units"
+  add_foreign_key "inventory_movement_details", "inventories"
+  add_foreign_key "inventory_movement_details", "inventory_movements"
+  add_foreign_key "inventory_movements", "sites", column: "destination_site_id"
+  add_foreign_key "inventory_movements", "sites", column: "source_site_id"
+  add_foreign_key "inventory_movements", "user_assets"
   add_foreign_key "purchase_orders", "currencies"
   add_foreign_key "purchase_orders", "personal_boards", column: "approved_by_id"
   add_foreign_key "purchase_orders", "po_delivery_sites", column: "ship_to_site_id"

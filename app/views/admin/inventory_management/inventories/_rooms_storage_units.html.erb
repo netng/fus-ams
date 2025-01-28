@@ -1,0 +1,18 @@
+<div id="rooms-storage-units" class="w-full mb-2">
+  <%= label_tag :storage_units, "#{t('activerecord.models.rooms_storage_unit')}", class: "fus-label" %>
+  <%= select_tag "q[rooms_storage_units_bin_rooms_storage_unit_id_eq]",
+    options_for_select(
+      (rooms_storage_units || []).map { |id, label, name| ["#{name} / #{label}", id] },
+      selected_rooms_storage_unit_id
+    ),
+    include_blank: t("custom.label.select", model: t("activerecord.models.rooms_storage_unit")).capitalize,
+    data: {
+      controller: "turbo-dependent-select",
+      turbo_dependent_select_target: "select",
+      turbo_dependent_select_endpoint_value: rooms_storage_unit_bins_admin_inventories_path,
+      action: "filters#submit change->turbo-dependent-select#loadStorageUnitBins",
+    },
+    class: "fus-tom-select",
+    disabled: option_disabled 
+  %>
+</div>
