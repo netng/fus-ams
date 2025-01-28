@@ -3,7 +3,7 @@
 service: ams
 
 # Name of the container image.
-image: netnan/ams
+image: superfus/fus_ams
 
 # Deploy to these servers.
 servers:
