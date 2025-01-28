@@ -56,8 +56,8 @@ env:
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
     POSTGRES_USER: fus_ams
-    # POSTGRES_HOST: fus_ams-postgres
-    POSTGRES_HOST: 158.101.37.21
+    POSTGRES_HOST: fus_ams-postgres
+    #POSTGRES_HOST: 158.101.37.21
     POSTGRES_DB: fus_ams_production
     POSTGRES_PORT: 5432
     MINIO_BUCKET: ams-prod
@@ -110,9 +110,9 @@ ssh:
 accessories:
   postgres:
     image: postgres:15
-    host: 158.101.37.21
-    # port: "127.0.0.1:5432:5432"
-    port: 5432
+    #host: 158.101.37.21
+    port: "127.0.0.1:5432:5432"
+    #port: 5432
     env:
       clear:
         POSTGRES_USER: fus_ams
