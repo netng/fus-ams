@@ -90,7 +90,7 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   #arch: amd64
-  arch: arm64
+  remote: ssh://ubuntu@158.101.44.254
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
   # remote: ssh://docker@docker-builder-server
@@ -110,7 +110,7 @@ ssh:
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16
     host: 158.101.44.254
     port: "127.0.0.1:5432:5432"
     #port: 5432
